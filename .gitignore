@@ -26,3 +26,9 @@
 # IDE folders (Visual Studio & JetBrains Rider).
 /app/.vs/
 /app/.idea/
+
+# Output folder(s).
+/app/Kwality.UVault/bin/
+/app/Kwality.UVault/obj/
+/app/Kwality.UVault.QA/bin/
+/app/Kwality.UVault.QA/obj/
