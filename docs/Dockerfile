@@ -22,16 +22,10 @@
 # ==                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # ==                OTHER DEALINGS IN THE SOFTWARE.
 # ======================================================================================================================
+# A Dockerfile, based on Sphinx which supports the theme `sphinx_rtd_theme`.
 
-# IDE folders (Visual Studio & JetBrains Rider).
-/app/.vs/
-/app/.idea/
+# Base image.
+FROM sphinxdoc/sphinx
 
-# Output folder(s).
-/app/Kwality.UVault/bin/
-/app/Kwality.UVault/obj/
-/app/Kwality.UVault.QA/bin/
-/app/Kwality.UVault.QA/obj/
-
-# Output folder (documentation).
-/docs/_build/
+# Install the `sphinx-rtd-theme` package.
+RUN pip install sphinx-rtd-theme

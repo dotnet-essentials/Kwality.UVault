@@ -23,15 +23,25 @@
 # ==                OTHER DEALINGS IN THE SOFTWARE.
 # ======================================================================================================================
 
-# IDE folders (Visual Studio & JetBrains Rider).
-/app/.vs/
-/app/.idea/
+# GENERAL CONFIGURATION.
+source_suffix = [ '.rst' ]
+master_doc = 'index'
 
-# Output folder(s).
-/app/Kwality.UVault/bin/
-/app/Kwality.UVault/obj/
-/app/Kwality.UVault.QA/bin/
-/app/Kwality.UVault.QA/obj/
+# PROJECT INFORMATION.
+project = 'UVault'
+copyright = '2023, Kevin De Coninck'
+author = 'Kevin De Coninck'
 
-# Output folder (documentation).
-/docs/_build/
+# PROJECT VERSION.
+release = '1.0.0'
+
+# GENERAL INFORMATION.
+exclude_patterns = [ 'build', 'Thumbs.db', '.DS_Store' ]
+pygments_style = 'sphinx'
+
+# HTML OUTPUT OPTIONS.
+htmlhelp_basename = 'UVaultdoc'
+html_theme = 'sphinx_rtd_theme'
+html_theme_options = {
+    'display_version': False
+}

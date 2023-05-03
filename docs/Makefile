@@ -22,16 +22,20 @@
 # ==                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # ==                OTHER DEALINGS IN THE SOFTWARE.
 # ======================================================================================================================
+# Minimal makefile for Sphinx documentation.
 
-# IDE folders (Visual Studio & JetBrains Rider).
-/app/.vs/
-/app/.idea/
+# The environment variables for the build
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+SOURCEDIR     = .
+BUILDDIR      = _build
 
-# Output folder(s).
-/app/Kwality.UVault/bin/
-/app/Kwality.UVault/obj/
-/app/Kwality.UVault.QA/bin/
-/app/Kwality.UVault.QA/obj/
+# Ensure that "make" without any arguments is the same as "make help".
+help:
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-# Output folder (documentation).
-/docs/_build/
+.PHONY: help Makefile
+
+# Catch-all target: route all unknown targets to Sphinx.
+%: Makefile
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

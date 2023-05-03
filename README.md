@@ -25,3 +25,4 @@
 # Introduction
 
 UVault consists out of a collection of .NET libraries for performing user management operations in .NET applications.
+See the [full documentation](https://kwalityuvault.readthedocs.io/en/latest/index.html) for more information.
