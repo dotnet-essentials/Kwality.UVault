@@ -19,4 +19,12 @@ documents contains a few steps to help you smoothen the process.
   :maxdepth: 1
   :caption: Contributing
 
+  contrib
   contrib-docs
+
+.. _release_notes_docs:
+.. toctree::
+  :maxdepth: 1
+  :caption: Release notes
+
+  release-notes

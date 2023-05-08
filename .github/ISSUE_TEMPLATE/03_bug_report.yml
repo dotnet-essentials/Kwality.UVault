@@ -1,0 +1,117 @@
+# ======================================================================================================================
+# == LICENSE:       Copyright (c) 2023 Kevin De Coninck
+# ==
+# ==                Permission is hereby granted, free of charge, to any person
+# ==                obtaining a copy of this software and associated documentation
+# ==                files (the "Software"), to deal in the Software without
+# ==                restriction, including without limitation the rights to use,
+# ==                copy, modify, merge, publish, distribute, sublicense, and/or sell
+# ==                copies of the Software, and to permit persons to whom the
+# ==                Software is furnished to do so, subject to the following
+# ==                conditions:
+# ==
+# ==                The above copyright notice and this permission notice shall be
+# ==                included in all copies or substantial portions of the Software.
+# ==
+# ==                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# ==                EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# ==                OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# ==                NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# ==                HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# ==                WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# ==                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# ==                OTHER DEALINGS IN THE SOFTWARE.
+# ======================================================================================================================
+name: 🐞 Bug report
+description: Report a bug.
+title: "[Bug]: "
+labels: [ Bug, Under review ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        You have spotted an issue in the behavior of the software. Let's discuss it.
+        Please see our [contribution guidelines](https://kwalityuvault.readthedocs.io/en/latest/finding-issues.html#reporting-a-new-issue)
+        for more information on how to write a good bug report.
+
+        **Before continuing, have you:**
+
+          * Tried upgrading to newest version of UVault?
+          * Checked existing open *and* closed [issues](https://github.com/dotnet-essentials/Kwality.UVault/issues)?
+          * Tried reproducing your problem in a new isolated project?
+          * Read the [documentation](https://kwalityuvault.readthedocs.io/en/latest/)?
+  - type: dropdown
+    id: components
+    attributes:
+      label: Which component does the issue targets?
+      multiple: false
+      options:
+        - Core
+  - type: textarea
+    id: description
+    attributes:
+      label: High level description of the issue.
+      description: Please describe the problem (High Level).
+      placeholder: Description
+    validations:
+      required: true
+  - type: textarea
+    id: repro-steps
+    attributes:
+      label: How to reproduce?
+      description: |
+        Please include minimal steps to reproduce the problem if possible.
+        Always include text as text rather than screenshots so code can easily be copied and will show up in searches.
+
+        If possible, the example should be represented as a test.
+      placeholder: Minimal reproduction
+      value: |
+        ```csharp
+        ```
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: |
+        Provide a description of the expected behavior.
+      placeholder: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: |
+        Provide a description of the actual behavior observed. If applicable please include any error messages or
+        exception stacktraces.
+      placeholder: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: known-workarounds
+    attributes:
+      label: Known workarounds
+      description: |
+        Please provide a description of any known workarounds.
+      placeholder: Known workarounds
+    validations:
+      required: false
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration
+      description: |
+        Please provide more information on your .NET configuration, e.g. nuget version, .NET version, etc.
+      placeholder: Configuration
+    validations:
+      required: false
+  - type: textarea
+    id: other-info
+    attributes:
+      label: Other information
+      description: |
+        If you have an idea where the problem might lie, let us know that here. Please include any pointers to code,
+        relevant changes, or related issues you know of.
+      placeholder: Other information
+    validations:
+      required: false
