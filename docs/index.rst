@@ -1,8 +1,11 @@
 Introduction
 ============
 
-UVault consists out of a collection of .NET libraries (NuGet packages) for perfororming user management operations in
-.NET applications.
+UVault consists out of a collection of .NET libraries for performing user management operations in .NET applications and
+runs of the following platforms:
+
+- `Microsoft .NET 6 <https://dotnet.microsoft.com/en-us/download/dotnet/6.0>`_
+- `Microsoft .NET 7 <https://dotnet.microsoft.com/en-us/download/dotnet/7.0>`_
 
 How to contribute?
 ------------------
