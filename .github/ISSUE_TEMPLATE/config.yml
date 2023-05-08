@@ -23,3 +23,7 @@
 # ==                OTHER DEALINGS IN THE SOFTWARE.
 # ======================================================================================================================
 blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://kwalityuvault.readthedocs.io/en/latest/
+    about: Read our documentation.
