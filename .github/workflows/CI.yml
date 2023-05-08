@@ -29,10 +29,11 @@ run-name: "Continuous integration (branch: \u0022${{ github.ref_name }}\u0022)\u
 
 # TRIGGER(S).
 on:
-    workflow_dispatch:
-    push:
-      branches:
-        - 'main'
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+  pull_request:
 
 # JOBS.
 jobs:
@@ -60,10 +61,19 @@ jobs:
 
       - name: Build .NET Solution
         working-directory: ./app/
-        run: dotnet build --no-incremental --no-restore
+        run: dotnet build --no-incremental --no-restore /p:CIBuild=true
 
       - name: Run tests
         working-directory: ./app/
+        env:
+          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
+          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
+          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
         run: dotnet test --no-build --no-restore --logger trx --results-directory "TestResults-${{ matrix.dotnet }}"
 
       - name: Check if directory containing test results does exist.
@@ -81,7 +91,7 @@ jobs:
         with:
           name: Test results (.NET ${{ matrix.dotnet }})
           path: ./app/TestResults-${{ matrix.dotnet }}
-  
+
   inspect:
     needs: [ build-and-test ]
     runs-on: ubuntu-latest
@@ -106,18 +116,40 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        projects: [ 'Kwality.UVault' ]
+        projects: [ 'Kwality.UVault', 'Kwality.UVault.IAM' ]
     steps:
       - name: GIT Clone
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
+      - name: Setup .NET ${{ matrix.dotnet }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+
+      - name: Restore NuGet packages
+        working-directory: ./app/
+        run: dotnet restore
+
+      - name: Build .NET Solution
+        working-directory: ./app/
+        run: dotnet build --no-incremental --no-restore
+
       - name: Install Stryker.NET
         run: dotnet tool install -g dotnet-stryker
 
       - name: Mutate `${{ matrix.projects }}`
         working-directory: app/Kwality.UVault.QA/
+        env:
+          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
+          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
+          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
         run: dotnet stryker --config-file ../stryker-config.json --project ${{ matrix.projects }}.csproj --output StrykerOutput-${{ matrix.projects }}
 
       - name: Upload mutation results.
@@ -149,6 +181,15 @@ jobs:
 
       - name: Build and analyze
         working-directory: ./app/
+        env:
+          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
+          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
+          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
         shell: powershell
         run: |
           dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml

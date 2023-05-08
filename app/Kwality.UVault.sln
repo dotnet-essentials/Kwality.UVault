@@ -46,6 +46,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001. Issues.", "001. Issues
 		..\.github\ISSUE_TEMPLATE\config.yml = ..\.github\ISSUE_TEMPLATE\config.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.UVault.IAM", "Kwality.UVault.IAM\Kwality.UVault.IAM.csproj", "{6E7E908A-8BF7-4BB6-B83E-DB7288341F17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,7 @@ Global
 		{3DCB84B4-3D6A-41AC-9C99-9798863DE1C3} = {D41A97D1-7A86-4B65-8AAD-95D8147907A5}
 		{430C9FDF-03FD-486C-9A5C-42F920E87DA1} = {D39EBD5C-BACC-460E-AF61-3EAD24217DE0}
 		{4849248E-153B-4CCE-9594-04B4E6E19912} = {430C9FDF-03FD-486C-9A5C-42F920E87DA1}
+		{6E7E908A-8BF7-4BB6-B83E-DB7288341F17} = {27D3C0B5-F535-4D0D-91DA-B286CB08E682}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{366B07B3-B8FC-4E9B-AEBD-EDE80FA72B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -70,5 +73,9 @@ Global
 		{3DCB84B4-3D6A-41AC-9C99-9798863DE1C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DCB84B4-3D6A-41AC-9C99-9798863DE1C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DCB84B4-3D6A-41AC-9C99-9798863DE1C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E7E908A-8BF7-4BB6-B83E-DB7288341F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E7E908A-8BF7-4BB6-B83E-DB7288341F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E7E908A-8BF7-4BB6-B83E-DB7288341F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E7E908A-8BF7-4BB6-B83E-DB7288341F17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
