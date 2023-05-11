@@ -41,6 +41,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "030. Configuration.", "030.
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "002. Templates.", "002. Templates.", "{430C9FDF-03FD-486C-9A5C-42F920E87DA1}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\release.yml = ..\.github\release.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001. Issues.", "001. Issues.", "{4849248E-153B-4CCE-9594-04B4E6E19912}"
 	ProjectSection(SolutionItems) = preProject
