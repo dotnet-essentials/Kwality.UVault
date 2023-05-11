@@ -29,6 +29,7 @@ run-name: "Release (NuGet) (branch: \u0022${{ github.ref_name }}\u0022)\u0022"
 
 # TRIGGER(S).
 on:
+  workflow_dispatch:
   release:
     types:
       - published
@@ -49,7 +50,7 @@ jobs:
 
       - name: Package
         working-directory: ./app/
-        run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
+        run: dotnet pack --configuration Release --output .
 
       - name: Publish
         working-directory: app
