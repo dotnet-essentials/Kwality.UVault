@@ -46,6 +46,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001. Issues.", "001. Issues
 	ProjectSection(SolutionItems) = preProject
 		..\.github\ISSUE_TEMPLATE\01_new_feature.yml = ..\.github\ISSUE_TEMPLATE\01_new_feature.yml
 		..\.github\ISSUE_TEMPLATE\config.yml = ..\.github\ISSUE_TEMPLATE\config.yml
+		..\.github\ISSUE_TEMPLATE\02_api_change.yml = ..\.github\ISSUE_TEMPLATE\02_api_change.yml
+		..\.github\ISSUE_TEMPLATE\03_bug_report.yml = ..\.github\ISSUE_TEMPLATE\03_bug_report.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.UVault.IAM", "Kwality.UVault.IAM\Kwality.UVault.IAM.csproj", "{6E7E908A-8BF7-4BB6-B83E-DB7288341F17}"
