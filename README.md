@@ -13,8 +13,6 @@
 [![SonarCloud Analysis (Lines of Code)](https://sonarcloud.io/api/project_badges/measure?project=dotnet-essentials_Kwality.UVault&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=dotnet-essentials_Kwality.UVault)
 [![SonarCloud Analysis (Code Coverage)](https://sonarcloud.io/api/project_badges/measure?project=dotnet-essentials_Kwality.UVault&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dotnet-essentials_Kwality.UVault)
 [![Latest Release (GitHub)](https://img.shields.io/github/release/dotnet-essentials/Kwality.UVault.svg?label=latest%20release&color=007edf)](https://github.com/dotnet-essentials/Kwality.UVault/releases/latest)
-[![# Downloads (NuGet)](https://img.shields.io/nuget/dt/Kwality.UVault.svg?label=downloads%20(Kwality.UVault)&color=007edf&logo=nuget)](https://www.nuget.org/packages/Kwality.UVault)
-[![# Dependent libraries (NuGet)](https://img.shields.io/librariesio/dependents/nuget/Kwality.UVault.svg?label=dependent%20libraries%20(Kwality.UVault))](https://libraries.io/nuget/Kwality.UVault)
 [![# Start (GitHub)](https://img.shields.io/github/stars/dotnet-essentials/Kwality.UVault)](https://github.com/dotnet-essentials/Kwality.UVault/stargazers)
 [![# Contributors (GitHub)](https://img.shields.io/github/contributors/dotnet-essentials/Kwality.UVault)](https://github.com/dotnet-essentials/Kwality.UVault/graphs/contributors)
 [![Last commit (GitHub)](https://img.shields.io/github/last-commit/dotnet-essentials/Kwality.UVault)](https://github.com/dotnet-essentials/Kwality.UVault)
@@ -26,3 +24,10 @@
 
 UVault consists out of a collection of .NET libraries for performing user management operations in .NET applications.
 See the [full documentation](https://kwalityuvault.readthedocs.io/en/latest/index.html) for more information.
+
+# NuGet Packages
+
+| Package | Version | # Downloads | Dependent libraries |
+| --- | --- | --- | --- |
+| [Kwality.UVault](https://www.nuget.org/packages/Kwality.UVault) | [![NuGet](https://img.shields.io/nuget/v/Kwality.UVault.svg)](https://www.nuget.org/packages/Kwality.UVault) | [![# Downloads (NuGet)](https://img.shields.io/nuget/dt/Kwality.UVault.svg?label=downloads%20(Kwality.UVault)&color=007edf&logo=nuget)](https://www.nuget.org/packages/Kwality.UVault) | [![# Dependent libraries (NuGet)](https://img.shields.io/librariesio/dependents/nuget/Kwality.UVault.svg?label=dependent%20libraries%20(Kwality.UVault))](https://libraries.io/nuget/Kwality.UVault) |
+| [Kwality.UVault.IAM](https://www.nuget.org/packages/Kwality.UVault.IAM) | [![NuGet](https://img.shields.io/nuget/v/Kwality.UVault.IAM.svg)](https://www.nuget.org/packages/Kwality.UVault.IAM) | [![# Downloads (NuGet)](https://img.shields.io/nuget/dt/Kwality.UVault.IAM.svg?label=downloads%20(Kwality.UVault.IAM)&color=007edf&logo=nuget)](https://www.nuget.org/packages/Kwality.UVault.IAM) | [![# Dependent libraries (NuGet)](https://img.shields.io/librariesio/dependents/nuget/Kwality.UVault.IAM.svg?label=dependent%20libraries%20(Kwality.UVault.IAM))](https://libraries.io/nuget/Kwality.UVault.IAM) |
