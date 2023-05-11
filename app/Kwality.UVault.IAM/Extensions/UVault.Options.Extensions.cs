@@ -43,9 +43,8 @@ public static class UVaultOptionsExtensions
         using (IServiceScope serviceProviderScope = options.Services.BuildServiceProvider()
                                                            .CreateScope())
         {
-            optionsAction.Invoke(
-                serviceProviderScope.ServiceProvider,
-                new IAMOptions(options.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)));
+            var iamOptions = new IAMOptions(options.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme));
+            optionsAction.Invoke(serviceProviderScope.ServiceProvider, iamOptions);
         }
 
         options.Services.AddAuthorization();
