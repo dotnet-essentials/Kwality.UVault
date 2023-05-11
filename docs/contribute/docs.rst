@@ -4,7 +4,7 @@ Updating the documentation
 This technical document details how UVault employs Docker for building its documentation.
 
 .. warning::
-   All the commands listed in this document should be executed within the``docs/`` folder.
+   All the commands listed in this document should be executed within the ``docs/`` folder.
 
 Docker image
 ------------
