@@ -24,10 +24,3 @@ It is compatible with the following platforms:
 
   contribute/index
   contribute/docs
-
-.. _release_notes_docs:
-.. toctree::
-  :maxdepth: 1
-  :caption: Release notes
-
-  release-notes
