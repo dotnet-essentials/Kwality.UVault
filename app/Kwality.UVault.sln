@@ -23,6 +23,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001. Workflows.", "001. Workflows.", "{713351FF-ABDA-4F85-A3DF-F8DB34B87332}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\CI.yml = ..\.github\workflows\CI.yml
+		..\.github\workflows\CI - Auth0.yml = ..\.github\workflows\CI - Auth0.yml
+		..\.github\workflows\Release.yml = ..\.github\workflows\Release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "700. Source.", "700. Source.", "{27D3C0B5-F535-4D0D-91DA-B286CB08E682}"
