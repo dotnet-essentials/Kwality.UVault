@@ -175,6 +175,7 @@ public sealed class IAMDefaultTests
     }
 
     [IAM]
+    [Auth0]
     [Fact(DisplayName = "Request a secured HTTP endpoint with a valid `JWT` succeeds (Default JWT validator).")]
     internal async Task RequestSecuredEndpoint_ValidJwt_Succeeds()
     {
