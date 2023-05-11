@@ -24,7 +24,7 @@
 # ======================================================================================================================
 
 # GENERAL INFORMATION.
-name: Continuous integration
+name: Continuous integration (Auth0)
 run-name: "Continuous integration (branch: \u0022${{ github.ref_name }}\u0022)\u0022"
 
 # TRIGGER(S).
