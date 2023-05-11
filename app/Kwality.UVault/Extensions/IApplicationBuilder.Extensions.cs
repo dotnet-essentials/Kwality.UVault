@@ -35,7 +35,6 @@ public static class ApplicationBuilderExtensions
 {
     public static void UseUVault(this IApplicationBuilder app, Action<UVaultMiddlewareOptions>? optionsAction)
     {
-        var middlewareOptions = new UVaultMiddlewareOptions(app);
-        optionsAction?.Invoke(middlewareOptions);
+        optionsAction?.Invoke(new UVaultMiddlewareOptions(app));
     }
 }
