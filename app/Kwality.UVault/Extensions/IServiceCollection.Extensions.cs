@@ -33,11 +33,6 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class ServiceCollectionExtensions
 {
-    public static void AddUVault(this IServiceCollection services)
-    {
-        services.AddUVault(null);
-    }
-
     public static void AddUVault(this IServiceCollection services, Action<UVaultOptions>? optionsAction)
     {
         optionsAction?.Invoke(new UVaultOptions(services));

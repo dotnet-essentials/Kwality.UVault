@@ -67,44 +67,14 @@ public sealed class IAMTests
 
     [IAM]
     [Fact(DisplayName = "Request an HTTP endpoint succeeds.")]
-    internal async Task RequestEndpoint_Succeeds2()
+    internal async Task NoIAM_RequestEndpoint_Succeeds()
     {
         // ACT / ASSERT.
         await new HttpRequestValidator
             {
                 ConfigureServices = static services =>
                 {
-                    services.AddUVault();
-                },
-                ConfigureApp = static app => app.UseUVault(),
-                ConfigureRoutes = static routes =>
-                {
-                    routes.MapGet(
-                        defaultRoute, static context =>
-                        {
-                            context.Response.StatusCode = 200;
-
-                            return Task.CompletedTask;
-                        });
-                },
-
-                // EXPECTATIONS.
-                ExpectedHttpStatusCode = HttpStatusCode.OK,
-            }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
-    }
-
-    [IAM]
-    [Fact(DisplayName = "Request an HTTP endpoint succeeds.")]
-    internal async Task RequestEndpoint_Succeeds()
-    {
-        // ACT / ASSERT.
-        await new HttpRequestValidator
-            {
-                ConfigureServices = static services =>
-                {
-                    // Add `UVault`.
-                    services.AddUVault();
+                    services.AddUVault(null);
                 },
                 ConfigureApp = static app => app.UseUVault(),
                 ConfigureRoutes = static routes =>
