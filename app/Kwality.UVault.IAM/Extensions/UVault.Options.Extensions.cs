@@ -36,7 +36,7 @@ using Microsoft.Extensions.DependencyInjection;
 public static class UVaultOptionsExtensions
 {
     // ReSharper disable once InconsistentNaming
-    public static void UseIAM(this UVaultOptions options, Action<IServiceProvider, IAMOptions> optionsAction)
+    public static void UseIAM(this UVaultOptions options, Action<IServiceProvider, IAMOptions>? optionsAction)
     {
         ArgumentNullException.ThrowIfNull(optionsAction);
 
