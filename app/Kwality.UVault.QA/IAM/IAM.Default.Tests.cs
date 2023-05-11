@@ -73,7 +73,7 @@ public sealed class IAMDefaultTests
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },
-                ConfigureApp = static app => app.UseUVault(),
+                ConfigureApp = static app => app.UseUVault(null),
                 ConfigureRoutes = static routes =>
                 {
                     routes.MapGet(

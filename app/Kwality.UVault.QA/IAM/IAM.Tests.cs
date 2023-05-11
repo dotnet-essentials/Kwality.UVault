@@ -76,7 +76,7 @@ public sealed class IAMTests
                 {
                     services.AddUVault(null);
                 },
-                ConfigureApp = static app => app.UseUVault(),
+                ConfigureApp = static app => app.UseUVault(null),
                 ConfigureRoutes = static routes =>
                 {
                     routes.MapGet(
