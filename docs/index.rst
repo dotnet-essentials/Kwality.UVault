@@ -1,8 +1,8 @@
 Introduction
 ============
 
-UVault consists out of a collection of .NET libraries for performing user management operations in .NET applications and
-runs of the following platforms:
+UVault is a collection of .NET libraries specifically designed to handle user management tasks in .NET applications.
+It is compatible with the following platforms:
 
 - `Microsoft .NET 6 <https://dotnet.microsoft.com/en-us/download/dotnet/6.0>`_
 - `Microsoft .NET 7 <https://dotnet.microsoft.com/en-us/download/dotnet/7.0>`_

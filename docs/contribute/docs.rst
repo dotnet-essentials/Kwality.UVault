@@ -1,27 +1,28 @@
 Updating the documentation
 ==========================
 
-This document describes how UVault uses Docker to build the documentation.
+This technical document details how UVault employs Docker for building its documentation.
 
 .. warning::
-   The commands that are listed on this page **must** be executed from within the ``docs/`` folder.
+   All the commands listed in this document should be executed within the``docs/`` folder.
 
 Docker image
 ------------
 
-You can build the Docker image that's used for building the documentation using the following PowerShell command.
+To build the Docker image used for building the documentation, run the following PowerShell command:
 
 .. code-block:: console
 
     $ docker image build -t uvault/docs .
 
-This command generates a Docker image named `uvault/docs` which can be used to build to project's documentation.
+The following command generates a Docker image with the name `uvault/docs` that can be used to build the documentation
+of the project.
 
 Building the documentation
 --------------------------
 
-With the Docker image created, the following PowerShell command to generate an HTML version of UVault's documentation.
-Once this command completes, the output can be found in the ``/docs/_build/`` folder.
+After creating the Docker image, you can use the following PowerShell command to generate an HTML version of the UVault
+documentation. Upon completion, the output will be located in the  ``/docs/_build/`` folder.
 
 .. code-block:: console
 

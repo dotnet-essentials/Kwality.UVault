@@ -1,4 +1,5 @@
 Introduction
 ============
 
-UVault's Identity & access management component makes is easy to validate JWT bearer tokens in ASP.NET applications.
+The Identity & Access Management component of UVault provides a straightforward approach for validating JWT bearer
+tokens within ASP.NET applications.

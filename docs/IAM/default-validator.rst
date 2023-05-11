@@ -1,15 +1,16 @@
 Default JWT validator
 =====================
 
-The default implementation of UVault's Identity & access management uses the following characteristics.
+UVault's default implementation of Identity & Access Management incorporates the following characteristics:
 
-- The `authority` of the JWT must match a predefined value.
-- The `issuer` of the JWT must match a predefined value.
-- The `audience` of the JWT must match a predefined value.
-- The `lifetime` of the JWT must be valid.
-- The `signature key` of the JWT must be valid.
+- The JWT's `authority` must match a predefined value.
+- The JWT's `issuer` must match a predefined value.
+- The JWT's `audience` must match a predefined value.
+- The JWT's `lifetime`` must be valid.
+- The JWT's `signature key`` must be valid.
 
-In order to use it, UVault's `core` services must be added and configured to use Identity & access management.
+UVault's Identity & Access Management component can be used by adding and configuring UVault's `core` services to use
+IAM. Here's an example of how to do this:
 
 .. code-block:: csharp
 
@@ -23,7 +24,9 @@ In order to use it, UVault's `core` services must be added and configured to use
         options.UseIAM((_, iamOptions) => iamOptions.UseDefault(validIssuer, validAudience));
     });
 
-Next, UVault's middleware components must be added to the HTTP request pipeline.
+In this example, the ``UseDefault`` method is used to define the validation characteristics of JWTs. The `authority`,
+`issuer`, and `audience` of the JWT must match predefined values, and the lifetime and signature key of the JWT must be
+valid.
 
 .. code-block:: csharp
 
@@ -35,7 +38,13 @@ Next, UVault's middleware components must be added to the HTTP request pipeline.
 
     app.Run();
 
-It's also possible to use different IAM options, depending on the environment you're running.
+UVault's Identity & Access Management component provides the flexibility to use different IAM options depending on other
+services.
+
+To achieve this, first, the UVault `core` services must be added and configured to use Identity & Access Management.
+Then, in the configuration, you can provide different values.
+
+Here is an example code block in C# that demonstrates the use of different IAM options:
 
 .. code-block:: csharp
 

@@ -1,86 +1,87 @@
 Contributing to UVault
 ======================
 
-Few open-source projects are going to be successful without contributions and UVault is no exception to this rule.
-We are deeply grateful for all contributions no matter their size.
+Contributions to open-source projects are essential for their success, and UVault is no exception to this rule.
+We appreciate all contributions, regardless of their size.
 
 Finding existing issues
 -----------------------
 
-Before filing a new issue, please use our `issue tracker <https://github.com/dotnet-essentials/Kwality.UVault/issues>`_
-to check if it already exists.
+Prior to submitting a new issue, we kindly request that you check our
+`issue tracker <https://github.com/dotnet-essentials/Kwality.UVault/issues>`_  to ensure that a similar issue has not
+already been reported.
 
 .. note::
-  If you do find an existing issue, please include your own feedback in the discussion.
-  Instead of posting "me too", upvote the issue with 👍, as this better helps us prioritize popular issues and avoids
-  spamming people who are subscribed to the issue.
+  Should you discover an issue that has already been reported, we encourage you to participate in the ongoing discussion
+  by sharing your own feedback. Rather than posting a simple "me too" comment, please upvote the issue using the 👍
+  reaction. This approach assists us in prioritizing popular issues and prevents the need to repeatedly notify
+  individuals subscribed to the issue thread.
 
 Writing a Good Bug Report
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-Good bug reports make it easier for maintainers to verify and root cause the underlying problem.
-The better a bug report, the faster the problem will be resolved.
-Ideally, a bug report should contain the following information:
+Effective bug reports play a crucial role in assisting maintainers with verifying and identifying the root cause of an
+issue. The quality of a bug report directly impacts the speed with which a problem can be resolved.
+Ideally, a bug report should include the following details:
 
-* A high-level description of the problem.
-* A minimal reproduction, i.e. the smallest size of code/configuration required to reproduce the wrong behavior.
-* A description of the expected behavior, contrasted with the actual behavior observed.
-* Information on the environment: nuget version, .NET version, etc.
-* Additional information, e.g. is it a regression from previous versions? are there any known workarounds?
+* A brief overview of the problem.
+* A minimal reproduction scenario, consisting of the smallest possible code or configuration required to recreate the
+  undesired behavior.
+* A comparison of the expected versus actual behavior.
+* Information about the environment, including the NuGet version, .NET version, and any other relevant system details.
+* Additional information, such as whether the issue is a regression from previous versions or if there are known
+  workarounds.
 
-When ready to submit a bug report, please use the
+To submit a bug report, please use the
 `Bug report <https://github.com/dotnet-essentials/Kwality.UVault/issues/new/choose>`_ issue template.
 
 Contributing Changes
 --------------------
 
-UVault's core library very rarely accepts changes which introduces extra dependencies.
-If you feel the need to add an extra dependency, think about a design where this extra dependency can be added in
-another project instead of UVault's core library.
+The UVault core library has a strict policy of minimizing dependencies and rarely accepts changes that introduce
+additional ones. If it is necessary to add an extra dependency, please consider designing a solution where it can be
+incorporated into a separate project instead of the core library.
 
-In order for UVault to provide a consistent experience across the library, we generally want to review every single API
-that's added, changed or deleted. Changes to the API must be proposed, discussed and approved with the ``API approved``
-label in a separate issue before opening a PR.
+To ensure a uniform experience throughout the library, all new APIs, modifications, and deletions must undergo review.
+Before submitting a pull request, changes to the API must be proposed, discussed, and approved using the
+``API approved`` label in a separate issue.
 
 DOs and DON'Ts
 ^^^^^^^^^^^^^^
 
-Please do:
+When submitting a pull request, please adhere to the following guidelines:
 
-- Target your `PR <https://help.github.com/articles/using-pull-requests>`_ at the `main` branch.
-- Follow the coding style already present in the project.
-- Use ReSharper (CLI) for inspection(s). A GitHub action is present which runs these inspections on every commit.
-  So anything reported by ReSharper (CLI) will cause your pull request to be declined.
-- Ensure that your changes are covered by new or existing tests.
-- Ensure that the quality of your tests is sufficient by performing mutation testing using
+- Target the `main`` branch with your `pull request <https://help.github.com/articles/using-pull-requests>`_.
+- Follow the coding style established in the existing project.
+- Follow the coding style established in the existing project.
+  Any issues detected by ReSharper (CLI) will result in the rejection of your pull request.
+- Verify that your changes are covered by either new or pre-existing tests.
+- Ensure that your test quality is adequate by performing mutation testing with
   `Stryker <https://stryker-mutator.io/docs/stryker-net/introduction/>`_.
-- Code coverage must be non-decreasing unless approved by the authors.
-- If the contribution adds a feature or fixes a bug, please update the
-  `release notes <https://kwalityuvault.readthedocs.io/en/latest/release-notes.html>`_.
-- If the contribution affects the documentation, please update the
-  `documentation <https://kwalityuvault.readthedocs.io/en/latest/>`_.
+- Code coverage should not decrease unless it has been approved by the authors.
+- If your contribution affects the documentation, please update the
+- `documentation <https://kwalityuvault.readthedocs.io/en/latest/>`_.
 
-Please do not:
+To ensure that your pull request is well-received, please avoid the following:
 
-- Create big PR's. Instead, file an issue and discuss and start  a discussion so we can agree on a direction before you
-  invest a large amount of time. This includes ``any`` change to the public API.
-- Add dependencies to your favorite packages in the ``core`` library, instead opt for another design where your favorite
-  library is included in an additional project.
+- Do not create excessively large pull requests. Instead, open an issue to begin a discussion and come to an agreement
+  on the direction of the proposed changes before investing a substantial amount of time. This includes any
+  modifications to the public API.
 
 Validate your work locally
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before you submit a PR, you can run the test suite locally to be confident that your PR doesn't break any existing
-functionality.
+To ensure that your PR does not break any existing functionality, it is recommended that you run the test suite locally
+before submitting it.
 
-Since UVault closely integrates with Auth0, you need to sign up for a "free" Auth0 account.
-Once your account is created, there are a couple of steps which needs to be performed.
+Since UVault closely integrates with Auth0, it is necessary to have a (free) Auth0 account before proceeding.
+After creating an account, the following steps need to be performed:
 
-- Inside your tenant's settings, change the value of the ``Default Directory`` to ``Username-Password-Authentication``.
-- Create a ``Regular Web Application`` application in your tenant and enable the ``Password`` grant type.
-- Create an API in your tenant, or use the default ``Auth0 Management API``.
-- Create a user in your tenant which uses the ``Username-Password-Authentication`` connection.
+1. Change the value of the `Default Directory` to ``Username-Password-Authentication`` inside your tenant's settings.
+2. Create a `Regular Web Application` application in your tenant and enable the ``Password`` grant type.
+3. Create an API in your tenant or use the default ``Auth0 Management API``.
+4. Create a user in your tenant that uses the ``Username-Password-Authentication`` connection.
 
-Once you have your Auth0 account configured, the following environment variables needs to be set:
+Once your Auth0 account is configured, set the following environment variables:
 
 - ``AUTH0_AUDIENCE``: The API audience of the API in your tenant.
 - ``AUTH0_CLIENT_ID``: The Client ID of the application in your tenant.
