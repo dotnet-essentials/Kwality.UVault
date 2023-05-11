@@ -23,17 +23,30 @@
 # ==                OTHER DEALINGS IN THE SOFTWARE.
 # ======================================================================================================================
 
-# IDE folders (Visual Studio & JetBrains Rider).
-/app/.vs/
-/app/.idea/
+# GENERAL INFORMATION.
+name: Release (NuGet)
+run-name: "Release (NuGet) (branch: \u0022${{ github.ref_name }}\u0022)\u0022"
 
-# Output folder(s).
-/app/Kwality.UVault/bin/
-/app/Kwality.UVault/obj/
-/app/Kwality.UVault.IAM/bin/
-/app/Kwality.UVault.IAM/obj/
-/app/Kwality.UVault.QA/bin/
-/app/Kwality.UVault.QA/obj/
+# TRIGGER(S).
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+-preview[0-9][0-9][0-9]"
 
-# Output folder (documentation).
-/docs/_build/
+# JOBS.
+jobs:
+  publish-on-nuget:
+    name: Build & publish NuGet packages.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: GIT Clone
+        uses: actions/checkout@v3
+      - name: Set VERSION variable from tag
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+      - name: Pack
+        working-directory: ./app/
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
+      - name: Push
+        working-directory: ./app/
+        run: dotnet nuget push "*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
