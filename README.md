@@ -12,7 +12,6 @@
 [![SonarCloud Analysis (Code Smells)](https://sonarcloud.io/api/project_badges/measure?project=dotnet-essentials_Kwality.UVault&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=dotnet-essentials_Kwality.UVault)
 [![SonarCloud Analysis (Lines of Code)](https://sonarcloud.io/api/project_badges/measure?project=dotnet-essentials_Kwality.UVault&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=dotnet-essentials_Kwality.UVault)
 [![SonarCloud Analysis (Code Coverage)](https://sonarcloud.io/api/project_badges/measure?project=dotnet-essentials_Kwality.UVault&metric=coverage)](https://sonarcloud.io/summary/new_code?id=dotnet-essentials_Kwality.UVault)
-[![Latest Release (GitHub)](https://img.shields.io/github/release/dotnet-essentials/Kwality.UVault.svg?label=latest%20release&color=007edf)](https://github.com/dotnet-essentials/Kwality.UVault/releases/latest)
 [![# Start (GitHub)](https://img.shields.io/github/stars/dotnet-essentials/Kwality.UVault)](https://github.com/dotnet-essentials/Kwality.UVault/stargazers)
 [![# Contributors (GitHub)](https://img.shields.io/github/contributors/dotnet-essentials/Kwality.UVault)](https://github.com/dotnet-essentials/Kwality.UVault/graphs/contributors)
 [![Last commit (GitHub)](https://img.shields.io/github/last-commit/dotnet-essentials/Kwality.UVault)](https://github.com/dotnet-essentials/Kwality.UVault)
