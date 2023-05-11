@@ -21,7 +21,7 @@
 
 # Introduction
 
-UVault consists out of a collection of .NET libraries for performing user management operations in .NET applications.
+UVault is a collection of .NET libraries specifically designed to handle user management tasks in .NET applications.
 See the [full documentation](https://kwalityuvault.readthedocs.io/en/latest/index.html) for more information.
 
 # NuGet Packages
