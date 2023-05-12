@@ -50,14 +50,12 @@ public static class UVaultOptionsExtensions
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        ArgumentNullException.ThrowIfNull(optionsAction);
-
         // Add the "default" services.
         // When some options are provided, they will be overridden.
         options.Services.AddScoped<UserManager<TModel, TKey>>();
         options.Services.AddScoped<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 
         // Apply the options to customize the implementation.
-        optionsAction.Invoke(new UserManagementOptions<TModel, TKey>(options.Services));
+        optionsAction?.Invoke(new UserManagementOptions<TModel, TKey>(options.Services));
     }
 }
