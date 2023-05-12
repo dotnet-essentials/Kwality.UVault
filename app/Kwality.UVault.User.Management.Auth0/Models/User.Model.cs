@@ -29,7 +29,7 @@ using JetBrains.Annotations;
 using Kwality.UVault.User.Management.Auth0.Keys;
 
 [PublicAPI]
-public abstract class UserModel : Kwality.UVault.User.Management.Models.UserModel<StringKey>
+public class UserModel : Kwality.UVault.User.Management.Models.UserModel<StringKey>
 {
     protected UserModel(StringKey email)
         : base(email, (email ?? throw new ArgumentNullException(nameof(email))).Value)
