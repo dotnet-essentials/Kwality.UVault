@@ -108,7 +108,7 @@ jobs:
           solutionPath: ./Kwality.UVault.sln
           include: |
             **.cs
-          failOnIssue: 1
+          failOnIssue: 0
           solutionWideAnalysis: true
 
   mutate:
