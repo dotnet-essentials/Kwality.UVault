@@ -2,7 +2,7 @@
 
 <!-- Please provide a description of your changes. -->
 
-# Fixes
+## Fixes
 
 <!-- Please provide a link to the ticket(s) you have fixed in this PR.
     Fixes #1
