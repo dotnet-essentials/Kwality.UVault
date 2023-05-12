@@ -57,7 +57,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     // Stryker disable once all
     public async Task<TModel> GetByKeyAsync(StringKey key)
     {
-        using ManagementApiClient apiClient = await this.CreateManagementApiClient()
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
@@ -76,7 +76,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     // Stryker disable once all
     public async Task<IEnumerable<TModel>> GetByEmailAsync(string email)
     {
-        using ManagementApiClient apiClient = await this.CreateManagementApiClient()
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         IList<User>? users = await apiClient.Users.GetUsersByEmailAsync(email)
@@ -88,7 +88,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     // Stryker disable once all
     public async Task<StringKey> CreateAsync(TModel model, IRequestFactory requestFactory)
     {
-        using ManagementApiClient apiClient = await this.CreateManagementApiClient()
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
@@ -107,7 +107,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     // Stryker disable once all
     public async Task DeleteByKeyAsync(StringKey key)
     {
-        using ManagementApiClient apiClient = await this.CreateManagementApiClient()
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         await apiClient.Users.DeleteAsync(key.Value)
@@ -117,7 +117,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     // Stryker disable once all
     public async Task UpdateAsync(StringKey key, TModel model, IRequestFactory requestFactory)
     {
-        using ManagementApiClient apiClient = await this.CreateManagementApiClient()
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
@@ -131,7 +131,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         }
     }
 
-    private async Task<ManagementApiClient> CreateManagementApiClient()
+    private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
         string managementApiToken = await this.managementClient.GetTokenAsync(this.apiConfiguration)
                                               .ConfigureAwait(false);
