@@ -51,7 +51,8 @@ internal sealed class UserManagerFactory
                    .GetRequiredService<UserManager<TModel, TKey>>();
     }
 
-    public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? optionsAction)
+    public UserManager<TModel, TKey> Create<TModel, TKey>(
+        Action<IServiceProvider, UserManagementOptions<TModel, TKey>>? optionsAction)
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
