@@ -31,7 +31,7 @@ changelog:
         - PR Semver major
     - title: Exciting New Features 🎉
       labels:
-        - PR Semver major
+        - PR Semver minor
     - title: Other changes
       labels:
         - "*"
