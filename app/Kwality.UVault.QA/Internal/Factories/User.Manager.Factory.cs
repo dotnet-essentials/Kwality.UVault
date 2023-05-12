@@ -41,8 +41,14 @@ internal sealed class UserManagerFactory
         this.serviceCollection = new ServiceCollection();
     }
 
-    public UserManager<TModel, TKey> Create<TModel, TKey>(
-        Action<UserManagementOptions<TModel, TKey>>? optionsAction = null)
+    public UserManager<TModel, TKey> Create<TModel, TKey>()
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        return this.Create<TModel, TKey>(null);
+    }
+
+    public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? optionsAction)
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {

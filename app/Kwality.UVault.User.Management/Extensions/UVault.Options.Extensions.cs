@@ -38,8 +38,15 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class UVaultOptionsExtensions
 {
+    public static void UseUserManagement<TModel, TKey>(this UVaultOptions options)
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        options.UseUserManagement<TModel, TKey>(null);
+    }
+
     public static void UseUserManagement<TModel, TKey>(
-        this UVaultOptions options, Action<UserManagementOptions<TModel, TKey>>? optionsAction = null)
+        this UVaultOptions options, Action<UserManagementOptions<TModel, TKey>>? optionsAction)
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
