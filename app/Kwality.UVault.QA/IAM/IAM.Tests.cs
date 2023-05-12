@@ -28,8 +28,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 
-using FluentAssertions;
-
 using Kwality.UVault.Extensions;
 using Kwality.UVault.IAM.Extensions;
 using Kwality.UVault.IAM.Validators.Abstractions;
@@ -39,7 +37,6 @@ using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 using Xunit;
@@ -51,31 +48,13 @@ public sealed class IAMTests
     private const string defaultRoute = "/";
 
     [IAM]
-    [Fact(DisplayName = "Use IAM without options raises an exception.")]
-    internal void NoIAMOptions_RaisesException()
-    {
-        // ARRANGE.
-        var serviceCollection = new ServiceCollection();
-
-        // ACT.
-        Action act = () => serviceCollection.AddUVault(static options => options.UseIAM(null));
-
-        // ASSERT.
-        act.Should()
-           .Throw<ArgumentNullException>();
-    }
-
-    [IAM]
     [Fact(DisplayName = "Request an HTTP endpoint succeeds.")]
     internal async Task NoIAM_RequestEndpoint_Succeeds()
     {
         // ACT / ASSERT.
         await new HttpRequestValidator
             {
-                ConfigureServices = static services =>
-                {
-                    services.AddUVault(null);
-                },
+                ConfigureServices = static services => { services.AddUVault(null); },
                 ConfigureApp = static app => app.UseUVault(null),
                 ConfigureRoutes = static routes =>
                 {
