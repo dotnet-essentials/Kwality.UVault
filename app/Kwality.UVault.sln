@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "030. User Management.", "03
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.UVault.User.Management", "Kwality.UVault.User.Management\Kwality.UVault.User.Management.csproj", "{37A8E4BC-2CA1-4A0C-BDB0-B37F8DD6DD77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.UVault.User.Management.Auth0", "Kwality.UVault.User.Management.Auth0\Kwality.UVault.User.Management.Auth0.csproj", "{6B80FF36-E529-4710-BEBC-FA84FBA17A97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,7 @@ Global
 		{6E7E908A-8BF7-4BB6-B83E-DB7288341F17} = {0D285CCF-C0F0-4E56-834F-93BC6BBDBAC8}
 		{4FD6CC0E-E1DE-4508-A786-9ECACB412EDC} = {27D3C0B5-F535-4D0D-91DA-B286CB08E682}
 		{37A8E4BC-2CA1-4A0C-BDB0-B37F8DD6DD77} = {4FD6CC0E-E1DE-4508-A786-9ECACB412EDC}
+		{6B80FF36-E529-4710-BEBC-FA84FBA17A97} = {4FD6CC0E-E1DE-4508-A786-9ECACB412EDC}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{366B07B3-B8FC-4E9B-AEBD-EDE80FA72B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -100,5 +103,9 @@ Global
 		{37A8E4BC-2CA1-4A0C-BDB0-B37F8DD6DD77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37A8E4BC-2CA1-4A0C-BDB0-B37F8DD6DD77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37A8E4BC-2CA1-4A0C-BDB0-B37F8DD6DD77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B80FF36-E529-4710-BEBC-FA84FBA17A97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B80FF36-E529-4710-BEBC-FA84FBA17A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B80FF36-E529-4710-BEBC-FA84FBA17A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B80FF36-E529-4710-BEBC-FA84FBA17A97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
