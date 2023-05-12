@@ -27,7 +27,7 @@ namespace Kwality.UVault.User.Management.Models;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public abstract class UserModel<TKey>
+public class UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
     protected UserModel(TKey key, string email)
