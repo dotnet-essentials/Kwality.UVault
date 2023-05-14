@@ -27,6 +27,7 @@ namespace Kwality.UVault.User.Management.Auth0.Internal.API.Clients;
 using System.Net.Http.Json;
 
 using Kwality.UVault.User.Management.Auth0.Configuration;
+using Kwality.UVault.User.Management.Auth0.Exceptions;
 using Kwality.UVault.User.Management.Auth0.Internal.API.Models;
 
 internal sealed class ManagementClient

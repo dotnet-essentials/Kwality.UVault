@@ -36,6 +36,7 @@ using Kwality.UVault.QA.Internal.Extensions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.User.Management.Auth0;
 using Kwality.UVault.User.Management.Auth0.Configuration;
+using Kwality.UVault.User.Management.Auth0.Exceptions;
 using Kwality.UVault.User.Management.Auth0.Internal.API.Clients;
 
 using Moq;

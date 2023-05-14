@@ -22,7 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Auth0;
+namespace Kwality.UVault.User.Management.Auth0.Exceptions;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
