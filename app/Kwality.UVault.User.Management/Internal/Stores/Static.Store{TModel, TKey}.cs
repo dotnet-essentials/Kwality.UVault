@@ -25,8 +25,8 @@
 namespace Kwality.UVault.User.Management.Internal.Stores;
 
 using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Factories;
 using Kwality.UVault.User.Management.Models;
+using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
 using Kwality.UVault.User.Management.Stores.Abstractions;
 
 internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
@@ -52,11 +52,11 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
         return Task.FromResult(this.userCollection.Where(x => x.Email.Equals(email, StringComparison.Ordinal)));
     }
 
-    public Task<TKey> CreateAsync(TModel model, IRequestFactory requestFactory)
+    public Task<TKey> CreateAsync(TModel model, IUserOperationMapper operationMapper)
     {
         if (!this.userCollection.Any(u => u.Key.Equals(model.Key)))
         {
-            this.userCollection.Add(requestFactory.Create<TModel, TModel>(model));
+            this.userCollection.Add(operationMapper.Create<TModel, TModel>(model));
 
             return Task.FromResult(model.Key);
         }
@@ -64,7 +64,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
         throw new UserExistsException($"Another user with the same key `{model.Key}` already exists.");
     }
 
-    public async Task UpdateAsync(TKey key, TModel model, IRequestFactory requestFactory)
+    public async Task UpdateAsync(TKey key, TModel model, IUserOperationMapper operationMapper)
     {
         TModel? user = this.userCollection.FirstOrDefault(u => u.Key.Equals(key));
 
@@ -75,7 +75,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
         this.userCollection.Remove(user);
 
-        await this.CreateAsync(model, requestFactory)
+        await this.CreateAsync(model, operationMapper)
                   .ConfigureAwait(false);
     }
 

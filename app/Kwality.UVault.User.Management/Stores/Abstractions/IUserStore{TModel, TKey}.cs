@@ -24,8 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.User.Management.Stores.Abstractions;
 
-using Kwality.UVault.User.Management.Factories;
 using Kwality.UVault.User.Management.Models;
+using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
 
 public interface IUserStore<TModel, TKey>
     where TModel : UserModel<TKey>
@@ -33,7 +33,7 @@ public interface IUserStore<TModel, TKey>
 {
     Task<TModel> GetByKeyAsync(TKey key);
     Task<IEnumerable<TModel>> GetByEmailAsync(string email);
-    Task<TKey> CreateAsync(TModel model, IRequestFactory requestFactory);
-    Task UpdateAsync(TKey key, TModel model, IRequestFactory requestFactory);
+    Task<TKey> CreateAsync(TModel model, IUserOperationMapper operationMapper);
+    Task UpdateAsync(TKey key, TModel model, IUserOperationMapper operationMapper);
     Task DeleteByKeyAsync(TKey key);
 }

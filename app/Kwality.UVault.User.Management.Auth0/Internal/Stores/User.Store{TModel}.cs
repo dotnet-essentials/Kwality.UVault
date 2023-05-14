@@ -35,7 +35,7 @@ using Kwality.UVault.User.Management.Auth0.Keys;
 using Kwality.UVault.User.Management.Auth0.Mapping.Abstractions;
 using Kwality.UVault.User.Management.Auth0.Models;
 using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Factories;
+using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
 using Kwality.UVault.User.Management.Stores.Abstractions;
 
 [UsedImplicitly]
@@ -86,14 +86,14 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     }
 
     // Stryker disable once all
-    public async Task<StringKey> CreateAsync(TModel model, IRequestFactory requestFactory)
+    public async Task<StringKey> CreateAsync(TModel model, IUserOperationMapper operationMapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
         {
-            User user = await apiClient.Users.CreateAsync(requestFactory.Create<TModel, UserCreateRequest>(model))
+            User user = await apiClient.Users.CreateAsync(operationMapper.Create<TModel, UserCreateRequest>(model))
                                        .ConfigureAwait(false);
 
             return new StringKey(user.UserId);
@@ -115,14 +115,14 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     }
 
     // Stryker disable once all
-    public async Task UpdateAsync(StringKey key, TModel model, IRequestFactory requestFactory)
+    public async Task UpdateAsync(StringKey key, TModel model, IUserOperationMapper operationMapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
         {
-            await apiClient.Users.UpdateAsync(key.Value, requestFactory.Create<TModel, UserUpdateRequest>(model))
+            await apiClient.Users.UpdateAsync(key.Value, operationMapper.Create<TModel, UserUpdateRequest>(model))
                            .ConfigureAwait(false);
         }
         catch (Exception ex)

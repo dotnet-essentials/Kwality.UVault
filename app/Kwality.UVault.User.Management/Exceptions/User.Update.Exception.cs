@@ -1,4 +1,4 @@
-// =====================================================================================================================
+﻿// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,10 +22,31 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Factories;
+namespace Kwality.UVault.User.Management.Exceptions;
 
-public interface IRequestFactory
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+
+[Serializable]
+[ExcludeFromCodeCoverage]
+public sealed class UserUpdateException : Exception
 {
-    TDestination Create<TSource, TDestination>(TSource source)
-        where TDestination : class;
+    public UserUpdateException()
+    {
+    }
+
+    public UserUpdateException(string message)
+        : base(message)
+    {
+    }
+
+    public UserUpdateException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+
+    private UserUpdateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        : base(serializationInfo, streamingContext)
+    {
+    }
 }

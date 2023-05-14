@@ -22,53 +22,67 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Managers;
+namespace Kwality.UVault.QA.User.Management.Mappers;
+
+using AutoFixture.Xunit2;
+
+using FluentAssertions;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.User.Management.Models;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
+using Kwality.UVault.User.Management.Exceptions;
+using Kwality.UVault.User.Management.Operations.Mappers;
 using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
-using Kwality.UVault.User.Management.Stores.Abstractions;
 
-[PublicAPI]
-public sealed class UserManager<TModel, TKey>
-    where TModel : UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+using Xunit;
+
+public sealed class UserCreateOperationMapperTests
 {
-    private readonly IUserStore<TModel, TKey> userStore;
-
-    public UserManager(IUserStore<TModel, TKey> userStore)
+    [UserManagement]
+    [AutoData]
+    [Theory(DisplayName = "Mapping `Source` to invalid `Destination` raises an exception.")]
+    internal void MapSourceToDestination_InvalidDestination_RaisesException(ModelOne model)
     {
-        this.userStore = userStore;
+        // ARRANGE.
+        var mapper = new UserCreateOperationMapper();
+
+        // ACT.
+        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
+
+        // ASSERT.
+        act.Should()
+           .Throw<UserCreationException>()
+           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
     }
 
-    // Stryker disable once all
-    public Task<TModel> GetByKeyAsync(TKey key)
+    [UserManagement]
+    [AutoData]
+    [Theory(DisplayName = "Mapping `Source` to `Destination` succeeds.")]
+    internal void MapSourceToDestination_Succeeds(ModelOne model)
     {
-        return this.userStore.GetByKeyAsync(key);
+        // ARRANGE.
+        var mapper = new UserCreateOperationMapper();
+
+        // ACT.
+        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
+
+        // ASSERT.
+        result.Should()
+              .BeEquivalentTo(model);
     }
 
-    // Stryker disable once all
-    public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
+    [UsedImplicitly]
+    internal sealed class ModelOne
     {
-        return this.userStore.GetByEmailAsync(email);
+        [UsedImplicitly]
+        public string? Name { get; set; }
     }
 
-    // Stryker disable once all
-    public Task<TKey> CreateAsync(TModel user, IUserOperationMapper userOperationMapper)
+    [UsedImplicitly]
+    internal sealed class ModelTwo
     {
-        return this.userStore.CreateAsync(user, userOperationMapper);
-    }
-
-    // Stryker disable once all
-    public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper userOperationMapper)
-    {
-        return this.userStore.UpdateAsync(key, model, userOperationMapper);
-    }
-
-    // Stryker disable once all
-    public Task DeleteByKeyAsync(TKey key)
-    {
-        return this.userStore.DeleteByKeyAsync(key);
+        [UsedImplicitly]
+        public string? Name { get; set; }
     }
 }

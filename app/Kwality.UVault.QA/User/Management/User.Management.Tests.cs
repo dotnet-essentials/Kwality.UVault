@@ -35,10 +35,10 @@ using JetBrains.Annotations;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Factories;
 using Kwality.UVault.User.Management.Keys;
 using Kwality.UVault.User.Management.Managers;
 using Kwality.UVault.User.Management.Models;
+using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
 using Kwality.UVault.User.Management.Stores.Abstractions;
 
 using Xunit;
@@ -74,7 +74,7 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
 
-        await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                          .ConfigureAwait(false);
 
         // ACT.
@@ -97,7 +97,7 @@ public sealed class UserManagementTests
 
         foreach (UserModel model in models)
         {
-            await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                              .ConfigureAwait(false);
         }
 
@@ -124,7 +124,7 @@ public sealed class UserManagementTests
 
         foreach (UserModel model in models)
         {
-            await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                              .ConfigureAwait(false);
         }
 
@@ -150,7 +150,7 @@ public sealed class UserManagementTests
             = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
 
         // ACT.
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                          .ConfigureAwait(false);
 
         // ASSERT.
@@ -168,11 +168,11 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
 
-        await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                          .ConfigureAwait(false);
 
         // ACT.
-        Func<Task<IntKey>> act = () => userManager.CreateAsync(model, new UserCreateRequestFactory());
+        Func<Task<IntKey>> act = () => userManager.CreateAsync(model, new UserCreateUserOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -190,13 +190,13 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
 
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                          .ConfigureAwait(false);
 
         // ACT.
         model.Email = "kwality.uvault@github.com";
 
-        await userManager.UpdateAsync(userId, model, new UserUpdateRequestFactory())
+        await userManager.UpdateAsync(userId, model, new UserUpdateUserOperationMapper())
                          .ConfigureAwait(false);
 
         // ASSERT.
@@ -215,7 +215,7 @@ public sealed class UserManagementTests
             = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
 
         // ACT.
-        Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateRequestFactory());
+        Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateUserOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -233,7 +233,7 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
 
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                          .ConfigureAwait(false);
 
         // ACT.
@@ -279,7 +279,7 @@ public sealed class UserManagementTests
         }
     }
 
-    private sealed class UserCreateRequestFactory : IRequestFactory
+    private sealed class UserCreateUserOperationMapper : IUserOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
@@ -287,7 +287,7 @@ public sealed class UserManagementTests
             if (typeof(TDestination) != typeof(TSource))
             {
                 throw new UserCreationException(
-                    $"Invalid {nameof(IRequestFactory)}: Destination is NOT `{nameof(TSource)}`.");
+                    $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -295,7 +295,7 @@ public sealed class UserManagementTests
         }
     }
 
-    private sealed class UserUpdateRequestFactory : IRequestFactory
+    private sealed class UserUpdateUserOperationMapper : IUserOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
@@ -303,7 +303,7 @@ public sealed class UserManagementTests
             if (typeof(TDestination) != typeof(TSource))
             {
                 throw new UserCreationException(
-                    $"Invalid {nameof(IRequestFactory)}: Destination is NOT `{nameof(TSource)}`.");
+                    $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -335,11 +335,11 @@ public sealed class UserManagementTests
                     .Select(static user => user.Value));
         }
 
-        public Task<IntKey> CreateAsync(UserModel model, IRequestFactory requestFactory)
+        public Task<IntKey> CreateAsync(UserModel model, IUserOperationMapper operationMapper)
         {
             if (!this.userCollection.ContainsKey(model.Key))
             {
-                this.userCollection.Add(model.Key, requestFactory.Create<UserModel, UserModel>(model));
+                this.userCollection.Add(model.Key, operationMapper.Create<UserModel, UserModel>(model));
 
                 return Task.FromResult(model.Key);
             }
@@ -347,7 +347,7 @@ public sealed class UserManagementTests
             throw new UserExistsException($"Custom: Another user with the same key `{model.Key}` already exists.");
         }
 
-        public async Task UpdateAsync(IntKey key, UserModel model, IRequestFactory requestFactory)
+        public async Task UpdateAsync(IntKey key, UserModel model, IUserOperationMapper operationMapper)
         {
             if (!this.userCollection.ContainsKey(key))
             {
@@ -356,7 +356,7 @@ public sealed class UserManagementTests
 
             this.userCollection.Remove(key);
 
-            await this.CreateAsync(model, requestFactory)
+            await this.CreateAsync(model, operationMapper)
                       .ConfigureAwait(false);
         }
 

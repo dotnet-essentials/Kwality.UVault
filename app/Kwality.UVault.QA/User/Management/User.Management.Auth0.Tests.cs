@@ -45,9 +45,10 @@ using Kwality.UVault.User.Management.Auth0.Configuration;
 using Kwality.UVault.User.Management.Auth0.Extensions;
 using Kwality.UVault.User.Management.Auth0.Keys;
 using Kwality.UVault.User.Management.Auth0.Mapping.Abstractions;
+using Kwality.UVault.User.Management.Auth0.Operations.Mappers;
 using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Factories;
 using Kwality.UVault.User.Management.Managers;
+using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
 
 using Xunit;
 
@@ -98,7 +99,7 @@ public sealed class UserManagementAuth0Tests
 
         try
         {
-            userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                       .ConfigureAwait(false);
 
             // ACT.
@@ -142,7 +143,7 @@ public sealed class UserManagementAuth0Tests
             foreach (UserModel model in models)
             {
                 userIds.Add(
-                    await userManager.CreateAsync(model, new UserCreateRequestFactory())
+                    await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                      .ConfigureAwait(false));
             }
 
@@ -188,15 +189,15 @@ public sealed class UserManagementAuth0Tests
         try
         {
             userIds.Add(
-                await userManager.CreateAsync(model, new UserCreateRequestFactory())
+                await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                  .ConfigureAwait(false));
 
             userIds.Add(
-                await userManager.CreateAsync(model, new UserCreateRequestFactory("DEV-CNN-1"))
+                await userManager.CreateAsync(model, new UserCreateUserOperationMapper("DEV-CNN-1"))
                                  .ConfigureAwait(false));
 
             userIds.Add(
-                await userManager.CreateAsync(model, new UserCreateRequestFactory("DEV-CNN-2"))
+                await userManager.CreateAsync(model, new UserCreateUserOperationMapper("DEV-CNN-2"))
                                  .ConfigureAwait(false));
 
             // ACT.
@@ -239,7 +240,7 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // ACT.
-            userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                       .ConfigureAwait(false);
 
             // ASSERT.
@@ -281,7 +282,7 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // ACT.
-            userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                       .ConfigureAwait(false);
 
             // ASSERT.
@@ -319,11 +320,11 @@ public sealed class UserManagementAuth0Tests
 
         try
         {
-            userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                       .ConfigureAwait(false);
 
             // ACT.
-            Func<Task<StringKey>> act = () => userManager.CreateAsync(model, new UserCreateRequestFactory());
+            Func<Task<StringKey>> act = () => userManager.CreateAsync(model, new UserCreateUserOperationMapper());
 
             // ASSERT.
             await act.Should()
@@ -361,14 +362,14 @@ public sealed class UserManagementAuth0Tests
 
         try
         {
-            userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                       .ConfigureAwait(false);
 
             // ACT.
             model.FirstName = "Updated: FirstName.";
             model.Name = "Updated: Name.";
 
-            await userManager.UpdateAsync(userId, model, new UserUpdateRequestFactory())
+            await userManager.UpdateAsync(userId, model, new UserUpdateUserOperationMapper())
                              .ConfigureAwait(false);
 
             // ASSERT.
@@ -406,7 +407,7 @@ public sealed class UserManagementAuth0Tests
             (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         // ACT.
-        Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateRequestFactory());
+        Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateUserOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -430,7 +431,7 @@ public sealed class UserManagementAuth0Tests
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
             (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
-        StringKey userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        StringKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                             .ConfigureAwait(false);
 
         // ACT.
@@ -561,62 +562,50 @@ public sealed class UserManagementAuth0Tests
         }
     }
 
-    private sealed class UserCreateRequestFactory : IRequestFactory
+    private sealed class UserCreateUserOperationMapper : Auth0UserCreateOperationMapper
     {
         private readonly string connection;
 
-        public UserCreateRequestFactory(string connection = "Username-Password-Authentication")
+        public UserCreateUserOperationMapper(string connection = "Username-Password-Authentication")
         {
             this.connection = connection;
         }
 
-        public TDestination Create<TSource, TDestination>(TSource source)
-            where TDestination : class
+        protected override UserCreateRequest Map<TSource>(TSource source)
         {
-            if (typeof(TDestination) != typeof(UserCreateRequest))
-            {
-                throw new UserCreationException(
-                    $"Invalid {nameof(IRequestFactory)}: Destination is NOT `{nameof(UserCreateRequest)}`.");
-            }
-
             if (source is UserModel model)
             {
                 // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-                return (new UserCreateRequest
+                return new UserCreateRequest
                 {
                     Email = model.Key.Value,
                     Connection = this.connection,
                     Password = model.Password,
-                } as TDestination)!;
+                };
             }
 
-            throw new UserCreationException($"Invalid {nameof(IRequestFactory)}: Source is NOT `{nameof(UserModel)}`.");
+            throw new UserCreationException(
+                $"Invalid {nameof(IUserOperationMapper)}: Source is NOT `{nameof(UserModel)}`.");
         }
     }
 
-    private sealed class UserUpdateRequestFactory : IRequestFactory
+    private sealed class UserUpdateUserOperationMapper : Auth0UserUpdateOperationMapper
     {
-        public TDestination Create<TSource, TDestination>(TSource source)
-            where TDestination : class
+        protected override UserUpdateRequest Map<TSource>(TSource source)
         {
-            if (typeof(TDestination) != typeof(UserUpdateRequest))
-            {
-                throw new UserCreationException(
-                    $"Invalid {nameof(IRequestFactory)}: Destination is NOT `{nameof(UserCreateRequest)}`.");
-            }
-
             if (source is UserModel model)
             {
                 // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-                return (new UserUpdateRequest
+                return new UserUpdateRequest
                 {
                     Email = model.Key.Value,
                     FirstName = model.FirstName,
                     LastName = model.Name,
-                } as TDestination)!;
+                };
             }
 
-            throw new UserCreationException($"Invalid {nameof(IRequestFactory)}: Source is NOT `{nameof(UserModel)}`.");
+            throw new UserUpdateException(
+                $"Invalid {nameof(IUserOperationMapper)}: Source is NOT `{nameof(UserModel)}`.");
         }
     }
 

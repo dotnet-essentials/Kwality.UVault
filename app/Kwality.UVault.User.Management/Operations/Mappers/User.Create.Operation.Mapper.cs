@@ -22,53 +22,23 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Managers;
+namespace Kwality.UVault.User.Management.Operations.Mappers;
 
-using JetBrains.Annotations;
-
-using Kwality.UVault.User.Management.Models;
+using Kwality.UVault.User.Management.Exceptions;
 using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
-using Kwality.UVault.User.Management.Stores.Abstractions;
 
-[PublicAPI]
-public sealed class UserManager<TModel, TKey>
-    where TModel : UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+public sealed class UserCreateOperationMapper : IUserOperationMapper
 {
-    private readonly IUserStore<TModel, TKey> userStore;
-
-    public UserManager(IUserStore<TModel, TKey> userStore)
+    public TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class
     {
-        this.userStore = userStore;
-    }
+        if (typeof(TDestination) != typeof(TSource))
+        {
+            throw new UserCreationException(
+                $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
+        }
 
-    // Stryker disable once all
-    public Task<TModel> GetByKeyAsync(TKey key)
-    {
-        return this.userStore.GetByKeyAsync(key);
-    }
-
-    // Stryker disable once all
-    public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
-    {
-        return this.userStore.GetByEmailAsync(email);
-    }
-
-    // Stryker disable once all
-    public Task<TKey> CreateAsync(TModel user, IUserOperationMapper userOperationMapper)
-    {
-        return this.userStore.CreateAsync(user, userOperationMapper);
-    }
-
-    // Stryker disable once all
-    public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper userOperationMapper)
-    {
-        return this.userStore.UpdateAsync(key, model, userOperationMapper);
-    }
-
-    // Stryker disable once all
-    public Task DeleteByKeyAsync(TKey key)
-    {
-        return this.userStore.DeleteByKeyAsync(key);
+        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+        return (source as TDestination)!;
     }
 }

@@ -35,10 +35,10 @@ using JetBrains.Annotations;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Factories;
 using Kwality.UVault.User.Management.Keys;
 using Kwality.UVault.User.Management.Managers;
 using Kwality.UVault.User.Management.Models;
+using Kwality.UVault.User.Management.Operations.Mappers;
 
 using Xunit;
 
@@ -71,7 +71,7 @@ public sealed class UserManagementDefaultTests
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager = new UserManagerFactory().Create<UserModel, IntKey>();
 
-        await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        await userManager.CreateAsync(model, new UserCreateOperationMapper())
                          .ConfigureAwait(false);
 
         // ACT.
@@ -93,7 +93,7 @@ public sealed class UserManagementDefaultTests
 
         foreach (UserModel model in models)
         {
-            await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            await userManager.CreateAsync(model, new UserCreateOperationMapper())
                              .ConfigureAwait(false);
         }
 
@@ -119,7 +119,7 @@ public sealed class UserManagementDefaultTests
 
         foreach (UserModel model in models)
         {
-            await userManager.CreateAsync(model, new UserCreateRequestFactory())
+            await userManager.CreateAsync(model, new UserCreateOperationMapper())
                              .ConfigureAwait(false);
         }
 
@@ -144,7 +144,7 @@ public sealed class UserManagementDefaultTests
         UserManager<UserModel, IntKey> userManager = new UserManagerFactory().Create<UserModel, IntKey>();
 
         // ACT.
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        IntKey userId = await userManager.CreateAsync(model, new UserCreateOperationMapper())
                                          .ConfigureAwait(false);
 
         // ASSERT.
@@ -161,11 +161,11 @@ public sealed class UserManagementDefaultTests
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager = new UserManagerFactory().Create<UserModel, IntKey>();
 
-        await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        await userManager.CreateAsync(model, new UserCreateOperationMapper())
                          .ConfigureAwait(false);
 
         // ACT.
-        Func<Task<IntKey>> act = () => userManager.CreateAsync(model, new UserCreateRequestFactory());
+        Func<Task<IntKey>> act = () => userManager.CreateAsync(model, new UserCreateOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -182,13 +182,13 @@ public sealed class UserManagementDefaultTests
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager = new UserManagerFactory().Create<UserModel, IntKey>();
 
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        IntKey userId = await userManager.CreateAsync(model, new UserCreateOperationMapper())
                                          .ConfigureAwait(false);
 
         // ACT.
         model.Email = "kwality.uvault@github.com";
 
-        await userManager.UpdateAsync(userId, model, new UserUpdateRequestFactory())
+        await userManager.UpdateAsync(userId, model, new UserCreateOperationMapper())
                          .ConfigureAwait(false);
 
         // ASSERT.
@@ -206,7 +206,7 @@ public sealed class UserManagementDefaultTests
         UserManager<UserModel, IntKey> userManager = new UserManagerFactory().Create<UserModel, IntKey>();
 
         // ACT.
-        Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateRequestFactory());
+        Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -223,7 +223,7 @@ public sealed class UserManagementDefaultTests
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager = new UserManagerFactory().Create<UserModel, IntKey>();
 
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateRequestFactory())
+        IntKey userId = await userManager.CreateAsync(model, new UserCreateOperationMapper())
                                          .ConfigureAwait(false);
 
         // ACT.
@@ -265,38 +265,6 @@ public sealed class UserManagementDefaultTests
         public UserModel(IntKey key, string email)
             : base(key, email)
         {
-        }
-    }
-
-    private sealed class UserCreateRequestFactory : IRequestFactory
-    {
-        public TDestination Create<TSource, TDestination>(TSource source)
-            where TDestination : class
-        {
-            if (typeof(TDestination) != typeof(TSource))
-            {
-                throw new UserCreationException(
-                    $"Invalid {nameof(IRequestFactory)}: Destination is NOT `{nameof(TSource)}`.");
-            }
-
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
-        }
-    }
-
-    private sealed class UserUpdateRequestFactory : IRequestFactory
-    {
-        public TDestination Create<TSource, TDestination>(TSource source)
-            where TDestination : class
-        {
-            if (typeof(TDestination) != typeof(TSource))
-            {
-                throw new UserCreationException(
-                    $"Invalid {nameof(IRequestFactory)}: Destination is NOT `{nameof(TSource)}`.");
-            }
-
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
         }
     }
 
