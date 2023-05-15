@@ -22,7 +22,9 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.User.Management.Mappers;
+namespace Kwality.UVault.QA.Management.User.Mappers;
+
+using Auth0.ManagementApi.Models;
 
 using AutoFixture.Xunit2;
 
@@ -31,13 +33,13 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.QA.Internal.Xunit.Traits;
+using Kwality.UVault.User.Management.Auth0.Operations.Mappers;
 using Kwality.UVault.Users.Exceptions;
-using Kwality.UVault.Users.Operations.Mappers;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 using Xunit;
 
-public sealed class UserUpdateOperationMapperTests
+public sealed class Auth0UserCreateOperationMapperTests
 {
     [UserManagement]
     [AutoData]
@@ -45,15 +47,15 @@ public sealed class UserUpdateOperationMapperTests
     internal void MapSourceToDestination_InvalidDestination_RaisesException(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new UserUpdateOperationMapper();
+        var mapper = new UserCreateOperationMapper();
 
         // ACT.
         Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
 
         // ASSERT.
         act.Should()
-           .Throw<UserUpdateException>()
-           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
+           .Throw<UserCreationException>()
+           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserCreateRequest)}`.");
     }
 
     [UserManagement]
@@ -62,14 +64,22 @@ public sealed class UserUpdateOperationMapperTests
     internal void MapSourceToDestination_Succeeds(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new UserUpdateOperationMapper();
+        var mapper = new UserCreateOperationMapper();
 
         // ACT.
-        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
+        UserCreateRequest result = mapper.Create<ModelOne, UserCreateRequest>(model);
 
         // ASSERT.
         result.Should()
-              .BeEquivalentTo(model);
+              .BeEquivalentTo(new UserCreateRequest());
+    }
+
+    private sealed class UserCreateOperationMapper : Auth0UserCreateOperationMapper
+    {
+        protected override UserCreateRequest Map<TSource>(TSource source)
+        {
+            return new UserCreateRequest();
+        }
     }
 
     [UsedImplicitly]

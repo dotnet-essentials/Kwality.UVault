@@ -22,9 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.User.Management.Mappers;
-
-using Auth0.ManagementApi.Models;
+namespace Kwality.UVault.QA.Management.User.Mappers;
 
 using AutoFixture.Xunit2;
 
@@ -33,13 +31,13 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.User.Management.Auth0.Operations.Mappers;
 using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Operations.Mappers;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 using Xunit;
 
-public sealed class Auth0UserUpdateOperationMapperTests
+public sealed class UserUpdateOperationMapperTests
 {
     [UserManagement]
     [AutoData]
@@ -55,7 +53,7 @@ public sealed class Auth0UserUpdateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<UserUpdateException>()
-           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserUpdateRequest)}`.");
+           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
     }
 
     [UserManagement]
@@ -67,19 +65,11 @@ public sealed class Auth0UserUpdateOperationMapperTests
         var mapper = new UserUpdateOperationMapper();
 
         // ACT.
-        UserUpdateRequest result = mapper.Create<ModelOne, UserUpdateRequest>(model);
+        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
 
         // ASSERT.
         result.Should()
-              .BeEquivalentTo(new UserUpdateRequest());
-    }
-
-    private sealed class UserUpdateOperationMapper : Auth0UserUpdateOperationMapper
-    {
-        protected override UserUpdateRequest Map<TSource>(TSource source)
-        {
-            return new UserUpdateRequest();
-        }
+              .BeEquivalentTo(model);
     }
 
     [UsedImplicitly]
