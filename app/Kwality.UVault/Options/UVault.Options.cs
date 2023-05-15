@@ -33,5 +33,5 @@ public sealed class UVaultOptions
         this.Services = services;
     }
 
-    public IServiceCollection Services { get; }
+    internal IServiceCollection Services { get; }
 }
