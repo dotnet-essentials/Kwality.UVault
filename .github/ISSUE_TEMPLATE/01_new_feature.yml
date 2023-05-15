@@ -54,8 +54,6 @@ body:
       label: Proposed API
       description: Please describe the proposed API
       placeholder: Proposed API
-    validations:
-      required: true
   - type: textarea
     id: acceptance_criteria
     attributes:
