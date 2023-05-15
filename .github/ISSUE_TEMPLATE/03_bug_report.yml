@@ -43,10 +43,12 @@ body:
   - type: dropdown
     id: components
     attributes:
-      label: Which component does the issue targets?
+      label: Which component(s) does the issue targets?
       multiple: false
       options:
         - Core
+        - Identity & access management
+        - User Management (Auth0)
   - type: textarea
     id: description
     attributes:

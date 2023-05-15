@@ -36,7 +36,7 @@ body:
     attributes:
       label: Background and motivation
       description: Please describe the purpose of the new feature.
-      placeholder: Background and motiviation
+      placeholder: Background and motivation
     validations:
       required: true
   - type: dropdown
