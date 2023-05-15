@@ -27,6 +27,9 @@
 name: Continuous integration (Auth0)
 run-name: "Continuous integration (branch: \u0022${{ github.ref_name }}\u0022)\u0022"
 
+# To ensure that we don't face Auth0's "Rate Limit", we prevent that this action runs concurrently.
+concurrency: testing
+
 # TRIGGER(S).
 on:
   workflow_dispatch:
