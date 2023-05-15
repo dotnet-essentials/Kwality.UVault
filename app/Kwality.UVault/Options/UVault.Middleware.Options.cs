@@ -33,5 +33,5 @@ public sealed class UVaultMiddlewareOptions
         this.App = app;
     }
 
-    public IApplicationBuilder App { get; }
+    internal IApplicationBuilder App { get; }
 }

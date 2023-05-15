@@ -29,6 +29,7 @@ using JetBrains.Annotations;
 using Kwality.UVault.IAM.Options;
 using Kwality.UVault.Options;
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,7 +40,17 @@ public static class UVaultOptionsExtensions
     public static void UseIAM(this UVaultOptions options, Action<IAMOptions>? action)
     {
         ArgumentNullException.ThrowIfNull(action);
-        action.Invoke(new IAMOptions(options.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)));
+
+        // Setup authentication / authorization.
+        AuthenticationBuilder authenticationBuilder
+            = options.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+
+        var iamOptions = new IAMOptions(authenticationBuilder);
+
+        // Configure UVault's IAM component.
+        action.Invoke(iamOptions);
+
+        // Add ASP.NET's services to support authorization.
         options.Services.AddAuthorization();
     }
 }
