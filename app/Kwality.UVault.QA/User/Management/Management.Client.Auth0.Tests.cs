@@ -34,7 +34,6 @@ using FluentAssertions;
 
 using Kwality.UVault.QA.Internal.Extensions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.User.Management.Auth0;
 using Kwality.UVault.User.Management.Auth0.Configuration;
 using Kwality.UVault.User.Management.Auth0.Exceptions;
 using Kwality.UVault.User.Management.Auth0.Internal.API.Clients;
@@ -44,6 +43,7 @@ using Moq;
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
+[Collection("Auth0")]
 public sealed class Auth0ManagementClientTests
 {
     private const string testPrefix = "Request an API management token";
