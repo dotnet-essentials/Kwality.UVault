@@ -46,7 +46,7 @@ public static class UVaultOptionsExtensions
     }
 
     public static void UseUserManagement<TModel, TKey>(
-        this UVaultOptions options, Action<IServiceProvider, UserManagementOptions<TModel, TKey>>? optionsAction)
+        this UVaultOptions options, Action<UserManagementOptions<TModel, TKey>>? action)
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -54,12 +54,6 @@ public static class UVaultOptionsExtensions
         // When some options are provided, they will be overridden.
         options.Services.AddScoped<UserManager<TModel, TKey>>();
         options.Services.AddScoped<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
-
-        // Apply the options to customize the implementation.
-        using IServiceScope serviceProviderScope = options.Services.BuildServiceProvider()
-                                                          .CreateScope();
-
-        optionsAction?.Invoke(
-            serviceProviderScope.ServiceProvider, new UserManagementOptions<TModel, TKey>(options.Services));
+        action?.Invoke(new UserManagementOptions<TModel, TKey>(options.Services));
     }
 }

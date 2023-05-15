@@ -60,7 +60,7 @@ public sealed class IAMDefaultTests
         var serviceCollection = new ServiceCollection();
 
         // ACT.
-        Action act = () => serviceCollection.AddUVault(static options => options.UseIAM(null));
+        Action act = () => serviceCollection.AddUVault(static (_, options) => options.UseIAM(null));
 
         // ASSERT.
         act.Should()
@@ -81,11 +81,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },
@@ -121,11 +121,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },
@@ -162,11 +162,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },
@@ -208,11 +208,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },

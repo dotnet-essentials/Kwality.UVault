@@ -53,7 +53,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         // ACT.
         Func<Task<UserModel>> act = () => userManager.GetByKeyAsync(key);
@@ -72,7 +72,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                          .ConfigureAwait(false);
@@ -93,7 +93,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         foreach (UserModel model in models)
         {
@@ -120,7 +120,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         foreach (UserModel model in models)
         {
@@ -147,7 +147,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         // ACT.
         IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
@@ -166,7 +166,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                          .ConfigureAwait(false);
@@ -188,7 +188,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                          .ConfigureAwait(false);
@@ -212,7 +212,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         // ACT.
         Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateUserOperationMapper());
@@ -231,7 +231,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                          .ConfigureAwait(false);
@@ -256,7 +256,7 @@ public sealed class UserManagementTests
     {
         // ARRANGE.
         UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static (_, options) => options.UseStore<UserStore>());
+            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         // ACT.
         Func<Task> act = () => userManager.DeleteByKeyAsync(key);

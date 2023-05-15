@@ -68,7 +68,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         // ACT.
         Func<Task<UserModel>> act = () => userManager.GetByKeyAsync(key);
@@ -93,7 +93,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         StringKey? userId = null;
 
@@ -134,7 +134,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         var userIds = new List<StringKey>();
 
@@ -182,7 +182,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         var userIds = new List<StringKey>();
 
@@ -233,7 +233,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         StringKey? userId = null;
 
@@ -275,7 +275,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         StringKey? userId = null;
 
@@ -314,7 +314,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         StringKey? userId = null;
 
@@ -356,7 +356,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         StringKey? userId = null;
 
@@ -404,7 +404,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         // ACT.
         Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateUserOperationMapper());
@@ -429,7 +429,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         StringKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
                                             .ConfigureAwait(false);
@@ -460,7 +460,7 @@ public sealed class UserManagementAuth0Tests
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
         UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            (_, options) => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
+            options => options.UseAuth0Store<UserModel, UserModelMapper>(apiConfiguration));
 
         // ACT.
         Func<Task> act = () => userManager.DeleteByKeyAsync(key);

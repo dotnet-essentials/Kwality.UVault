@@ -84,10 +84,10 @@ public sealed class IAMTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        static options =>
+                        static (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(static (_, options) => options.UseJwtValidator<JwtValidator>());
+                            options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
                         });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
@@ -120,10 +120,10 @@ public sealed class IAMTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        static options =>
+                        static (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(static (_, options) => options.UseJwtValidator<JwtValidator>());
+                            options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
                         });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
@@ -157,10 +157,10 @@ public sealed class IAMTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        static options =>
+                        static (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(static (_, options) => options.UseJwtValidator<JwtValidator>());
+                            options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
                         });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),

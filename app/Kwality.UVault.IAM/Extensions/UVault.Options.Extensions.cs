@@ -36,17 +36,10 @@ using Microsoft.Extensions.DependencyInjection;
 public static class UVaultOptionsExtensions
 {
     // ReSharper disable once InconsistentNaming
-    public static void UseIAM(this UVaultOptions options, Action<IServiceProvider, IAMOptions>? optionsAction)
+    public static void UseIAM(this UVaultOptions options, Action<IAMOptions>? action)
     {
-        ArgumentNullException.ThrowIfNull(optionsAction);
-
-        using (IServiceScope serviceProviderScope = options.Services.BuildServiceProvider()
-                                                           .CreateScope())
-        {
-            var iamOptions = new IAMOptions(options.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme));
-            optionsAction.Invoke(serviceProviderScope.ServiceProvider, iamOptions);
-        }
-
+        ArgumentNullException.ThrowIfNull(action);
+        action.Invoke(new IAMOptions(options.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)));
         options.Services.AddAuthorization();
     }
 }
