@@ -116,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        projects: [ 'Kwality.UVault', 'Kwality.UVault.IAM' ]
+        projects: [ 'Kwality.UVault', 'Kwality.UVault.IAM', 'Kwality.UVault.User.Management', 'Kwality.UVault.User.Management.Auth0' ]
     steps:
       - name: GIT Clone
         uses: actions/checkout@v3
