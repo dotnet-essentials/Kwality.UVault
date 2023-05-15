@@ -26,6 +26,15 @@
 # Defines how releases are managed on GitHub.
 changelog:
   categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - Semver major
+    - title: Exciting New Features 🎉
+      labels:
+        - Semver minor
+    - title: Bug fixes 🐞
+      labels:
+        - Bugfix
     - title: Breaking Changes (Identity & access management) 🛠
       labels:
         - IAM (Semver major)
