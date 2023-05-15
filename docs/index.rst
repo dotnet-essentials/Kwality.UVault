@@ -14,8 +14,20 @@ It is compatible with the following platforms:
 
   IAM/introduction
   IAM/installation
-  IAM/default-validator
+  IAM/getting-started
   IAM/custom-validator
+
+.. _user_management_doc:
+.. toctree::
+  :maxdepth: 2
+  :caption: User Management
+
+  user-management/introduction
+  user-management/key-concepts
+  user-management/installation
+  user-management/getting-started
+  user-management/auth0-store
+  user-management/custom-store
 
 .. _contributing_docs:
 .. toctree::
