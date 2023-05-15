@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        projects: [ 'Kwality.UVault', 'Kwality.UVault.IAM', 'Kwality.UVault.User.Management', 'Kwality.UVault.User.Management.Auth0' ]
+        projects: [ 'Kwality.UVault', 'Kwality.UVault.User.Management.Auth0' ]
       max-parallel: 1
     steps:
       - name: GIT Clone

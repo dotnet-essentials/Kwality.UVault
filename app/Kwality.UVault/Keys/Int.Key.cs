@@ -22,23 +22,52 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Operations.Mappers;
+namespace Kwality.UVault.Keys;
 
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
+using System.Diagnostics.CodeAnalysis;
 
-public sealed class UserUpdateOperationMapper : IUserOperationMapper
+using JetBrains.Annotations;
+
+[UsedImplicitly]
+[ExcludeFromCodeCoverage]
+public sealed class IntKey : IEqualityComparer<IntKey>
 {
-    public TDestination Create<TSource, TDestination>(TSource source)
-        where TDestination : class
+    private readonly int value;
+
+    public IntKey(int value)
     {
-        if (typeof(TDestination) != typeof(TSource))
+        this.value = value;
+    }
+
+    public bool Equals(IntKey? x, IntKey? y)
+    {
+        if (ReferenceEquals(x, y))
         {
-            throw new UserUpdateException(
-                $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
+            return true;
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (source as TDestination)!;
+        if (ReferenceEquals(x, null))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(y, null))
+        {
+            return false;
+        }
+
+        if (x.GetType() != y.GetType())
+        {
+            return false;
+        }
+
+        return x.value == y.value;
+    }
+
+    public int GetHashCode(IntKey obj)
+    {
+        ArgumentNullException.ThrowIfNull(obj);
+
+        return obj.value;
     }
 }

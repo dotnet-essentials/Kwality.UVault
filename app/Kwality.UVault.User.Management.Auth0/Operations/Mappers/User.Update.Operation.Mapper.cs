@@ -28,8 +28,8 @@ using global::Auth0.ManagementApi.Models;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 [PublicAPI]
 public abstract class Auth0UserUpdateOperationMapper : IUserOperationMapper

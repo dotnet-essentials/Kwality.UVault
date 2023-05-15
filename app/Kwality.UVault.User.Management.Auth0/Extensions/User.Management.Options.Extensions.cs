@@ -32,7 +32,7 @@ using Kwality.UVault.User.Management.Auth0.Internal.Stores;
 using Kwality.UVault.User.Management.Auth0.Keys;
 using Kwality.UVault.User.Management.Auth0.Mapping.Abstractions;
 using Kwality.UVault.User.Management.Auth0.Models;
-using Kwality.UVault.User.Management.Options;
+using Kwality.UVault.Users.Options;
 
 using Microsoft.Extensions.DependencyInjection;
 

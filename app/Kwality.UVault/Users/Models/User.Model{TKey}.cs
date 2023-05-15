@@ -22,23 +22,20 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Operations.Mappers;
+namespace Kwality.UVault.Users.Models;
 
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
+using JetBrains.Annotations;
 
-public sealed class UserCreateOperationMapper : IUserOperationMapper
+[PublicAPI]
+public class UserModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public TDestination Create<TSource, TDestination>(TSource source)
-        where TDestination : class
+    protected UserModel(TKey key, string email)
     {
-        if (typeof(TDestination) != typeof(TSource))
-        {
-            throw new UserCreationException(
-                $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
-        }
-
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (source as TDestination)!;
+        this.Key = key;
+        this.Email = email;
     }
+
+    public TKey Key { get; set; }
+    public string Email { get; set; }
 }

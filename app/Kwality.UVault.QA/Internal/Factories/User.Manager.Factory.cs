@@ -25,10 +25,10 @@
 namespace Kwality.UVault.QA.Internal.Factories;
 
 using Kwality.UVault.Extensions;
-using Kwality.UVault.User.Management.Extensions;
-using Kwality.UVault.User.Management.Managers;
-using Kwality.UVault.User.Management.Models;
-using Kwality.UVault.User.Management.Options;
+using Kwality.UVault.Users.Extensions;
+using Kwality.UVault.Users.Managers;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Options;
 
 using Microsoft.Extensions.DependencyInjection;
 

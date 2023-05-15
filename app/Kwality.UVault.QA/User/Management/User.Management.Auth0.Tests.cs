@@ -46,9 +46,9 @@ using Kwality.UVault.User.Management.Auth0.Extensions;
 using Kwality.UVault.User.Management.Auth0.Keys;
 using Kwality.UVault.User.Management.Auth0.Mapping.Abstractions;
 using Kwality.UVault.User.Management.Auth0.Operations.Mappers;
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Managers;
-using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Managers;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 using Xunit;
 

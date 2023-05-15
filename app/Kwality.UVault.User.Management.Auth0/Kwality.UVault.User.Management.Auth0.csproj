@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kwality.UVault.User.Management\Kwality.UVault.User.Management.csproj" />
+    <ProjectReference Include="..\Kwality.UVault\Kwality.UVault.csproj" />
   </ItemGroup>
 
 </Project>

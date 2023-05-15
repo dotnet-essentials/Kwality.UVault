@@ -22,6 +22,23 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-using System.Runtime.InteropServices;
+namespace Kwality.UVault.Users.Operations.Mappers;
 
-[assembly: ComVisible(false)]
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
+
+public sealed class UserCreateOperationMapper : IUserOperationMapper
+{
+    public TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class
+    {
+        if (typeof(TDestination) != typeof(TSource))
+        {
+            throw new UserCreationException(
+                $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
+        }
+
+        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+        return (source as TDestination)!;
+    }
+}

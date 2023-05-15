@@ -22,12 +22,12 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Internal.Stores;
+namespace Kwality.UVault.Users.Internal.Stores;
 
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Models;
-using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
-using Kwality.UVault.User.Management.Stores.Abstractions;
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
+using Kwality.UVault.Users.Stores.Abstractions;
 
 internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
     where TModel : UserModel<TKey>

@@ -22,30 +22,53 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Options;
+namespace Kwality.UVault.Users.Managers;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.User.Management.Models;
-using Kwality.UVault.User.Management.Stores.Abstractions;
-
-using Microsoft.Extensions.DependencyInjection;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
+using Kwality.UVault.Users.Stores.Abstractions;
 
 [PublicAPI]
-public sealed class UserManagementOptions<TModel, TKey>
+public sealed class UserManager<TModel, TKey>
     where TModel : UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    internal UserManagementOptions(IServiceCollection serviceCollection)
+    private readonly IUserStore<TModel, TKey> userStore;
+
+    public UserManager(IUserStore<TModel, TKey> userStore)
     {
-        this.ServiceCollection = serviceCollection;
+        this.userStore = userStore;
     }
 
-    public IServiceCollection ServiceCollection { get; }
-
-    public void UseStore<TStore>()
-        where TStore : class, IUserStore<TModel, TKey>
+    // Stryker disable once all
+    public Task<TModel> GetByKeyAsync(TKey key)
     {
-        this.ServiceCollection.AddScoped<IUserStore<TModel, TKey>, TStore>();
+        return this.userStore.GetByKeyAsync(key);
+    }
+
+    // Stryker disable once all
+    public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
+    {
+        return this.userStore.GetByEmailAsync(email);
+    }
+
+    // Stryker disable once all
+    public Task<TKey> CreateAsync(TModel user, IUserOperationMapper userOperationMapper)
+    {
+        return this.userStore.CreateAsync(user, userOperationMapper);
+    }
+
+    // Stryker disable once all
+    public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper userOperationMapper)
+    {
+        return this.userStore.UpdateAsync(key, model, userOperationMapper);
+    }
+
+    // Stryker disable once all
+    public Task DeleteByKeyAsync(TKey key)
+    {
+        return this.userStore.DeleteByKeyAsync(key);
     }
 }

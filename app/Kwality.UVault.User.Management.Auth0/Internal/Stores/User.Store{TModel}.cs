@@ -34,9 +34,9 @@ using Kwality.UVault.User.Management.Auth0.Internal.API.Clients;
 using Kwality.UVault.User.Management.Auth0.Keys;
 using Kwality.UVault.User.Management.Auth0.Mapping.Abstractions;
 using Kwality.UVault.User.Management.Auth0.Models;
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
-using Kwality.UVault.User.Management.Stores.Abstractions;
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
+using Kwality.UVault.Users.Stores.Abstractions;
 
 [UsedImplicitly]
 internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>

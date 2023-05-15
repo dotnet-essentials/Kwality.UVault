@@ -34,8 +34,8 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.User.Management.Auth0.Operations.Mappers;
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 using Xunit;
 

@@ -1,4 +1,4 @@
-// =====================================================================================================================
+﻿// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,10 +22,31 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
+namespace Kwality.UVault.Users.Exceptions;
 
-public interface IUserOperationMapper
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+
+[Serializable]
+[ExcludeFromCodeCoverage]
+public sealed class UserNotFoundException : Exception
 {
-    TDestination Create<TSource, TDestination>(TSource source)
-        where TDestination : class;
+    public UserNotFoundException()
+    {
+    }
+
+    public UserNotFoundException(string message)
+        : base(message)
+    {
+    }
+
+    public UserNotFoundException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
+
+    private UserNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        : base(serializationInfo, streamingContext)
+    {
+    }
 }

@@ -30,9 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kwality.UVault.IAM\Kwality.UVault.IAM.csproj" />
     <ProjectReference Include="..\Kwality.UVault.User.Management.Auth0\Kwality.UVault.User.Management.Auth0.csproj" />
-    <ProjectReference Include="..\Kwality.UVault.User.Management\Kwality.UVault.User.Management.csproj" />
     <ProjectReference Include="..\Kwality.UVault\Kwality.UVault.csproj" />
   </ItemGroup>
 

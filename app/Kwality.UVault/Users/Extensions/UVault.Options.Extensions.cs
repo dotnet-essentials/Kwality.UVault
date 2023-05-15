@@ -22,52 +22,38 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Keys;
-
-using System.Diagnostics.CodeAnalysis;
+namespace Kwality.UVault.Users.Extensions;
 
 using JetBrains.Annotations;
 
-[UsedImplicitly]
-[ExcludeFromCodeCoverage]
-public sealed class IntKey : IEqualityComparer<IntKey>
+using Kwality.UVault.Options;
+using Kwality.UVault.Users.Internal.Stores;
+using Kwality.UVault.Users.Managers;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Options;
+using Kwality.UVault.Users.Stores.Abstractions;
+
+using Microsoft.Extensions.DependencyInjection;
+
+[PublicAPI]
+public static class UVaultOptionsExtensions
 {
-    private readonly int value;
-
-    public IntKey(int value)
+    public static void UseUserManagement<TModel, TKey>(this UVaultOptions options)
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
     {
-        this.value = value;
+        options.UseUserManagement<TModel, TKey>(null);
     }
 
-    public bool Equals(IntKey? x, IntKey? y)
+    public static void UseUserManagement<TModel, TKey>(
+        this UVaultOptions options, Action<UserManagementOptions<TModel, TKey>>? action)
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
+        options.Services.AddScoped<UserManager<TModel, TKey>>();
+        options.Services.AddScoped<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.value == y.value;
-    }
-
-    public int GetHashCode(IntKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.value;
+        // Configure UVault's User Management component.
+        action?.Invoke(new UserManagementOptions<TModel, TKey>(options.Services));
     }
 }

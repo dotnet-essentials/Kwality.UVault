@@ -22,38 +22,30 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Extensions;
+namespace Kwality.UVault.Users.Options;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Options;
-using Kwality.UVault.User.Management.Internal.Stores;
-using Kwality.UVault.User.Management.Managers;
-using Kwality.UVault.User.Management.Models;
-using Kwality.UVault.User.Management.Options;
-using Kwality.UVault.User.Management.Stores.Abstractions;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Stores.Abstractions;
 
 using Microsoft.Extensions.DependencyInjection;
 
 [PublicAPI]
-public static class UVaultOptionsExtensions
+public sealed class UserManagementOptions<TModel, TKey>
+    where TModel : UserModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public static void UseUserManagement<TModel, TKey>(this UVaultOptions options)
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+    internal UserManagementOptions(IServiceCollection serviceCollection)
     {
-        options.UseUserManagement<TModel, TKey>(null);
+        this.ServiceCollection = serviceCollection;
     }
 
-    public static void UseUserManagement<TModel, TKey>(
-        this UVaultOptions options, Action<UserManagementOptions<TModel, TKey>>? action)
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+    public IServiceCollection ServiceCollection { get; }
+
+    public void UseStore<TStore>()
+        where TStore : class, IUserStore<TModel, TKey>
     {
-        // Add the "default" services.
-        // When some options are provided, they will be overridden.
-        options.Services.AddScoped<UserManager<TModel, TKey>>();
-        options.Services.AddScoped<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
-        action?.Invoke(new UserManagementOptions<TModel, TKey>(options.Services));
+        this.ServiceCollection.AddScoped<IUserStore<TModel, TKey>, TStore>();
     }
 }

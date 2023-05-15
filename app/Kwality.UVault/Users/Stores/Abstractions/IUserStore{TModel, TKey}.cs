@@ -22,32 +22,18 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.User.Management.Exceptions;
+namespace Kwality.UVault.Users.Stores.Abstractions;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
-[Serializable]
-[ExcludeFromCodeCoverage]
-public sealed class UserExistsException : Exception
+public interface IUserStore<TModel, TKey>
+    where TModel : UserModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public UserExistsException()
-    {
-    }
-
-    public UserExistsException(string message)
-        : base(message)
-    {
-    }
-
-    public UserExistsException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
-
-    private UserExistsException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
-    {
-    }
+    Task<TModel> GetByKeyAsync(TKey key);
+    Task<IEnumerable<TModel>> GetByEmailAsync(string email);
+    Task<TKey> CreateAsync(TModel model, IUserOperationMapper operationMapper);
+    Task UpdateAsync(TKey key, TModel model, IUserOperationMapper operationMapper);
+    Task DeleteByKeyAsync(TKey key);
 }
-

@@ -32,13 +32,13 @@ using FluentAssertions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Keys;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.User.Management.Exceptions;
-using Kwality.UVault.User.Management.Keys;
-using Kwality.UVault.User.Management.Managers;
-using Kwality.UVault.User.Management.Models;
-using Kwality.UVault.User.Management.Operations.Mappers;
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Managers;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Operations.Mappers;
 
 using Xunit;
 
