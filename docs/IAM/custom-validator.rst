@@ -1,10 +1,13 @@
+.. _iam_custom-validator:
+
 Custom JWT validator
 ====================
 
 Sometimes, it may be necessary to customize the Identity & Access Management (IAM) options in UVault.
 For instance, in development, it might be necessary to turn off JWT validation.
 
-To accomplish this, you can create a new class that implements the ``IJwtValidator`` interface.
+To accomplish this, you can create a new class that implements the `IJwtValidator <https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.IAM/Validators/Abstractions/IJwt.Validator.cs>`_
+interface.
 
 The following implementation completely disables all validation checks:
 
@@ -29,8 +32,8 @@ The following implementation completely disables all validation checks:
             };
     }
 
-UVault's Identity & Access Management (IAM) component can be configured to use a custom implementation of the
-``IJwtValidator`` interface instead of the default one.
+UVault's Identity & Access Management (IAM) component can be configured to use a custom JWT validator instead of the
+default one.
 
 .. code-block:: csharp
 

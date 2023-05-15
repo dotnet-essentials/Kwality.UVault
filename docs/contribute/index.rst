@@ -77,9 +77,14 @@ Since UVault closely integrates with Auth0, it is necessary to have a (free) Aut
 After creating an account, the following steps need to be performed:
 
 1. Change the value of the `Default Directory` to ``Username-Password-Authentication`` inside your tenant's settings.
-2. Create a `Regular Web Application` application in your tenant and enable the ``Password`` grant type.
+2. Create a `Regular Web Application` application in your tenant and enable the ``Password`` and ``Client Credentials``
+   grant type.
 3. Create an API in your tenant or use the default ``Auth0 Management API``.
+   Ensure that your application is authorized and has all the permissions for this tenant.
+   This can be done under the section `Machine To Machine Applications`.
 4. Create a user in your tenant that uses the ``Username-Password-Authentication`` connection.
+5. In your tenant, create 2 `Database Connections` named ``DEV-CNN-1`` and ``DEV-CNN-2`` and enable your application for
+   them.
 
 Once your Auth0 account is configured, set the following environment variables:
 

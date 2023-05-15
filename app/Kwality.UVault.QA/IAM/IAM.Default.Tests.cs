@@ -42,6 +42,7 @@ using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
@@ -50,6 +51,21 @@ using Xunit;
 public sealed class IAMDefaultTests
 {
     private const string defaultRoute = "/";
+
+    [IAM]
+    [Fact(DisplayName = "Use IAM without options raises an exception.")]
+    internal void NoIAMOptions_RaisesException()
+    {
+        // ARRANGE.
+        var serviceCollection = new ServiceCollection();
+
+        // ACT.
+        Action act = () => serviceCollection.AddUVault(static (_, options) => options.UseIAM(null));
+
+        // ASSERT.
+        act.Should()
+           .Throw<ArgumentNullException>();
+    }
 
     [IAM]
     [Fact(DisplayName = "Request an HTTP endpoint succeeds (Default JWT validator).")]
@@ -65,11 +81,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },
@@ -105,11 +121,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },
@@ -146,11 +162,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },
@@ -192,11 +208,11 @@ public sealed class IAMDefaultTests
                 {
                     // Add `UVault`.
                     services.AddUVault(
-                        options =>
+                        (_, options) =>
                         {
                             // Use `UVault's` Identity & Access Management.
                             options.UseIAM(
-                                (_, iamOptions) => iamOptions.UseDefault(
+                                iamOptions => iamOptions.UseDefault(
                                     jwtSettings.validIssuer, jwtSettings.validAudience));
                         });
                 },

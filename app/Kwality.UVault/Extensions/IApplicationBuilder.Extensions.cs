@@ -33,8 +33,8 @@ using Microsoft.AspNetCore.Builder;
 [PublicAPI]
 public static class ApplicationBuilderExtensions
 {
-    public static void UseUVault(this IApplicationBuilder app, Action<UVaultMiddlewareOptions>? optionsAction)
+    public static void UseUVault(this IApplicationBuilder app, Action<UVaultMiddlewareOptions>? action)
     {
-        optionsAction?.Invoke(new UVaultMiddlewareOptions(app));
+        action?.Invoke(new UVaultMiddlewareOptions(app));
     }
 }
