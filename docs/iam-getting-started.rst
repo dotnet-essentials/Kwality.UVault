@@ -1,21 +1,21 @@
 Getting started
-===============
+###############
 
-UVault's default implementation of Identity & Access Management incorporates the following characteristics:
+The default implementation of Identity & Access Management incorporates the following characteristics:
 
 - The JWT's `authority` must match a predefined value.
 - The JWT's `issuer` must match a predefined value.
 - The JWT's `audience` must match a predefined value.
-- The JWT's `lifetime`` must be valid.
-- The JWT's `signature key`` must be valid.
+- The JWT's `lifetime` must be valid.
+- The JWT's `signature key` must be valid.
 
-It's also possible to use a customized implementation, see :ref:`customize JWT validation <iam_custom-validator>` for
-more information.
+It's also possible to use a customized implementation, see :ref:`customize JWT validation <iam_custom-jwt-validation>`
+for more information.
 
 Configure ASP.NET
------------------
+*****************
 
-UVault's Identity & Access Management component can be used by adding and configuring UVault's required services to use
+The Identity & Access Management component can be used by adding and configuring UVault's required services to use
 IAM. Here's an example of how to do this:
 
 .. code-block:: csharp
@@ -35,10 +35,11 @@ IAM. Here's an example of how to do this:
     app.UseUVault();
     app.Run();
 
-In this example, the ``UseDefault`` method is used to use the default validation characteristics of JWTs (`see above`).
+In this example, the ``UseDefault`` method is used to use the default validation characteristics of JWTs.
 
-It's also possible to use different IAM options based on other services by accessing the `IServiceProvider <https://learn.microsoft.com/en-us/dotnet/api/system.iserviceprovider?view=net-7.0>`_.
-Here is an example code block in C# that demonstrates the use of different IAM options:
+It's also possible to use different IAM options based on other services by accessing the `IServiceProvider`_.
+The following code block is an example written in C# that demonstrates how to use a different valid issuer and valid
+audience depending on the environment in which the application is operating:
 
 .. code-block:: csharp
 
@@ -66,3 +67,5 @@ Here is an example code block in C# that demonstrates the use of different IAM o
             }
         });
     });
+
+.. _IServiceProvider: https://learn.microsoft.com/en-us/dotnet/api/system.iserviceprovider?view=net-7.0>
