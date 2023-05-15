@@ -53,6 +53,7 @@ using Kwality.UVault.User.Management.Operations.Mappers.Abstractions;
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
+[Collection("Auth0")]
 public sealed class UserManagementAuth0Tests
 {
     [AutoDomainData]
