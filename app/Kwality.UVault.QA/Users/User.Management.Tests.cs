@@ -302,7 +302,7 @@ public sealed class UserManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new UserCreationException(
+                throw new UserUpdateException(
                     $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
