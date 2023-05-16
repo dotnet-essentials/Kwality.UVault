@@ -22,20 +22,26 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.M2M.Operations.Mappers;
 
 using JetBrains.Annotations;
 
-[PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
-{
-    public UserModel(TKey key, string email)
-    {
-        this.Key = key;
-        this.Email = email;
-    }
+using Kwality.UVault.Exceptions;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+[PublicAPI]
+public sealed class ApplicationUpdateOperationMapper : IApplicationOperationMapper
+{
+    public TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class
+    {
+        if (typeof(TDestination) != typeof(TSource))
+        {
+            throw new UpdateException(
+                $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
+        }
+
+        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+        return (source as TDestination)!;
+    }
 }

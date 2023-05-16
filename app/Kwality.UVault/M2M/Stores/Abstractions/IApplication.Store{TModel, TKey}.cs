@@ -22,31 +22,17 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Exceptions;
+namespace Kwality.UVault.M2M.Stores.Abstractions;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
-[Serializable]
-[ExcludeFromCodeCoverage]
-public sealed class UserNotFoundException : Exception
+public interface IApplicationStore<TModel, TKey>
+    where TModel : ApplicationModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public UserNotFoundException()
-    {
-    }
-
-    public UserNotFoundException(string message)
-        : base(message)
-    {
-    }
-
-    public UserNotFoundException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
-
-    private UserNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
-    {
-    }
+    Task<TModel> GetByKeyAsync(TKey key);
+    Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper);
+    Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper);
+    Task DeleteByKeyAsync(TKey key);
 }

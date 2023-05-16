@@ -22,20 +22,38 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.M2M.Extensions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.M2M.Internal.Stores;
+using Kwality.UVault.M2M.Managers;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Options;
+using Kwality.UVault.M2M.Stores.Abstractions;
+using Kwality.UVault.Options;
+
+using Microsoft.Extensions.DependencyInjection;
+
 [PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+public static class UVaultOptionsExtensions
 {
-    public UserModel(TKey key, string email)
+    public static void UseApplicationManagement<TModel, TKey>(this UVaultOptions options)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
     {
-        this.Key = key;
-        this.Email = email;
+        options.UseApplicationManagement<TModel, TKey>(null);
     }
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    public static void UseApplicationManagement<TModel, TKey>(
+        this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? action)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        options.Services.AddScoped<ApplicationManager<TModel, TKey>>();
+        options.Services.AddScoped<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+        // Configure UVault's User Management component.
+        action?.Invoke(new ApplicationManagementOptions<TModel, TKey>(options.Services));
+    }
 }

@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,20 +22,10 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
-using JetBrains.Annotations;
-
-[PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+public interface IApplicationOperationMapper
 {
-    public UserModel(TKey key, string email)
-    {
-        this.Key = key;
-        this.Email = email;
-    }
-
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class;
 }

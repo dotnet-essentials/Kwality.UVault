@@ -22,20 +22,33 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.Auth0.M2M.Extensions;
 
 using JetBrains.Annotations;
 
-[PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
-{
-    public UserModel(TKey key, string email)
-    {
-        this.Key = key;
-        this.Email = email;
-    }
+using Kwality.UVault.Auth0.Configuration;
+using Kwality.UVault.Auth0.Internal.API.Clients;
+using Kwality.UVault.Auth0.Keys;
+using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
+using Kwality.UVault.Auth0.M2M.Models;
+using Kwality.UVault.Auth0.M2M.Stores;
+using Kwality.UVault.M2M.Options;
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+using Microsoft.Extensions.DependencyInjection;
+
+[PublicAPI]
+public static class ApplicationManagementOptionsExtensions
+{
+    public static void UseAuth0Store<TModel, TMapper>(
+        this ApplicationManagementOptions<TModel, StringKey> options, ApiConfiguration configuration)
+        where TModel : ApplicationModel
+        where TMapper : class, IModelMapper<TModel>
+    {
+        options.UseStore<ApplicationStore<TModel>>();
+
+        // Register additional services.
+        options.ServiceCollection.AddScoped<IModelMapper<TModel>, TMapper>();
+        options.ServiceCollection.AddHttpClient<ManagementClient>();
+        options.ServiceCollection.AddSingleton(configuration);
+    }
 }

@@ -22,20 +22,30 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.Auth0.M2M.Operations.Mappers;
+
+using global::Auth0.ManagementApi.Models;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Exceptions;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+
 [PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+public abstract class Auth0ApplicationUpdateOperationMapper : IApplicationOperationMapper
 {
-    public UserModel(TKey key, string email)
+    public TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class
     {
-        this.Key = key;
-        this.Email = email;
+        if (typeof(TDestination) != typeof(ClientUpdateRequest))
+        {
+            throw new UpdateException(
+                $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(ClientUpdateRequest)}`.");
+        }
+
+        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+        return (this.Map(source) as TDestination)!;
     }
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    protected abstract ClientUpdateRequest Map<TSource>(TSource source);
 }

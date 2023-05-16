@@ -22,20 +22,43 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.QA.Internal.Factories;
 
-using JetBrains.Annotations;
+using Kwality.UVault.Extensions;
+using Kwality.UVault.M2M.Extensions;
+using Kwality.UVault.M2M.Managers;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Options;
 
-[PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+using Microsoft.Extensions.DependencyInjection;
+
+internal sealed class ApplicationManagerFactory
 {
-    public UserModel(TKey key, string email)
+    private readonly IServiceCollection serviceCollection;
+
+    public ApplicationManagerFactory()
     {
-        this.Key = key;
-        this.Email = email;
+        this.serviceCollection = new ServiceCollection();
     }
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    public ApplicationManager<TModel, TKey> Create<TModel, TKey>()
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        this.serviceCollection.AddUVault(static (_, options) => options.UseApplicationManagement<TModel, TKey>());
+
+        return this.serviceCollection.BuildServiceProvider()
+                   .GetRequiredService<ApplicationManager<TModel, TKey>>();
+    }
+
+    public ApplicationManager<TModel, TKey> Create<TModel, TKey>(
+        Action<ApplicationManagementOptions<TModel, TKey>>? action)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        this.serviceCollection.AddUVault((_, options) => options.UseApplicationManagement(action));
+
+        return this.serviceCollection.BuildServiceProvider()
+                   .GetRequiredService<ApplicationManager<TModel, TKey>>();
+    }
 }

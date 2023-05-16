@@ -22,20 +22,30 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.M2M.Options;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Stores.Abstractions;
+
+using Microsoft.Extensions.DependencyInjection;
+
 [PublicAPI]
-public class UserModel<TKey>
+public sealed class ApplicationManagementOptions<TModel, TKey>
+    where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    public UserModel(TKey key, string email)
+    internal ApplicationManagementOptions(IServiceCollection serviceCollection)
     {
-        this.Key = key;
-        this.Email = email;
+        this.ServiceCollection = serviceCollection;
     }
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    public IServiceCollection ServiceCollection { get; }
+
+    public void UseStore<TStore>()
+        where TStore : class, IApplicationStore<TModel, TKey>
+    {
+        this.ServiceCollection.AddScoped<IApplicationStore<TModel, TKey>, TStore>();
+    }
 }

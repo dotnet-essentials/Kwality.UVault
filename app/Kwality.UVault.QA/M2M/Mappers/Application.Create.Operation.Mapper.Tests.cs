@@ -22,20 +22,67 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.QA.M2M.Mappers;
+
+using AutoFixture.Xunit2;
+
+using FluentAssertions;
 
 using JetBrains.Annotations;
 
-[PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+using Kwality.UVault.Exceptions;
+using Kwality.UVault.M2M.Operations.Mappers;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
+
+using Xunit;
+
+public sealed class ApplicationCreateOperationMapperTests
 {
-    public UserModel(TKey key, string email)
+    [M2MManagement]
+    [AutoData]
+    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
+    internal void Map_InvalidDestination_RaisesException(ModelOne model)
     {
-        this.Key = key;
-        this.Email = email;
+        // ARRANGE.
+        var mapper = new ApplicationCreateOperationMapper();
+
+        // ACT.
+        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
+
+        // ASSERT.
+        act.Should()
+           .Throw<CreateException>()
+           .WithMessage($"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
     }
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    [M2MManagement]
+    [AutoData]
+    [Theory(DisplayName = "Map succeeds.")]
+    internal void Map_Succeeds(ModelOne model)
+    {
+        // ARRANGE.
+        var mapper = new ApplicationCreateOperationMapper();
+
+        // ACT.
+        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
+
+        // ASSERT.
+        result.Should()
+              .BeEquivalentTo(model);
+    }
+
+    [UsedImplicitly]
+    internal sealed class ModelOne
+    {
+        [UsedImplicitly]
+        public string? Name { get; set; }
+    }
+
+    [UsedImplicitly]
+    internal sealed class ModelTwo
+    {
+        [UsedImplicitly]
+        public string? Name { get; set; }
+    }
 }

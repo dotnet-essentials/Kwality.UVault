@@ -32,7 +32,7 @@ using Kwality.UVault.Users.Models;
 [PublicAPI]
 public class UserModel : UserModel<StringKey>
 {
-    protected UserModel(StringKey email)
+    public UserModel(StringKey email)
         : base(email, (email ?? throw new ArgumentNullException(nameof(email))).Value)
     {
     }

@@ -22,20 +22,14 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 
-using JetBrains.Annotations;
+using global::Auth0.ManagementApi.Models;
 
-[PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+using Kwality.UVault.Auth0.M2M.Models;
+
+public interface IModelMapper<out TModel>
+    where TModel : ApplicationModel
 {
-    public UserModel(TKey key, string email)
-    {
-        this.Key = key;
-        this.Email = email;
-    }
-
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    TModel Map(Client client);
 }

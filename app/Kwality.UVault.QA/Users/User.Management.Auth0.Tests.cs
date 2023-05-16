@@ -269,7 +269,7 @@ public sealed class UserManagementAuth0Tests
     [UserManagement]
     [Auth0]
     [Theory(DisplayName = "Create succeeds, and the created user can authenticate.")]
-    internal async Task Create_CreatedUser_CanAuthenticate(UserModel model)
+    internal async Task Create_CreatedUser_CanAuthenticate(Model model)
     {
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -277,8 +277,8 @@ public sealed class UserManagementAuth0Tests
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
 
-        UserManager<UserModel, StringKey> userManager = new UserManagerFactory().Create<UserModel, StringKey>(
-            options => options.UseAuth0Store<UserModel, ModelMapper>(apiConfiguration));
+        UserManager<Model, StringKey> userManager = new UserManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         StringKey? userId = null;
 
@@ -448,11 +448,10 @@ public sealed class UserManagementAuth0Tests
                  .ConfigureAwait(false);
     }
 
-    [AutoDomainData]
     [UserManagement]
     [Auth0]
-    [Theory(DisplayName = "Delete raises an exception when the key is not found.")]
-    internal async Task Delete_UnknownKey_RaisesException(StringKey key)
+    [Fact(DisplayName = "Delete succeeds when the key is not found.")]
+    internal async Task Delete_UnknownKey_Succeeds()
     {
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -464,11 +463,11 @@ public sealed class UserManagementAuth0Tests
             options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
-        Func<Task> act = () => manager.DeleteByKeyAsync(key);
+        Func<Task> act = () => manager.DeleteByKeyAsync(new StringKey("auth0|000000000000000000000000"));
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<ErrorApiException>()
+                 .NotThrowAsync()
                  .ConfigureAwait(false);
     }
 
@@ -544,21 +543,6 @@ public sealed class UserManagementAuth0Tests
             {
                 FirstName = user.FirstName,
                 Name = user.LastName,
-            };
-        }
-
-        // ReSharper disable once UnusedMember.Local
-#pragma warning disable CA1822 // "Mark members as static".
-#pragma warning disable S1144 // "Unused private types or members should be removed".
-        public User ToUser(Model model)
-#pragma warning restore S1144
-#pragma warning restore CA1822
-        {
-            return new User
-            {
-                Email = model.Key.Value,
-                FirstName = model.FirstName,
-                LastName = model.Name,
             };
         }
     }

@@ -22,58 +22,48 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Internal.Stores;
+namespace Kwality.UVault.M2M.Internal.Stores;
 
 using Kwality.UVault.Exceptions;
-using Kwality.UVault.Users.Models;
-using Kwality.UVault.Users.Operations.Mappers.Abstractions;
-using Kwality.UVault.Users.Stores.Abstractions;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+using Kwality.UVault.M2M.Stores.Abstractions;
 
-internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
-    where TModel : UserModel<TKey>
+internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey>
+    where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
     private readonly IList<TModel> collection = new List<TModel>();
 
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        TModel? user = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? application = this.collection.FirstOrDefault(x => x.Key.Equals(key));
 
-        if (user == null)
+        if (application == null)
         {
-            throw new NotFoundException($"User with key `{key}` NOT found.");
+            throw new NotFoundException($"Application with key `{key}` NOT found.");
         }
 
-        return Task.FromResult(user);
+        return Task.FromResult(application);
     }
 
-    public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
+    public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
     {
-        return Task.FromResult(this.collection.Where(x => x.Email.Equals(email, StringComparison.Ordinal)));
+        this.collection.Add(mapper.Create<TModel, TModel>(model));
+
+        return Task.FromResult(model.Key);
     }
 
-    public Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper)
+    public async Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
     {
-        if (!this.collection.Any(u => u.Key.Equals(model.Key)))
+        TModel? application = this.collection.FirstOrDefault(u => u.Key.Equals(key));
+
+        if (application == null)
         {
-            this.collection.Add(mapper.Create<TModel, TModel>(model));
-
-            return Task.FromResult(model.Key);
+            throw new NotFoundException($"Application with key `{model.Key}` NOT found.");
         }
 
-        throw new CreateException($"Another user with the same key `{model.Key}` already exists.");
-    }
-
-    public async Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
-    {
-        TModel? user = this.collection.FirstOrDefault(u => u.Key.Equals(key));
-
-        if (user == null)
-        {
-            throw new NotFoundException($"User with key `{model.Key}` NOT found.");
-        }
-
-        this.collection.Remove(user);
+        this.collection.Remove(application);
 
         await this.CreateAsync(model, mapper)
                   .ConfigureAwait(false);
@@ -81,11 +71,11 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
     public Task DeleteByKeyAsync(TKey key)
     {
-        TModel? user = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? application = this.collection.FirstOrDefault(x => x.Key.Equals(key));
 
-        if (user != null)
+        if (application != null)
         {
-            this.collection.Remove(user);
+            this.collection.Remove(application);
         }
 
         return Task.CompletedTask;

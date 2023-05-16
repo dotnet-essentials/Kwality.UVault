@@ -22,20 +22,47 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.M2M.Managers;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+using Kwality.UVault.M2M.Stores.Abstractions;
+
 [PublicAPI]
-public class UserModel<TKey>
+public sealed class ApplicationManager<TModel, TKey>
+    where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    public UserModel(TKey key, string email)
+    private readonly IApplicationStore<TModel, TKey> store;
+
+    public ApplicationManager(IApplicationStore<TModel, TKey> store)
     {
-        this.Key = key;
-        this.Email = email;
+        this.store = store;
     }
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    // Stryker disable once all
+    public Task<TModel> GetByKeyAsync(TKey key)
+    {
+        return this.store.GetByKeyAsync(key);
+    }
+
+    // Stryker disable once all
+    public Task<TKey> CreateAsync(TModel user, IApplicationOperationMapper mapper)
+    {
+        return this.store.CreateAsync(user, mapper);
+    }
+
+    // Stryker disable once all
+    public Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
+    {
+        return this.store.UpdateAsync(key, model, mapper);
+    }
+
+    // Stryker disable once all
+    public Task DeleteByKeyAsync(TKey key)
+    {
+        return this.store.DeleteByKeyAsync(key);
+    }
 }

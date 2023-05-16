@@ -251,8 +251,8 @@ public sealed class UserManagementTests
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Delete raises an exception when the key is not found.")]
-    internal async Task Delete_UnknownKey_RaisesException(IntKey key)
+    [Theory(DisplayName = "Delete succeeds when the key is not found.")]
+    internal async Task Delete_UnknownKey_Succeeds(IntKey key)
     {
         // ARRANGE.
         UserManager<Model, IntKey> manager
@@ -263,8 +263,7 @@ public sealed class UserManagementTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Custom: User with key `{key}` NOT found.")
+                 .NotThrowAsync()
                  .ConfigureAwait(false);
     }
 
@@ -362,12 +361,10 @@ public sealed class UserManagementTests
 
         public Task DeleteByKeyAsync(IntKey key)
         {
-            if (!this.collection.ContainsKey(key))
+            if (this.collection.ContainsKey(key))
             {
-                throw new NotFoundException($"Custom: User with key `{key}` NOT found.");
+                this.collection.Remove(key);
             }
-
-            this.collection.Remove(key);
 
             return Task.CompletedTask;
         }

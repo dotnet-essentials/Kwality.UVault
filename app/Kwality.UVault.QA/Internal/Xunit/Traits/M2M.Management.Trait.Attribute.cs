@@ -22,20 +22,33 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Models;
+namespace Kwality.UVault.QA.Internal.Xunit.Traits;
+
+using global::Xunit.Abstractions;
+using global::Xunit.Sdk;
 
 using JetBrains.Annotations;
 
-[PublicAPI]
-public class UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+// ReSharper disable once InconsistentNaming
+#pragma warning disable S101 // "Types should be named in PascalCase".
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+[TraitDiscoverer("Kwality.UVault.QA.Internal.Xunit.Traits.M2MManagementFeatureDiscoverer", "Kwality.UVault.QA")]
+internal sealed class M2MManagementAttribute : Attribute, ITraitAttribute
+#pragma warning restore S101
 {
-    public UserModel(TKey key, string email)
-    {
-        this.Key = key;
-        this.Email = email;
-    }
+    // NOTE: Intentionally left blank.
+}
 
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+// ReSharper disable once InconsistentNaming
+#pragma warning disable S101 // "Types should be named in PascalCase".
+#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
+[UsedImplicitly]
+internal sealed class M2MManagementFeatureDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
+#pragma warning restore S101
+{
+    public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
+    {
+        yield return new KeyValuePair<string, string>("Feature", "M2M (Machine 2 Machine)");
+    }
 }
