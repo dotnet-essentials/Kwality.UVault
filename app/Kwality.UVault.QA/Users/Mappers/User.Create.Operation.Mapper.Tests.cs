@@ -30,8 +30,8 @@ using FluentAssertions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
@@ -52,7 +52,7 @@ public sealed class UserCreateOperationMapperTests
 
         // ASSERT.
         act.Should()
-           .Throw<UserCreationException>()
+           .Throw<CreateException>()
            .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
     }
 

@@ -22,32 +22,31 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Exceptions;
+namespace Kwality.UVault.Exceptions;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public sealed class UserExistsException : Exception
+public sealed class NotFoundException : Exception
 {
-    public UserExistsException()
+    public NotFoundException()
     {
     }
 
-    public UserExistsException(string message)
+    public NotFoundException(string message)
         : base(message)
     {
     }
 
-    public UserExistsException(string message, Exception innerException)
+    public NotFoundException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
 
-    private UserExistsException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+    private NotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         : base(serializationInfo, streamingContext)
     {
     }
 }
-

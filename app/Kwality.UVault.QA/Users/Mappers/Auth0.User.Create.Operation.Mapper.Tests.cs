@@ -33,8 +33,8 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Auth0.Users.Operations.Mappers;
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 using Xunit;
@@ -54,7 +54,7 @@ public sealed class Auth0UserCreateOperationMapperTests
 
         // ASSERT.
         act.Should()
-           .Throw<UserCreationException>()
+           .Throw<CreateException>()
            .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserCreateRequest)}`.");
     }
 

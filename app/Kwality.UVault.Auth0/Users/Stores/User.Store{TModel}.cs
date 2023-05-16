@@ -34,6 +34,7 @@ using Kwality.UVault.Auth0.Internal.API.Clients;
 using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
 using Kwality.UVault.Auth0.Users.Models;
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
@@ -100,7 +101,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         }
         catch (Exception ex)
         {
-            throw new UserCreationException("An error occured during the creation of the user.", ex);
+            throw new CreateException("An error occured during the creation of the user.", ex);
         }
     }
 

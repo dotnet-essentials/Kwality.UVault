@@ -26,7 +26,7 @@ namespace Kwality.UVault.Users.Operations.Mappers;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 [PublicAPI]
@@ -37,7 +37,7 @@ public sealed class UserUpdateOperationMapper : IUserOperationMapper
     {
         if (typeof(TDestination) != typeof(TSource))
         {
-            throw new UserUpdateException(
+            throw new UpdateException(
                 $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
         }
 

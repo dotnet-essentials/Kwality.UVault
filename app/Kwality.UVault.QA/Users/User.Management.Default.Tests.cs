@@ -32,6 +32,7 @@ using FluentAssertions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
@@ -169,7 +170,7 @@ public sealed class UserManagementDefaultTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<UserExistsException>()
+                 .ThrowAsync<CreateException>()
                  .WithMessage($"Another user with the same key `{model.Key}` already exists.")
                  .ConfigureAwait(false);
     }

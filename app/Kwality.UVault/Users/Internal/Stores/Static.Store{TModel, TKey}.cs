@@ -24,6 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Users.Internal.Stores;
 
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Models;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
@@ -61,7 +62,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
             return Task.FromResult(model.Key);
         }
 
-        throw new UserExistsException($"Another user with the same key `{model.Key}` already exists.");
+        throw new CreateException($"Another user with the same key `{model.Key}` already exists.");
     }
 
     public async Task UpdateAsync(TKey key, TModel model, IUserOperationMapper operationMapper)

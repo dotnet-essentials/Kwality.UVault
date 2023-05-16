@@ -41,6 +41,7 @@ using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.Users.Extensions;
 using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
 using Kwality.UVault.Auth0.Users.Operations.Mappers;
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.QA.Internal.Auth0.Exceptions;
 using Kwality.UVault.QA.Internal.Auth0.Models;
 using Kwality.UVault.QA.Internal.Factories;
@@ -329,7 +330,7 @@ public sealed class UserManagementAuth0Tests
 
             // ASSERT.
             await act.Should()
-                     .ThrowAsync<UserCreationException>()
+                     .ThrowAsync<CreateException>()
                      .WithMessage("An error occured during the creation of the user.")
                      .ConfigureAwait(false);
         }
@@ -585,8 +586,7 @@ public sealed class UserManagementAuth0Tests
                 };
             }
 
-            throw new UserCreationException(
-                $"Invalid {nameof(IUserOperationMapper)}: Source is NOT `{nameof(UserModel)}`.");
+            throw new CreateException($"Invalid {nameof(IUserOperationMapper)}: Source is NOT `{nameof(UserModel)}`.");
         }
     }
 
@@ -605,8 +605,7 @@ public sealed class UserManagementAuth0Tests
                 };
             }
 
-            throw new UserUpdateException(
-                $"Invalid {nameof(IUserOperationMapper)}: Source is NOT `{nameof(UserModel)}`.");
+            throw new UpdateException($"Invalid {nameof(IUserOperationMapper)}: Source is NOT `{nameof(UserModel)}`.");
         }
     }
 

@@ -32,6 +32,7 @@ using FluentAssertions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
@@ -176,7 +177,7 @@ public sealed class UserManagementTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<UserExistsException>()
+                 .ThrowAsync<CreateException>()
                  .WithMessage($"Custom: Another user with the same key `{model.Key}` already exists.")
                  .ConfigureAwait(false);
     }
@@ -286,7 +287,7 @@ public sealed class UserManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new UserCreationException(
+                throw new CreateException(
                     $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
@@ -302,7 +303,7 @@ public sealed class UserManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new UserUpdateException(
+                throw new UpdateException(
                     $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
@@ -344,7 +345,7 @@ public sealed class UserManagementTests
                 return Task.FromResult(model.Key);
             }
 
-            throw new UserExistsException($"Custom: Another user with the same key `{model.Key}` already exists.");
+            throw new CreateException($"Custom: Another user with the same key `{model.Key}` already exists.");
         }
 
         public async Task UpdateAsync(IntKey key, UserModel model, IUserOperationMapper operationMapper)

@@ -28,7 +28,7 @@ using global::Auth0.ManagementApi.Models;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 [PublicAPI]
@@ -39,7 +39,7 @@ public abstract class Auth0UserUpdateOperationMapper : IUserOperationMapper
     {
         if (typeof(TDestination) != typeof(UserUpdateRequest))
         {
-            throw new UserUpdateException(
+            throw new UpdateException(
                 $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserUpdateRequest)}`.");
         }
 

@@ -22,30 +22,30 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Exceptions;
+namespace Kwality.UVault.Exceptions;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public sealed class UserUpdateException : Exception
+public sealed class CreateException : Exception
 {
-    public UserUpdateException()
+    public CreateException()
     {
     }
 
-    public UserUpdateException(string message)
+    public CreateException(string message)
         : base(message)
     {
     }
 
-    public UserUpdateException(string message, Exception innerException)
+    public CreateException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
 
-    private UserUpdateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+    private CreateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         : base(serializationInfo, streamingContext)
     {
     }
