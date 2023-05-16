@@ -105,16 +105,6 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     }
 
     // Stryker disable once all
-    public async Task DeleteByKeyAsync(StringKey key)
-    {
-        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
-                                                        .ConfigureAwait(false);
-
-        await apiClient.Users.DeleteAsync(key.Value)
-                       .ConfigureAwait(false);
-    }
-
-    // Stryker disable once all
     public async Task UpdateAsync(StringKey key, TModel model, IUserOperationMapper operationMapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -129,6 +119,16 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         {
             throw new UserNotFoundException($"User with key `{key.Value}` NOT found.", ex);
         }
+    }
+
+    // Stryker disable once all
+    public async Task DeleteByKeyAsync(StringKey key)
+    {
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
+                                                        .ConfigureAwait(false);
+
+        await apiClient.Users.DeleteAsync(key.Value)
+                       .ConfigureAwait(false);
     }
 
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
