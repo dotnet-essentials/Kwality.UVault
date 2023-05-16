@@ -41,8 +41,8 @@ public sealed class UserCreateOperationMapperTests
 {
     [UserManagement]
     [AutoData]
-    [Theory(DisplayName = "Mapping `Source` to invalid `Destination` raises an exception.")]
-    internal void MapSourceToDestination_InvalidDestination_RaisesException(ModelOne model)
+    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
+    internal void Map_InvalidDestination_RaisesException(ModelOne model)
     {
         // ARRANGE.
         var mapper = new UserCreateOperationMapper();
@@ -58,8 +58,8 @@ public sealed class UserCreateOperationMapperTests
 
     [UserManagement]
     [AutoData]
-    [Theory(DisplayName = "Mapping `Source` to `Destination` succeeds.")]
-    internal void MapSourceToDestination_Succeeds(ModelOne model)
+    [Theory(DisplayName = "Map succeeds.")]
+    internal void Map_Succeeds(ModelOne model)
     {
         // ARRANGE.
         var mapper = new UserCreateOperationMapper();

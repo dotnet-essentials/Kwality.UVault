@@ -25,10 +25,11 @@
 namespace Kwality.UVault.Keys;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
-[UsedImplicitly]
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed class IntKey : IEqualityComparer<IntKey>
 {
@@ -69,5 +70,10 @@ public sealed class IntKey : IEqualityComparer<IntKey>
         ArgumentNullException.ThrowIfNull(obj);
 
         return obj.value;
+    }
+
+    public override string ToString()
+    {
+        return this.value.ToString(CultureInfo.InvariantCulture);
     }
 }

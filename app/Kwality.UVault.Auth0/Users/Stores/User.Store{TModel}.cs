@@ -35,7 +35,6 @@ using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
 using Kwality.UVault.Auth0.Users.Models;
 using Kwality.UVault.Exceptions;
-using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
 
@@ -70,7 +69,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         }
         catch (Exception ex)
         {
-            throw new UserNotFoundException($"User with key `{key}` NOT found.", ex);
+            throw new NotFoundException($"Key not found: `{key}`.", ex);
         }
     }
 
@@ -87,38 +86,38 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
     }
 
     // Stryker disable once all
-    public async Task<StringKey> CreateAsync(TModel model, IUserOperationMapper operationMapper)
+    public async Task<StringKey> CreateAsync(TModel model, IUserOperationMapper mapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
         {
-            User user = await apiClient.Users.CreateAsync(operationMapper.Create<TModel, UserCreateRequest>(model))
+            User user = await apiClient.Users.CreateAsync(mapper.Create<TModel, UserCreateRequest>(model))
                                        .ConfigureAwait(false);
 
             return new StringKey(user.UserId);
         }
         catch (Exception ex)
         {
-            throw new CreateException("An error occured during the creation of the user.", ex);
+            throw new CreateException("An error occured during the creation the user.", ex);
         }
     }
 
     // Stryker disable once all
-    public async Task UpdateAsync(StringKey key, TModel model, IUserOperationMapper operationMapper)
+    public async Task UpdateAsync(StringKey key, TModel model, IUserOperationMapper mapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
         {
-            await apiClient.Users.UpdateAsync(key.Value, operationMapper.Create<TModel, UserUpdateRequest>(model))
+            await apiClient.Users.UpdateAsync(key.Value, mapper.Create<TModel, UserUpdateRequest>(model))
                            .ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            throw new UserNotFoundException($"User with key `{key.Value}` NOT found.", ex);
+            throw new NotFoundException($"Key not found: `{key}`.", ex);
         }
     }
 

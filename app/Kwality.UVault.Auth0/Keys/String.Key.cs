@@ -28,7 +28,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-[UsedImplicitly]
+[PublicAPI]
 [ExcludeFromCodeCoverage]
 public sealed class StringKey : IEqualityComparer<StringKey>
 {
@@ -69,5 +69,10 @@ public sealed class StringKey : IEqualityComparer<StringKey>
         ArgumentNullException.ThrowIfNull(obj);
 
         return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
+    }
+
+    public override string ToString()
+    {
+        return this.Value;
     }
 }

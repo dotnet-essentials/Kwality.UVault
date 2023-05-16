@@ -36,7 +36,6 @@ using Kwality.UVault.Exceptions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Managers;
 using Kwality.UVault.Users.Models;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
@@ -49,131 +48,131 @@ public sealed class UserManagementTests
 {
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Get user by key fails when the key is NOT found.")]
-    internal async Task GetByKeyAsync_UnknownKey_Fails(IntKey key)
+    [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
+    internal async Task GetByKey_UnknownKey_RaisesException(IntKey key)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        Func<Task<UserModel>> act = () => userManager.GetByKeyAsync(key);
+        Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<UserNotFoundException>()
+                 .ThrowAsync<NotFoundException>()
                  .WithMessage($"Custom: User with key `{key}` NOT found.")
                  .ConfigureAwait(false);
     }
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Get user(s) by email returns NO users when NO users are found.")]
-    internal async Task GetByEmailAsync_UnknownEmail_NoUsers(UserModel model)
+    [Theory(DisplayName = "Get by email returns NO users when NO users are found.")]
+    internal async Task GetByEmail_UnknownEmail_ReturnsEmptyCollection(Model model)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
-        await userManager.CreateAsync(model, new CreateUserOperationMapper())
-                         .ConfigureAwait(false);
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
 
         // ACT.
-        IEnumerable<UserModel> users = await userManager.GetByEmailAsync("email")
-                                                        .ConfigureAwait(false);
+        IEnumerable<Model> result = await manager.GetByEmailAsync("email")
+                                                 .ConfigureAwait(false);
 
         // ASSERT.
-        users.Should()
-             .BeEmpty();
+        result.Should()
+              .BeEmpty();
     }
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Get user(s) by email returns users with the requested email.")]
-    internal async Task GetByEmailAsync_SingleUserWithEmail_Users(List<UserModel> models)
+    [Theory(DisplayName = "Get by email returns the matches.")]
+    internal async Task GetByEmail_SingleMatch_ReturnsMatches(List<Model> models)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
-        foreach (UserModel model in models)
+        foreach (Model model in models)
         {
-            await userManager.CreateAsync(model, new CreateUserOperationMapper())
-                             .ConfigureAwait(false);
+            await manager.CreateAsync(model, new CreateOperationMapper())
+                         .ConfigureAwait(false);
         }
 
         // ACT.
-        UserModel user = models.Skip(1)
+        Model expected = models.Skip(1)
                                .First();
 
-        IEnumerable<UserModel> users = await userManager.GetByEmailAsync(user.Email)
-                                                        .ConfigureAwait(false);
+        IEnumerable<Model> result = await manager.GetByEmailAsync(expected.Email)
+                                                 .ConfigureAwait(false);
 
         // ASSERT.
-        users.Should()
-             .BeEquivalentTo(new[] { user, });
+        result.Should()
+              .BeEquivalentTo(new[] { expected, });
     }
 
     [FixedEmail]
     [UserManagement]
-    [Theory(DisplayName = "Get user(s) by email returns user with the requested email.")]
-    internal async Task GetByEmailAsync_MultipleUsersWithSameEmail_Users(List<UserModel> models)
+    [Theory(DisplayName = "Get by email returns the matches.")]
+    internal async Task GetByEmail_MultipleMatches_ReturnsMatches(List<Model> models)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
-        foreach (UserModel model in models)
+        foreach (Model model in models)
         {
-            await userManager.CreateAsync(model, new CreateUserOperationMapper())
-                             .ConfigureAwait(false);
+            await manager.CreateAsync(model, new CreateOperationMapper())
+                         .ConfigureAwait(false);
         }
 
         // ACT.
-        UserModel user = models.Skip(1)
+        Model expected = models.Skip(1)
                                .First();
 
-        IEnumerable<UserModel> users = await userManager.GetByEmailAsync(user.Email)
-                                                        .ConfigureAwait(false);
+        IEnumerable<Model> result = await manager.GetByEmailAsync(expected.Email)
+                                                 .ConfigureAwait(false);
 
         // ASSERT.
-        users.Should()
-             .BeEquivalentTo(models);
+        result.Should()
+              .BeEquivalentTo(models);
     }
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Create user succeeds.")]
-    internal async Task CreateAsync_Succeeds(UserModel model)
+    [Theory(DisplayName = "Create succeeds.")]
+    internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        IntKey userId = await userManager.CreateAsync(model, new CreateUserOperationMapper())
-                                         .ConfigureAwait(false);
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
 
         // ASSERT.
-        (await userManager.GetByKeyAsync(userId)
-                          .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model);
+        (await manager.GetByKeyAsync(key)
+                      .ConfigureAwait(false)).Should()
+                                             .BeEquivalentTo(model);
     }
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Create user fails when the user key already exists.")]
-    internal async Task CreateAsync_KeyExists_Fails(UserModel model)
+    [Theory(DisplayName = "Create raises an exception when another user with the same key already exist.")]
+    internal async Task Create_KeyExists_RaisesException(Model model)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
-        await userManager.CreateAsync(model, new CreateUserOperationMapper())
-                         .ConfigureAwait(false);
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
 
         // ACT.
-        Func<Task<IntKey>> act = () => userManager.CreateAsync(model, new CreateUserOperationMapper());
+        Func<Task<IntKey>> act = () => manager.CreateAsync(model, new CreateOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -184,103 +183,103 @@ public sealed class UserManagementTests
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Update a user succeeds.")]
-    internal async Task UpdateAsync_Succeeds(UserModel model)
+    [Theory(DisplayName = "Update succeeds.")]
+    internal async Task Update_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
-        IntKey userId = await userManager.CreateAsync(model, new CreateUserOperationMapper())
-                                         .ConfigureAwait(false);
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
 
         // ACT.
         model.Email = "kwality.uvault@github.com";
 
-        await userManager.UpdateAsync(userId, model, new UpdateUserOperationMapper())
-                         .ConfigureAwait(false);
+        await manager.UpdateAsync(key, model, new UpdateOperationMapper())
+                     .ConfigureAwait(false);
 
         // ASSERT.
-        (await userManager.GetByKeyAsync(userId)
-                          .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model);
+        (await manager.GetByKeyAsync(key)
+                      .ConfigureAwait(false)).Should()
+                                             .BeEquivalentTo(model);
     }
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Update a user fails when the key is NOT found.")]
-    internal async Task UpdateAsync_UnknownKey_Fails(IntKey key, UserModel model)
+    [Theory(DisplayName = "Update raises an exception when the key is not found.")]
+    internal async Task Update_UnknownKey_RaisesException(IntKey key, Model model)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        Func<Task> act = () => userManager.UpdateAsync(key, model, new UpdateUserOperationMapper());
+        Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<UserNotFoundException>()
-                 .WithMessage($"Custom: User with key `{model.Key}` NOT found.")
+                 .ThrowAsync<NotFoundException>()
+                 .WithMessage($"Custom: User with key `{key}` NOT found.")
                  .ConfigureAwait(false);
     }
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Delete a user succeeds.")]
-    internal async Task DeleteByKeyAsync_Succeeds(UserModel model)
+    [Theory(DisplayName = "Delete succeeds.")]
+    internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
-        IntKey userId = await userManager.CreateAsync(model, new CreateUserOperationMapper())
-                                         .ConfigureAwait(false);
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
 
         // ACT.
-        await userManager.DeleteByKeyAsync(userId)
-                         .ConfigureAwait(false);
+        await manager.DeleteByKeyAsync(key)
+                     .ConfigureAwait(false);
 
         // ASSERT.
-        Func<Task<UserModel>> act = () => userManager.GetByKeyAsync(userId);
+        Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
-                 .ThrowAsync<UserNotFoundException>()
-                 .WithMessage($"Custom: User with key `{userId}` NOT found.")
+                 .ThrowAsync<NotFoundException>()
+                 .WithMessage($"Custom: User with key `{key}` NOT found.")
                  .ConfigureAwait(false);
     }
 
     [AutoData]
     [UserManagement]
-    [Theory(DisplayName = "Delete a user by key fails when the key is NOT found.")]
-    internal async Task DeleteByKeyAsync_UnknownKey_Fails(IntKey key)
+    [Theory(DisplayName = "Delete raises an exception when the key is not found.")]
+    internal async Task Delete_UnknownKey_RaisesException(IntKey key)
     {
         // ARRANGE.
-        UserManager<UserModel, IntKey> userManager
-            = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
+        UserManager<Model, IntKey> manager
+            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        Func<Task> act = () => userManager.DeleteByKeyAsync(key);
+        Func<Task> act = () => manager.DeleteByKeyAsync(key);
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<UserNotFoundException>()
+                 .ThrowAsync<NotFoundException>()
                  .WithMessage($"Custom: User with key `{key}` NOT found.")
                  .ConfigureAwait(false);
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class UserModel : UserModel<IntKey>
+    internal sealed class Model : UserModel<IntKey>
 #pragma warning restore CA1812
     {
-        public UserModel(IntKey key, string email)
+        public Model(IntKey key, string email)
             : base(key, email)
         {
         }
     }
 
-    private sealed class CreateUserOperationMapper : IUserOperationMapper
+    private sealed class CreateOperationMapper : IUserOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
@@ -296,7 +295,7 @@ public sealed class UserManagementTests
         }
     }
 
-    private sealed class UpdateUserOperationMapper : IUserOperationMapper
+    private sealed class UpdateOperationMapper : IUserOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
@@ -314,33 +313,33 @@ public sealed class UserManagementTests
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class UserStore : IUserStore<UserModel, IntKey>
+    internal sealed class Store : IUserStore<Model, IntKey>
 #pragma warning restore CA1812
     {
-        private readonly IDictionary<IntKey, UserModel> userCollection = new Dictionary<IntKey, UserModel>();
+        private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
 
-        public Task<UserModel> GetByKeyAsync(IntKey key)
+        public Task<Model> GetByKeyAsync(IntKey key)
         {
-            if (!this.userCollection.ContainsKey(key))
+            if (!this.collection.ContainsKey(key))
             {
-                throw new UserNotFoundException($"Custom: User with key `{key}` NOT found.");
+                throw new NotFoundException($"Custom: User with key `{key}` NOT found.");
             }
 
-            return Task.FromResult(this.userCollection[key]);
+            return Task.FromResult(this.collection[key]);
         }
 
-        public Task<IEnumerable<UserModel>> GetByEmailAsync(string email)
+        public Task<IEnumerable<Model>> GetByEmailAsync(string email)
         {
             return Task.FromResult(
-                this.userCollection.Where(user => user.Value.Email.Equals(email, StringComparison.Ordinal))
+                this.collection.Where(user => user.Value.Email.Equals(email, StringComparison.Ordinal))
                     .Select(static user => user.Value));
         }
 
-        public Task<IntKey> CreateAsync(UserModel model, IUserOperationMapper operationMapper)
+        public Task<IntKey> CreateAsync(Model model, IUserOperationMapper mapper)
         {
-            if (!this.userCollection.ContainsKey(model.Key))
+            if (!this.collection.ContainsKey(model.Key))
             {
-                this.userCollection.Add(model.Key, operationMapper.Create<UserModel, UserModel>(model));
+                this.collection.Add(model.Key, mapper.Create<Model, Model>(model));
 
                 return Task.FromResult(model.Key);
             }
@@ -348,27 +347,27 @@ public sealed class UserManagementTests
             throw new CreateException($"Custom: Another user with the same key `{model.Key}` already exists.");
         }
 
-        public async Task UpdateAsync(IntKey key, UserModel model, IUserOperationMapper operationMapper)
+        public async Task UpdateAsync(IntKey key, Model model, IUserOperationMapper mapper)
         {
-            if (!this.userCollection.ContainsKey(key))
+            if (!this.collection.ContainsKey(key))
             {
-                throw new UserNotFoundException($"Custom: User with key `{key}` NOT found.");
+                throw new NotFoundException($"Custom: User with key `{key}` NOT found.");
             }
 
-            this.userCollection.Remove(key);
+            this.collection.Remove(key);
 
-            await this.CreateAsync(model, operationMapper)
+            await this.CreateAsync(model, mapper)
                       .ConfigureAwait(false);
         }
 
         public Task DeleteByKeyAsync(IntKey key)
         {
-            if (!this.userCollection.ContainsKey(key))
+            if (!this.collection.ContainsKey(key))
             {
-                throw new UserNotFoundException($"Custom: User with key `{key}` NOT found.");
+                throw new NotFoundException($"Custom: User with key `{key}` NOT found.");
             }
 
-            this.userCollection.Remove(key);
+            this.collection.Remove(key);
 
             return Task.CompletedTask;
         }
@@ -405,9 +404,9 @@ public sealed class UserManagementTests
 
             public object Create(object request, ISpecimenContext context)
             {
-                if (request is Type type && type == typeof(UserModel))
+                if (request is Type type && type == typeof(Model))
                 {
-                    return new UserModel(context.Create<IntKey>(), this.email);
+                    return new Model(context.Create<IntKey>(), this.email);
                 }
 
                 return new NoSpecimen();

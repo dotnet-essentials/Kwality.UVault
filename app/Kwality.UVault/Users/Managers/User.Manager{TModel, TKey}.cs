@@ -35,40 +35,40 @@ public sealed class UserManager<TModel, TKey>
     where TModel : UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IUserStore<TModel, TKey> userStore;
+    private readonly IUserStore<TModel, TKey> store;
 
-    public UserManager(IUserStore<TModel, TKey> userStore)
+    public UserManager(IUserStore<TModel, TKey> store)
     {
-        this.userStore = userStore;
+        this.store = store;
     }
 
     // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        return this.userStore.GetByKeyAsync(key);
+        return this.store.GetByKeyAsync(key);
     }
 
     // Stryker disable once all
     public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
     {
-        return this.userStore.GetByEmailAsync(email);
+        return this.store.GetByEmailAsync(email);
     }
 
     // Stryker disable once all
-    public Task<TKey> CreateAsync(TModel user, IUserOperationMapper userOperationMapper)
+    public Task<TKey> CreateAsync(TModel user, IUserOperationMapper mapper)
     {
-        return this.userStore.CreateAsync(user, userOperationMapper);
+        return this.store.CreateAsync(user, mapper);
     }
 
     // Stryker disable once all
-    public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper userOperationMapper)
+    public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
     {
-        return this.userStore.UpdateAsync(key, model, userOperationMapper);
+        return this.store.UpdateAsync(key, model, mapper);
     }
 
     // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
-        return this.userStore.DeleteByKeyAsync(key);
+        return this.store.DeleteByKeyAsync(key);
     }
 }

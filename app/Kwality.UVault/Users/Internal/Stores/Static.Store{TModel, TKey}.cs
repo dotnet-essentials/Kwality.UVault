@@ -25,7 +25,6 @@
 namespace Kwality.UVault.Users.Internal.Stores;
 
 using Kwality.UVault.Exceptions;
-using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Models;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
@@ -34,15 +33,15 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
     where TModel : UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IList<TModel> userCollection = new List<TModel>();
+    private readonly IList<TModel> collection = new List<TModel>();
 
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        TModel? user = this.userCollection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? user = this.collection.FirstOrDefault(x => x.Key.Equals(key));
 
         if (user == null)
         {
-            throw new UserNotFoundException($"User with key `{key}` NOT found.");
+            throw new NotFoundException($"User with key `{key}` NOT found.");
         }
 
         return Task.FromResult(user);
@@ -50,14 +49,14 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
     public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
     {
-        return Task.FromResult(this.userCollection.Where(x => x.Email.Equals(email, StringComparison.Ordinal)));
+        return Task.FromResult(this.collection.Where(x => x.Email.Equals(email, StringComparison.Ordinal)));
     }
 
-    public Task<TKey> CreateAsync(TModel model, IUserOperationMapper operationMapper)
+    public Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper)
     {
-        if (!this.userCollection.Any(u => u.Key.Equals(model.Key)))
+        if (!this.collection.Any(u => u.Key.Equals(model.Key)))
         {
-            this.userCollection.Add(operationMapper.Create<TModel, TModel>(model));
+            this.collection.Add(mapper.Create<TModel, TModel>(model));
 
             return Task.FromResult(model.Key);
         }
@@ -65,31 +64,31 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
         throw new CreateException($"Another user with the same key `{model.Key}` already exists.");
     }
 
-    public async Task UpdateAsync(TKey key, TModel model, IUserOperationMapper operationMapper)
+    public async Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
     {
-        TModel? user = this.userCollection.FirstOrDefault(u => u.Key.Equals(key));
+        TModel? user = this.collection.FirstOrDefault(u => u.Key.Equals(key));
 
         if (user == null)
         {
-            throw new UserNotFoundException($"User with key `{model.Key}` NOT found.");
+            throw new NotFoundException($"User with key `{model.Key}` NOT found.");
         }
 
-        this.userCollection.Remove(user);
+        this.collection.Remove(user);
 
-        await this.CreateAsync(model, operationMapper)
+        await this.CreateAsync(model, mapper)
                   .ConfigureAwait(false);
     }
 
     public Task DeleteByKeyAsync(TKey key)
     {
-        TModel? user = this.userCollection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? user = this.collection.FirstOrDefault(x => x.Key.Equals(key));
 
         if (user == null)
         {
-            throw new UserNotFoundException($"User with key `{key}` NOT found.");
+            throw new NotFoundException($"User with key `{key}` NOT found.");
         }
 
-        this.userCollection.Remove(user);
+        this.collection.Remove(user);
 
         return Task.CompletedTask;
     }

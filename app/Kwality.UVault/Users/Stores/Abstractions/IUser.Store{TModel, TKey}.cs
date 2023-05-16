@@ -33,7 +33,7 @@ public interface IUserStore<TModel, TKey>
 {
     Task<TModel> GetByKeyAsync(TKey key);
     Task<IEnumerable<TModel>> GetByEmailAsync(string email);
-    Task<TKey> CreateAsync(TModel model, IUserOperationMapper operationMapper);
-    Task UpdateAsync(TKey key, TModel model, IUserOperationMapper operationMapper);
+    Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper);
+    Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper);
     Task DeleteByKeyAsync(TKey key);
 }

@@ -43,11 +43,11 @@ public sealed class Auth0UserCreateOperationMapperTests
 {
     [UserManagement]
     [AutoData]
-    [Theory(DisplayName = "Mapping `Source` to invalid `Destination` raises an exception.")]
-    internal void MapSourceToDestination_InvalidDestination_RaisesException(ModelOne model)
+    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
+    internal void Map_InvalidDestination_RaisesException(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new UserCreateOperationMapper();
+        var mapper = new OperationMapper();
 
         // ACT.
         Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
@@ -60,11 +60,11 @@ public sealed class Auth0UserCreateOperationMapperTests
 
     [UserManagement]
     [AutoData]
-    [Theory(DisplayName = "Mapping `Source` to `Destination` succeeds.")]
-    internal void MapSourceToDestination_Succeeds(ModelOne model)
+    [Theory(DisplayName = "Map succeeds.")]
+    internal void Map_Succeeds(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new UserCreateOperationMapper();
+        var mapper = new OperationMapper();
 
         // ACT.
         UserCreateRequest result = mapper.Create<ModelOne, UserCreateRequest>(model);
@@ -74,7 +74,7 @@ public sealed class Auth0UserCreateOperationMapperTests
               .BeEquivalentTo(new UserCreateRequest());
     }
 
-    private sealed class UserCreateOperationMapper : Auth0UserCreateOperationMapper
+    private sealed class OperationMapper : Auth0UserCreateOperationMapper
     {
         protected override UserCreateRequest Map<TSource>(TSource source)
         {
