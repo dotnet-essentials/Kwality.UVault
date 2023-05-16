@@ -74,7 +74,7 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
-        await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
+        await userManager.CreateAsync(model, new CreateUserOperationMapper())
                          .ConfigureAwait(false);
 
         // ACT.
@@ -97,7 +97,7 @@ public sealed class UserManagementTests
 
         foreach (UserModel model in models)
         {
-            await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
+            await userManager.CreateAsync(model, new CreateUserOperationMapper())
                              .ConfigureAwait(false);
         }
 
@@ -124,7 +124,7 @@ public sealed class UserManagementTests
 
         foreach (UserModel model in models)
         {
-            await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
+            await userManager.CreateAsync(model, new CreateUserOperationMapper())
                              .ConfigureAwait(false);
         }
 
@@ -150,7 +150,7 @@ public sealed class UserManagementTests
             = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         // ACT.
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
+        IntKey userId = await userManager.CreateAsync(model, new CreateUserOperationMapper())
                                          .ConfigureAwait(false);
 
         // ASSERT.
@@ -168,11 +168,11 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
-        await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
+        await userManager.CreateAsync(model, new CreateUserOperationMapper())
                          .ConfigureAwait(false);
 
         // ACT.
-        Func<Task<IntKey>> act = () => userManager.CreateAsync(model, new UserCreateUserOperationMapper());
+        Func<Task<IntKey>> act = () => userManager.CreateAsync(model, new CreateUserOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -190,13 +190,13 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
+        IntKey userId = await userManager.CreateAsync(model, new CreateUserOperationMapper())
                                          .ConfigureAwait(false);
 
         // ACT.
         model.Email = "kwality.uvault@github.com";
 
-        await userManager.UpdateAsync(userId, model, new UserUpdateUserOperationMapper())
+        await userManager.UpdateAsync(userId, model, new UpdateUserOperationMapper())
                          .ConfigureAwait(false);
 
         // ASSERT.
@@ -215,7 +215,7 @@ public sealed class UserManagementTests
             = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
         // ACT.
-        Func<Task> act = () => userManager.UpdateAsync(key, model, new UserUpdateUserOperationMapper());
+        Func<Task> act = () => userManager.UpdateAsync(key, model, new UpdateUserOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -233,7 +233,7 @@ public sealed class UserManagementTests
         UserManager<UserModel, IntKey> userManager
             = new UserManagerFactory().Create<UserModel, IntKey>(static options => options.UseStore<UserStore>());
 
-        IntKey userId = await userManager.CreateAsync(model, new UserCreateUserOperationMapper())
+        IntKey userId = await userManager.CreateAsync(model, new CreateUserOperationMapper())
                                          .ConfigureAwait(false);
 
         // ACT.
@@ -279,7 +279,7 @@ public sealed class UserManagementTests
         }
     }
 
-    private sealed class UserCreateUserOperationMapper : IUserOperationMapper
+    private sealed class CreateUserOperationMapper : IUserOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
@@ -295,7 +295,7 @@ public sealed class UserManagementTests
         }
     }
 
-    private sealed class UserUpdateUserOperationMapper : IUserOperationMapper
+    private sealed class UpdateUserOperationMapper : IUserOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
