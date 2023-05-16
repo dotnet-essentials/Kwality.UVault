@@ -35,7 +35,6 @@ public static class ServiceCollectionExtensions
 {
     public static void AddUVault(this IServiceCollection services, Action<IServiceProvider, UVaultOptions>? action)
     {
-        // Apply the options to customize the implementation.
         using IServiceScope serviceProviderScope = services.BuildServiceProvider()
                                                            .CreateScope();
 
