@@ -26,26 +26,26 @@ namespace Kwality.UVault.QA.Management.User;
 
 using System.Net.Http.Json;
 
-using Auth0.Core.Exceptions;
-using Auth0.ManagementApi.Models;
-
 using AutoFixture;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
+using global::Auth0.Core.Exceptions;
+using global::Auth0.ManagementApi.Models;
+
 using JetBrains.Annotations;
 
+using Kwality.UVault.Auth0.Configuration;
+using Kwality.UVault.Auth0.Extensions;
+using Kwality.UVault.Auth0.Keys;
+using Kwality.UVault.Auth0.Mapping.Abstractions;
+using Kwality.UVault.Auth0.Operations.Mappers;
 using Kwality.UVault.QA.Internal.Auth0.Exceptions;
 using Kwality.UVault.QA.Internal.Auth0.Models;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.System;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.User.Management.Auth0.Configuration;
-using Kwality.UVault.User.Management.Auth0.Extensions;
-using Kwality.UVault.User.Management.Auth0.Keys;
-using Kwality.UVault.User.Management.Auth0.Mapping.Abstractions;
-using Kwality.UVault.User.Management.Auth0.Operations.Mappers;
 using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Managers;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
@@ -517,7 +517,7 @@ public sealed class UserManagementAuth0Tests
         return responseModel?.AccessToken ?? string.Empty;
     }
 
-    internal sealed class UserModel : UVault.User.Management.Auth0.Models.UserModel
+    internal sealed class UserModel : Auth0.Models.UserModel
     {
         public UserModel(StringKey email)
             : base(email)

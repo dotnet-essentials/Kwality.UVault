@@ -30,12 +30,8 @@
 # Output folder(s).
 /app/Kwality.UVault/bin/
 /app/Kwality.UVault/obj/
-/app/Kwality.UVault.IAM/bin/
-/app/Kwality.UVault.IAM/obj/
-/app/Kwality.UVault.User.Management/bin/
-/app/Kwality.UVault.User.Management/obj/
-/app/Kwality.UVault.User.Management.Auth0/bin/
-/app/Kwality.UVault.User.Management.Auth0/obj/
+/app/Kwality.UVault.Auth0/bin/
+/app/Kwality.UVault.Auth0/obj/
 /app/Kwality.UVault.QA/bin/
 /app/Kwality.UVault.QA/obj/
 

@@ -24,7 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.Management.User.Mappers;
 
-using Auth0.ManagementApi.Models;
+using global::Auth0.ManagementApi.Models;
 
 using AutoFixture.Xunit2;
 
@@ -33,7 +33,7 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.User.Management.Auth0.Operations.Mappers;
+using Kwality.UVault.Auth0.Operations.Mappers;
 using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
@@ -78,7 +78,14 @@ public sealed class Auth0UserCreateOperationMapperTests
     {
         protected override UserCreateRequest Map<TSource>(TSource source)
         {
-            return new UserCreateRequest();
+            
+            return new UserCreateRequest
+            {
+                Email = "",
+                Password = "",
+                FirstName = "",
+                LastName = "",
+            }
         }
     }
 

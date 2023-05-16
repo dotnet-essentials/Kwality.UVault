@@ -37,8 +37,8 @@ entities. On the other hand, an external service provider such as Auth0 may use 
 Model mapper
 ************
 
-A model mapper refers to a one-way transformation that converts the model representation of a concept stored within a
-store to a model that can be easily understood by your code.
+A model mapper refers to a transformation that converts the model representation of a concept stored within a store to a
+model that can be easily understood by your code and vice versa.
 
 Each store may store a concept such as users, APIs, applications, and others using a specific model. In some stores,
 like the built-in `Static` store, the stored model matches the model defined in your codebase. In contrast, for other

@@ -22,77 +22,30 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Management.User.Mappers;
-
-using AutoFixture.Xunit2;
-
-using FluentAssertions;
+namespace Kwality.UVault.Auth0.Operations.Mappers;
 
 using global::Auth0.ManagementApi.Models;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Auth0.Operations.Mappers;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
-using Xunit;
-
-public sealed class Auth0UserUpdateOperationMapperTests
+[PublicAPI]
+public abstract class Auth0UserUpdateOperationMapper : IUserOperationMapper
 {
-    [UserManagement]
-    [AutoData]
-    [Theory(DisplayName = "Mapping `Source` to invalid `Destination` raises an exception.")]
-    internal void MapSourceToDestination_InvalidDestination_RaisesException(ModelOne model)
+    public TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class
     {
-        // ARRANGE.
-        var mapper = new UserUpdateOperationMapper();
-
-        // ACT.
-        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
-
-        // ASSERT.
-        act.Should()
-           .Throw<UserUpdateException>()
-           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserUpdateRequest)}`.");
-    }
-
-    [UserManagement]
-    [AutoData]
-    [Theory(DisplayName = "Mapping `Source` to `Destination` succeeds.")]
-    internal void MapSourceToDestination_Succeeds(ModelOne model)
-    {
-        // ARRANGE.
-        var mapper = new UserUpdateOperationMapper();
-
-        // ACT.
-        UserUpdateRequest result = mapper.Create<ModelOne, UserUpdateRequest>(model);
-
-        // ASSERT.
-        result.Should()
-              .BeEquivalentTo(new UserUpdateRequest());
-    }
-
-    private sealed class UserUpdateOperationMapper : Auth0UserUpdateOperationMapper
-    {
-        protected override UserUpdateRequest Map<TSource>(TSource source)
+        if (typeof(TDestination) != typeof(UserUpdateRequest))
         {
-            return new UserUpdateRequest();
+            throw new UserUpdateException(
+                $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserUpdateRequest)}`.");
         }
+
+        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+        return (this.Map(source) as TDestination)!;
     }
 
-    [UsedImplicitly]
-    internal sealed class ModelOne
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
-    }
-
-    [UsedImplicitly]
-    internal sealed class ModelTwo
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
-    }
+    protected abstract UserUpdateRequest Map<TSource>(TSource source);
 }

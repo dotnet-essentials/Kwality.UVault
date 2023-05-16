@@ -68,4 +68,4 @@ audience depending on the environment in which the application is operating:
         });
     });
 
-.. _IServiceProvider: https://learn.microsoft.com/en-us/dotnet/api/system.iserviceprovider?view=net-7.0>
+.. _IServiceProvider: https://learn.microsoft.com/en-us/dotnet/api/system.iserviceprovider?view=net-7.0

@@ -1,38 +1,51 @@
 Introduction
-============
+############
 
-UVault is a collection of .NET libraries specifically designed to handle user management tasks in .NET applications.
+UVault is a collection of .NET libraries specifically designed to handle user management operations in .NET applications.
 It is compatible with the following platforms:
 
 - `Microsoft .NET 6 <https://dotnet.microsoft.com/en-us/download/dotnet/6.0>`_
 - `Microsoft .NET 7 <https://dotnet.microsoft.com/en-us/download/dotnet/7.0>`_
 
-.. _iam_doc:
+Supported features
+******************
+
+The following features are supported:
+
+- :ref:`Authentication / authorization (JWT Bearer) <iam-introduction>`
+- :ref:`User Management (Create, Read, Update & Delete) <user-management-introduction>`
+
+Getting started
+***************
+.. toctree::
+   :maxdepth: 1
+   :caption: Getting started
+
+   installation
+   key-concepts
+
 .. toctree::
   :maxdepth: 1
   :caption: Identity & access management
 
-  IAM/introduction
-  IAM/installation
-  IAM/getting-started
-  IAM/custom-validator
+  iam-introduction
+  iam-getting-started
+  iam-custom-jwt-validation
 
-.. _user_management_doc:
 .. toctree::
-  :maxdepth: 2
-  :caption: User Management
+  :maxdepth: 1
+  :caption: User management
 
-  user-management/introduction
-  user-management/key-concepts
-  user-management/installation
-  user-management/getting-started
-  user-management/auth0-store
-  user-management/custom-store
+  user-management-introduction
+  user-management-keys
+  user-management-model-definition
+  user-management-stores
+  user-management-di
+  user-management-operations
 
-.. _contributing_docs:
 .. toctree::
   :maxdepth: 1
   :caption: Contributing
 
-  contribute/index
-  contribute/docs
+  contribute
+  contribute-documentation

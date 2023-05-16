@@ -58,7 +58,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "010. Core.", "010. Core.", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "030. User Management.", "030. User Management.", "{4FD6CC0E-E1DE-4508-A786-9ECACB412EDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.UVault.User.Management.Auth0", "Kwality.UVault.User.Management.Auth0\Kwality.UVault.User.Management.Auth0.csproj", "{6B80FF36-E529-4710-BEBC-FA84FBA17A97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwality.UVault.Auth0", "Kwality.UVault.Auth0\Kwality.UVault.Auth0.csproj", "{6B80FF36-E529-4710-BEBC-FA84FBA17A97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
