@@ -24,12 +24,15 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.Users.Models;
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Users.Models;
 
 [PublicAPI]
+[ExcludeFromCodeCoverage]
 public class UserModel : UserModel<StringKey>
 {
     public UserModel(StringKey email)

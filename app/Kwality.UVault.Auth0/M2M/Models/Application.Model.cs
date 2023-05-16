@@ -24,12 +24,15 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.M2M.Models;
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.M2M.Models;
 
 [PublicAPI]
+[ExcludeFromCodeCoverage]
 public class ApplicationModel : ApplicationModel<StringKey>
 {
     public ApplicationModel(StringKey key)
