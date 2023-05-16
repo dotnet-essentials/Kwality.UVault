@@ -22,7 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Management.User.Mappers;
+namespace Kwality.UVault.QA.Users.Mappers;
 
 using AutoFixture.Xunit2;
 

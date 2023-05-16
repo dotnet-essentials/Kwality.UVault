@@ -22,7 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Management.User;
+namespace Kwality.UVault.QA.Users;
 
 using System.Net;
 
@@ -32,11 +32,11 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
-using Kwality.UVault.QA.Internal.Extensions;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
 using Kwality.UVault.Auth0.Internal.API.Clients;
+using Kwality.UVault.QA.Internal.Extensions;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Moq;
 

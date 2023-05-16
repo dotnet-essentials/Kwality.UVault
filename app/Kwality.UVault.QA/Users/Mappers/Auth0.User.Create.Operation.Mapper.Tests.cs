@@ -22,7 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Management.User.Mappers;
+namespace Kwality.UVault.QA.Users.Mappers;
 
 using AutoFixture.Xunit2;
 
@@ -39,7 +39,7 @@ using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 using Xunit;
 
-public sealed class Auth0UserUpdateOperationMapperTests
+public sealed class Auth0UserCreateOperationMapperTests
 {
     [UserManagement]
     [AutoData]
@@ -47,15 +47,15 @@ public sealed class Auth0UserUpdateOperationMapperTests
     internal void MapSourceToDestination_InvalidDestination_RaisesException(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new UserUpdateOperationMapper();
+        var mapper = new UserCreateOperationMapper();
 
         // ACT.
         Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
 
         // ASSERT.
         act.Should()
-           .Throw<UserUpdateException>()
-           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserUpdateRequest)}`.");
+           .Throw<UserCreationException>()
+           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserCreateRequest)}`.");
     }
 
     [UserManagement]
@@ -64,21 +64,21 @@ public sealed class Auth0UserUpdateOperationMapperTests
     internal void MapSourceToDestination_Succeeds(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new UserUpdateOperationMapper();
+        var mapper = new UserCreateOperationMapper();
 
         // ACT.
-        UserUpdateRequest result = mapper.Create<ModelOne, UserUpdateRequest>(model);
+        UserCreateRequest result = mapper.Create<ModelOne, UserCreateRequest>(model);
 
         // ASSERT.
         result.Should()
-              .BeEquivalentTo(new UserUpdateRequest());
+              .BeEquivalentTo(new UserCreateRequest());
     }
 
-    private sealed class UserUpdateOperationMapper : Auth0UserUpdateOperationMapper
+    private sealed class UserCreateOperationMapper : Auth0UserCreateOperationMapper
     {
-        protected override UserUpdateRequest Map<TSource>(TSource source)
+        protected override UserCreateRequest Map<TSource>(TSource source)
         {
-            return new UserUpdateRequest();
+            return new UserCreateRequest();
         }
     }
 

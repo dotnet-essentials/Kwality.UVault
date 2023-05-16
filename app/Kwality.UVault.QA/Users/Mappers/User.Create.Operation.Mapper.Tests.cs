@@ -22,9 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Management.User.Mappers;
-
-using global::Auth0.ManagementApi.Models;
+namespace Kwality.UVault.QA.Users.Mappers;
 
 using AutoFixture.Xunit2;
 
@@ -33,13 +31,13 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.QA.Internal.Xunit.Traits;
-using Kwality.UVault.Auth0.Users.Operations.Mappers;
 using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Operations.Mappers;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 using Xunit;
 
-public sealed class Auth0UserCreateOperationMapperTests
+public sealed class UserCreateOperationMapperTests
 {
     [UserManagement]
     [AutoData]
@@ -55,7 +53,7 @@ public sealed class Auth0UserCreateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<UserCreationException>()
-           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserCreateRequest)}`.");
+           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
     }
 
     [UserManagement]
@@ -67,19 +65,11 @@ public sealed class Auth0UserCreateOperationMapperTests
         var mapper = new UserCreateOperationMapper();
 
         // ACT.
-        UserCreateRequest result = mapper.Create<ModelOne, UserCreateRequest>(model);
+        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
 
         // ASSERT.
         result.Should()
-              .BeEquivalentTo(new UserCreateRequest());
-    }
-
-    private sealed class UserCreateOperationMapper : Auth0UserCreateOperationMapper
-    {
-        protected override UserCreateRequest Map<TSource>(TSource source)
-        {
-            return new UserCreateRequest();
-        }
+              .BeEquivalentTo(model);
     }
 
     [UsedImplicitly]
