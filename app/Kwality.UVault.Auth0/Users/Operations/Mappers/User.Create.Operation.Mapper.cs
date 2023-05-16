@@ -22,14 +22,30 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Mapping.Abstractions;
+namespace Kwality.UVault.Auth0.Users.Operations.Mappers;
 
 using global::Auth0.ManagementApi.Models;
 
-using Kwality.UVault.Auth0.Models;
+using JetBrains.Annotations;
 
-public interface IModelMapper<out TModel>
-    where TModel : UserModel
+using Kwality.UVault.Users.Exceptions;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
+
+[PublicAPI]
+public abstract class Auth0UserCreateOperationMapper : IUserOperationMapper
 {
-    TModel Map(User user);
+    public TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class
+    {
+        if (typeof(TDestination) != typeof(UserCreateRequest))
+        {
+            throw new UserCreationException(
+                $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserCreateRequest)}`.");
+        }
+
+        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+        return (this.Map(source) as TDestination)!;
+    }
+
+    protected abstract UserCreateRequest Map<TSource>(TSource source);
 }

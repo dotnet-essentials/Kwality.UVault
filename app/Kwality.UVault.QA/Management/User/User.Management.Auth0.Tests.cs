@@ -37,10 +37,10 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Auth0.Configuration;
-using Kwality.UVault.Auth0.Extensions;
 using Kwality.UVault.Auth0.Keys;
-using Kwality.UVault.Auth0.Mapping.Abstractions;
-using Kwality.UVault.Auth0.Operations.Mappers;
+using Kwality.UVault.Auth0.Users.Extensions;
+using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
+using Kwality.UVault.Auth0.Users.Operations.Mappers;
 using Kwality.UVault.QA.Internal.Auth0.Exceptions;
 using Kwality.UVault.QA.Internal.Auth0.Models;
 using Kwality.UVault.QA.Internal.Factories;
@@ -517,7 +517,7 @@ public sealed class UserManagementAuth0Tests
         return responseModel?.AccessToken ?? string.Empty;
     }
 
-    internal sealed class UserModel : Auth0.Models.UserModel
+    internal sealed class UserModel : Auth0.Users.Models.UserModel
     {
         public UserModel(StringKey email)
             : base(email)

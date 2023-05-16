@@ -22,7 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Internal.Stores;
+namespace Kwality.UVault.Auth0.Users.Stores;
 
 using global::Auth0.ManagementApi;
 using global::Auth0.ManagementApi.Models;
@@ -32,8 +32,8 @@ using JetBrains.Annotations;
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Internal.API.Clients;
 using Kwality.UVault.Auth0.Keys;
-using Kwality.UVault.Auth0.Mapping.Abstractions;
-using Kwality.UVault.Auth0.Models;
+using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
+using Kwality.UVault.Auth0.Users.Models;
 using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;

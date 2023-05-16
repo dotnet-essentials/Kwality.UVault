@@ -22,33 +22,27 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Extensions;
+namespace Kwality.UVault.Auth0.Users.Models;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Auth0.Configuration;
-using Kwality.UVault.Auth0.Internal.API.Clients;
-using Kwality.UVault.Auth0.Internal.Stores;
 using Kwality.UVault.Auth0.Keys;
-using Kwality.UVault.Auth0.Mapping.Abstractions;
-using Kwality.UVault.Auth0.Models;
-using Kwality.UVault.Users.Options;
-
-using Microsoft.Extensions.DependencyInjection;
+using Kwality.UVault.Users.Models;
 
 [PublicAPI]
-public static class UserManagementOptionsExtensions
+public class UserModel : UserModel<StringKey>
 {
-    public static void UseAuth0Store<TModel, TMapper>(
-        this UserManagementOptions<TModel, StringKey> options, ApiConfiguration configuration)
-        where TModel : UserModel
-        where TMapper : class, IModelMapper<TModel>
+    protected UserModel(StringKey email)
+        : base(email, (email ?? throw new ArgumentNullException(nameof(email))).Value)
     {
-        options.UseStore<UserStore<TModel>>();
-
-        // Register additional services.
-        options.ServiceCollection.AddScoped<IModelMapper<TModel>, TMapper>();
-        options.ServiceCollection.AddHttpClient<ManagementClient>();
-        options.ServiceCollection.AddSingleton(configuration);
     }
+
+    protected UserModel(StringKey email, string password)
+        : base(email, (email ?? throw new ArgumentNullException(nameof(email))).Value)
+    {
+        this.Password = password;
+    }
+
+    public string? Password { get; set; }
 }
+

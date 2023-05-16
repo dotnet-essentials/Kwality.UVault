@@ -22,30 +22,33 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Operations.Mappers;
-
-using global::Auth0.ManagementApi.Models;
+namespace Kwality.UVault.Auth0.Users.Extensions;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Users.Exceptions;
-using Kwality.UVault.Users.Operations.Mappers.Abstractions;
+using Kwality.UVault.Auth0.Configuration;
+using Kwality.UVault.Auth0.Internal.API.Clients;
+using Kwality.UVault.Auth0.Keys;
+using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
+using Kwality.UVault.Auth0.Users.Models;
+using Kwality.UVault.Auth0.Users.Stores;
+using Kwality.UVault.Users.Options;
+
+using Microsoft.Extensions.DependencyInjection;
 
 [PublicAPI]
-public abstract class Auth0UserUpdateOperationMapper : IUserOperationMapper
+public static class UserManagementOptionsExtensions
 {
-    public TDestination Create<TSource, TDestination>(TSource source)
-        where TDestination : class
+    public static void UseAuth0Store<TModel, TMapper>(
+        this UserManagementOptions<TModel, StringKey> options, ApiConfiguration configuration)
+        where TModel : UserModel
+        where TMapper : class, IModelMapper<TModel>
     {
-        if (typeof(TDestination) != typeof(UserUpdateRequest))
-        {
-            throw new UserUpdateException(
-                $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(UserUpdateRequest)}`.");
-        }
+        options.UseStore<UserStore<TModel>>();
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (this.Map(source) as TDestination)!;
+        // Register additional services.
+        options.ServiceCollection.AddScoped<IModelMapper<TModel>, TMapper>();
+        options.ServiceCollection.AddHttpClient<ManagementClient>();
+        options.ServiceCollection.AddSingleton(configuration);
     }
-
-    protected abstract UserUpdateRequest Map<TSource>(TSource source);
 }

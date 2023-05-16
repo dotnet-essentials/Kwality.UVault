@@ -30,4 +30,4 @@ also utilizing the integer-based key that comes as a pre-existing feature within
     }
 
 .. _UserModel<TKey>: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault/Users/Models/User.Model%7BTKey%7D.cs
-.. _UserModel: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.Auth0/Models/User.Model.cs
+.. _UserModel: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.Auth0/Users/Models/User.Model.cs

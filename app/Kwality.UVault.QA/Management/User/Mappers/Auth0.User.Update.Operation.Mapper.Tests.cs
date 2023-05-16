@@ -32,7 +32,7 @@ using global::Auth0.ManagementApi.Models;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Auth0.Operations.Mappers;
+using Kwality.UVault.Auth0.Users.Operations.Mappers;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.Users.Exceptions;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
