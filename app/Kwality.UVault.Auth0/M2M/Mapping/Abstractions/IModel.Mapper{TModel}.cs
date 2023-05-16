@@ -22,57 +22,14 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 
-using System.Diagnostics.CodeAnalysis;
+using global::Auth0.ManagementApi.Models;
 
-using JetBrains.Annotations;
+using Kwality.UVault.Auth0.M2M.Models;
 
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public interface IModelMapper<out TModel>
+    where TModel : ApplicationModel
 {
-    public StringKey(string value)
-    {
-        this.Value = value;
-    }
-
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
-    }
+    TModel Map(Client client);
 }

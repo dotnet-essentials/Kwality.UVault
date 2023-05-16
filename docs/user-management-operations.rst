@@ -166,6 +166,6 @@ You may now employ this mapper when creating a user.
 
 .. _IUserOperationMapper: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault/Users/Operations/Mappers/Abstractions/IUser.Operation.Mapper.cs
 .. _UserCreateOperationMapper: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault/Users/Operations/Mappers/User.Create.Operation.Mapper.cs
-.. _Auth0UserCreateOperationMapper: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.User.Management.Auth0/Operations/Mappers/User.Create.Operation.Mapper.cs
-.. _Auth0UserUpdateOperationMapper: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.User.Management.Auth0/Operations/Mappers/User.Update.Operation.Mapper.cs
+.. _Auth0UserCreateOperationMapper: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.Auth0/Users/Operations/Mappers/User.Create.Operation.Mapper.cs
+.. _Auth0UserUpdateOperationMapper: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.Auth0/Users/Operations/Mappers/User.Update.Operation.Mapper.cs
 .. _UserUpdateOperationMapper: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault/Users/Operations/Mappers/User.Update.Operation.Mapper.cs

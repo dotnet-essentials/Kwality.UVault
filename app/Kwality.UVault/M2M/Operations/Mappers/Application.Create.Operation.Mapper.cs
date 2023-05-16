@@ -22,57 +22,26 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
-
-using System.Diagnostics.CodeAnalysis;
+namespace Kwality.UVault.M2M.Operations.Mappers;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Exceptions;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+
 [PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public sealed class ApplicationCreateOperationMapper : IApplicationOperationMapper
 {
-    public StringKey(string value)
+    public TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class
     {
-        this.Value = value;
-    }
-
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
+        if (typeof(TDestination) != typeof(TSource))
         {
-            return true;
+            throw new CreateException(
+                $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
         }
 
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
+        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+        return (source as TDestination)!;
     }
 }

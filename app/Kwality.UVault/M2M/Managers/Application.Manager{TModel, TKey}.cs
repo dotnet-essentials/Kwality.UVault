@@ -22,57 +22,47 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
-
-using System.Diagnostics.CodeAnalysis;
+namespace Kwality.UVault.M2M.Managers;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+using Kwality.UVault.M2M.Stores.Abstractions;
+
 [PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public sealed class ApplicationManager<TModel, TKey>
+    where TModel : ApplicationModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public StringKey(string value)
+    private readonly IApplicationStore<TModel, TKey> store;
+
+    public ApplicationManager(IApplicationStore<TModel, TKey> store)
     {
-        this.Value = value;
+        this.store = store;
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
+    // Stryker disable once all
+    public Task<TModel> GetByKeyAsync(TKey key)
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
+        return this.store.GetByKeyAsync(key);
     }
 
-    public int GetHashCode(StringKey obj)
+    // Stryker disable once all
+    public Task<TKey> CreateAsync(TModel user, IApplicationOperationMapper mapper)
     {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
+        return this.store.CreateAsync(user, mapper);
     }
 
-    public override string ToString()
+    // Stryker disable once all
+    public Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
     {
-        return this.Value;
+        return this.store.UpdateAsync(key, model, mapper);
+    }
+
+    // Stryker disable once all
+    public Task DeleteByKeyAsync(TKey key)
+    {
+        return this.store.DeleteByKeyAsync(key);
     }
 }

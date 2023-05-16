@@ -22,57 +22,62 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.M2M.Internal.Stores;
 
-using System.Diagnostics.CodeAnalysis;
+using Kwality.UVault.Exceptions;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+using Kwality.UVault.M2M.Stores.Abstractions;
 
-using JetBrains.Annotations;
-
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey>
+    where TModel : ApplicationModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public StringKey(string value)
+    private readonly IList<TModel> collection = new List<TModel>();
+
+    public Task<TModel> GetByKeyAsync(TKey key)
     {
-        this.Value = value;
+        TModel? application = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+
+        if (application == null)
+        {
+            throw new NotFoundException($"Application with key `{key}` NOT found.");
+        }
+
+        return Task.FromResult(application);
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
+    public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
+        this.collection.Add(mapper.Create<TModel, TModel>(model));
 
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
+        return Task.FromResult(model.Key);
     }
 
-    public int GetHashCode(StringKey obj)
+    public async Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
     {
-        ArgumentNullException.ThrowIfNull(obj);
+        TModel? application = this.collection.FirstOrDefault(u => u.Key.Equals(key));
 
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
+        if (application == null)
+        {
+            throw new NotFoundException($"Application with key `{model.Key}` NOT found.");
+        }
+
+        this.collection.Remove(application);
+
+        await this.CreateAsync(model, mapper)
+                  .ConfigureAwait(false);
     }
 
-    public override string ToString()
+    public Task DeleteByKeyAsync(TKey key)
     {
-        return this.Value;
+        TModel? application = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+
+        if (application != null)
+        {
+            this.collection.Remove(application);
+        }
+
+        return Task.CompletedTask;
     }
 }

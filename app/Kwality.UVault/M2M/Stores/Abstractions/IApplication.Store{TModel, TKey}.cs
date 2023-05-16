@@ -22,57 +22,17 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.M2M.Stores.Abstractions;
 
-using System.Diagnostics.CodeAnalysis;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
-using JetBrains.Annotations;
-
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public interface IApplicationStore<TModel, TKey>
+    where TModel : ApplicationModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public StringKey(string value)
-    {
-        this.Value = value;
-    }
-
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
-    }
+    Task<TModel> GetByKeyAsync(TKey key);
+    Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper);
+    Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper);
+    Task DeleteByKeyAsync(TKey key);
 }

@@ -22,57 +22,38 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
-
-using System.Diagnostics.CodeAnalysis;
+namespace Kwality.UVault.M2M.Extensions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.M2M.Internal.Stores;
+using Kwality.UVault.M2M.Managers;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Options;
+using Kwality.UVault.M2M.Stores.Abstractions;
+using Kwality.UVault.Options;
+
+using Microsoft.Extensions.DependencyInjection;
+
 [PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public static class UVaultOptionsExtensions
 {
-    public StringKey(string value)
+    public static void UseApplicationManagement<TModel, TKey>(this UVaultOptions options)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
     {
-        this.Value = value;
+        options.UseApplicationManagement<TModel, TKey>(null);
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
+    public static void UseApplicationManagement<TModel, TKey>(
+        this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? action)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
+        options.Services.AddScoped<ApplicationManager<TModel, TKey>>();
+        options.Services.AddScoped<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
+        // Configure UVault's User Management component.
+        action?.Invoke(new ApplicationManagementOptions<TModel, TKey>(options.Services));
     }
 }

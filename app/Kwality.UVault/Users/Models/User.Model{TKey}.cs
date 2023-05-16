@@ -30,7 +30,7 @@ using JetBrains.Annotations;
 public class UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    protected UserModel(TKey key, string email)
+    public UserModel(TKey key, string email)
     {
         this.Key = key;
         this.Email = email;

@@ -22,57 +22,33 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.QA.Internal.Xunit.Traits;
 
-using System.Diagnostics.CodeAnalysis;
+using global::Xunit.Abstractions;
+using global::Xunit.Sdk;
 
 using JetBrains.Annotations;
 
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+// ReSharper disable once InconsistentNaming
+#pragma warning disable S101 // "Types should be named in PascalCase".
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+[TraitDiscoverer("Kwality.UVault.QA.Internal.Xunit.Traits.M2MManagementFeatureDiscoverer", "Kwality.UVault.QA")]
+internal sealed class M2MManagementAttribute : Attribute, ITraitAttribute
+#pragma warning restore S101
 {
-    public StringKey(string value)
+    // NOTE: Intentionally left blank.
+}
+
+// ReSharper disable once InconsistentNaming
+#pragma warning disable S101 // "Types should be named in PascalCase".
+#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
+[UsedImplicitly]
+internal sealed class M2MManagementFeatureDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
+#pragma warning restore S101
+{
+    public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {
-        this.Value = value;
-    }
-
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
+        yield return new KeyValuePair<string, string>("Feature", "M2M (Machine 2 Machine)");
     }
 }

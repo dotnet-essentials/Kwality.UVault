@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,57 +22,10 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
-using System.Diagnostics.CodeAnalysis;
-
-using JetBrains.Annotations;
-
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public interface IApplicationOperationMapper
 {
-    public StringKey(string value)
-    {
-        this.Value = value;
-    }
-
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
-    }
+    TDestination Create<TSource, TDestination>(TSource source)
+        where TDestination : class;
 }

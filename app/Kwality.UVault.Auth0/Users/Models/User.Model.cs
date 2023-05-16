@@ -22,57 +22,30 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.Auth0.Users.Models;
 
 using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Auth0.Keys;
+using Kwality.UVault.Users.Models;
+
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public class UserModel : UserModel<StringKey>
 {
-    public StringKey(string value)
+    public UserModel(StringKey email)
+        : base(email, (email ?? throw new ArgumentNullException(nameof(email))).Value)
     {
-        this.Value = value;
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
+    protected UserModel(StringKey email, string password)
+        : base(email, (email ?? throw new ArgumentNullException(nameof(email))).Value)
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
+        this.Password = password;
     }
 
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
-    }
+    public string? Password { get; set; }
 }
+

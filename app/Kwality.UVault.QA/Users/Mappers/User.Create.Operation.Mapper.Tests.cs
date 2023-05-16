@@ -22,57 +22,67 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.QA.Users.Mappers;
 
-using System.Diagnostics.CodeAnalysis;
+using AutoFixture.Xunit2;
+
+using FluentAssertions;
 
 using JetBrains.Annotations;
 
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+using Kwality.UVault.Exceptions;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
+using Kwality.UVault.Users.Operations.Mappers;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
+
+using Xunit;
+
+public sealed class UserCreateOperationMapperTests
 {
-    public StringKey(string value)
+    [UserManagement]
+    [AutoData]
+    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
+    internal void Map_InvalidDestination_RaisesException(ModelOne model)
     {
-        this.Value = value;
+        // ARRANGE.
+        var mapper = new UserCreateOperationMapper();
+
+        // ACT.
+        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
+
+        // ASSERT.
+        act.Should()
+           .Throw<CreateException>()
+           .WithMessage($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
+    [UserManagement]
+    [AutoData]
+    [Theory(DisplayName = "Map succeeds.")]
+    internal void Map_Succeeds(ModelOne model)
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
+        // ARRANGE.
+        var mapper = new UserCreateOperationMapper();
 
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
+        // ACT.
+        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
 
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
+        // ASSERT.
+        result.Should()
+              .BeEquivalentTo(model);
     }
 
-    public int GetHashCode(StringKey obj)
+    [UsedImplicitly]
+    internal sealed class ModelOne
     {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
+        [UsedImplicitly]
+        public string? Name { get; set; }
     }
 
-    public override string ToString()
+    [UsedImplicitly]
+    internal sealed class ModelTwo
     {
-        return this.Value;
+        [UsedImplicitly]
+        public string? Name { get; set; }
     }
 }

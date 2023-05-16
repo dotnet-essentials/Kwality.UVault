@@ -22,57 +22,20 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
-
-using System.Diagnostics.CodeAnalysis;
+namespace Kwality.UVault.M2M.Models;
 
 using JetBrains.Annotations;
 
 [PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public class ApplicationModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public StringKey(string value)
+    public ApplicationModel(TKey key, string name)
     {
-        this.Value = value;
+        this.Key = key;
+        this.Name = name;
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
-    }
+    public TKey Key { get; set; }
+    public string Name { get; set; }
 }

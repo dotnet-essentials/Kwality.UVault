@@ -22,57 +22,43 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.QA.Internal.Factories;
 
-using System.Diagnostics.CodeAnalysis;
+using Kwality.UVault.Extensions;
+using Kwality.UVault.M2M.Extensions;
+using Kwality.UVault.M2M.Managers;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Options;
 
-using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+internal sealed class ApplicationManagerFactory
 {
-    public StringKey(string value)
+    private readonly IServiceCollection serviceCollection;
+
+    public ApplicationManagerFactory()
     {
-        this.Value = value;
+        this.serviceCollection = new ServiceCollection();
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
+    public ApplicationManager<TModel, TKey> Create<TModel, TKey>()
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
+        this.serviceCollection.AddUVault(static (_, options) => options.UseApplicationManagement<TModel, TKey>());
 
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
+        return this.serviceCollection.BuildServiceProvider()
+                   .GetRequiredService<ApplicationManager<TModel, TKey>>();
     }
 
-    public int GetHashCode(StringKey obj)
+    public ApplicationManager<TModel, TKey> Create<TModel, TKey>(
+        Action<ApplicationManagementOptions<TModel, TKey>>? action)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
     {
-        ArgumentNullException.ThrowIfNull(obj);
+        this.serviceCollection.AddUVault((_, options) => options.UseApplicationManagement(action));
 
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
+        return this.serviceCollection.BuildServiceProvider()
+                   .GetRequiredService<ApplicationManager<TModel, TKey>>();
     }
 }

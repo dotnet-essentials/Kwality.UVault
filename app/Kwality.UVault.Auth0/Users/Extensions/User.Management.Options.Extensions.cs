@@ -22,57 +22,33 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
-
-using System.Diagnostics.CodeAnalysis;
+namespace Kwality.UVault.Auth0.Users.Extensions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Auth0.Configuration;
+using Kwality.UVault.Auth0.Internal.API.Clients;
+using Kwality.UVault.Auth0.Keys;
+using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
+using Kwality.UVault.Auth0.Users.Models;
+using Kwality.UVault.Auth0.Users.Stores;
+using Kwality.UVault.Users.Options;
+
+using Microsoft.Extensions.DependencyInjection;
+
 [PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public static class UserManagementOptionsExtensions
 {
-    public StringKey(string value)
+    public static void UseAuth0Store<TModel, TMapper>(
+        this UserManagementOptions<TModel, StringKey> options, ApiConfiguration configuration)
+        where TModel : UserModel
+        where TMapper : class, IModelMapper<TModel>
     {
-        this.Value = value;
-    }
+        options.UseStore<UserStore<TModel>>();
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
+        // Register additional services.
+        options.ServiceCollection.AddScoped<IModelMapper<TModel>, TMapper>();
+        options.ServiceCollection.AddHttpClient<ManagementClient>();
+        options.ServiceCollection.AddSingleton(configuration);
     }
 }

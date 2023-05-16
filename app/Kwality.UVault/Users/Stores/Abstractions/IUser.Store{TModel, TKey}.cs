@@ -22,57 +22,18 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.Users.Stores.Abstractions;
 
-using System.Diagnostics.CodeAnalysis;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
-using JetBrains.Annotations;
-
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public interface IUserStore<TModel, TKey>
+    where TModel : UserModel<TKey>
+    where TKey : IEqualityComparer<TKey>
 {
-    public StringKey(string value)
-    {
-        this.Value = value;
-    }
-
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
-    {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
-    }
+    Task<TModel> GetByKeyAsync(TKey key);
+    Task<IEnumerable<TModel>> GetByEmailAsync(string email);
+    Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper);
+    Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper);
+    Task DeleteByKeyAsync(TKey key);
 }

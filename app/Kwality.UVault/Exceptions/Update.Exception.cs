@@ -22,57 +22,31 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Keys;
+namespace Kwality.UVault.Exceptions;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
-using JetBrains.Annotations;
-
-[PublicAPI]
+[Serializable]
 [ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public sealed class UpdateException : Exception
 {
-    public StringKey(string value)
+    public UpdateException()
     {
-        this.Value = value;
     }
 
-    internal string Value { get; }
-
-    public bool Equals(StringKey? x, StringKey? y)
+    public UpdateException(string message)
+        : base(message)
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
     }
 
-    public int GetHashCode(StringKey obj)
+    public UpdateException(string message, Exception innerException)
+        : base(message, innerException)
     {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
     }
 
-    public override string ToString()
+    private UpdateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        : base(serializationInfo, streamingContext)
     {
-        return this.Value;
     }
 }

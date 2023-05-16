@@ -173,5 +173,5 @@ be used when you're configuring UVault's services.
     app.UseUVault();
     app.Run();
 
-.. _IModelMapper<out TModel>: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.User.Management.Auth0/Mapping/Abstractions/IModel.Mapper%7BTModel%7D.cs
-.. _IUserStore<TModel, TKey>: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault/Users/Stores/Abstractions/IUserStore%7BTModel%2C%20TKey%7D.cs
+.. _IModelMapper<out TModel>: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault.Auth0/Users/Mapping/Abstractions/IModel.Mapper%7BTModel%7D.cs
+.. _IUserStore<TModel, TKey>: https://github.com/dotnet-essentials/Kwality.UVault/blob/main/app/Kwality.UVault/Users/Stores/Abstractions/IUser.Store%7BTModel%2C%20TKey%7D.cs
