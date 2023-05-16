@@ -100,7 +100,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         }
         catch (Exception ex)
         {
-            throw new CreateException("An error occured during the creation the user.", ex);
+            throw new CreateException("An error occured during the creation of the user.", ex);
         }
     }
 
