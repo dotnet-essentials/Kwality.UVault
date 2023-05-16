@@ -78,14 +78,7 @@ public sealed class Auth0UserCreateOperationMapperTests
     {
         protected override UserCreateRequest Map<TSource>(TSource source)
         {
-            
-            return new UserCreateRequest
-            {
-                Email = "",
-                Password = "",
-                FirstName = "",
-                LastName = "",
-            }
+            return new UserCreateRequest();
         }
     }
 
