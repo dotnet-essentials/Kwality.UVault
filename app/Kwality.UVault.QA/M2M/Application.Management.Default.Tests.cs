@@ -58,8 +58,8 @@ public sealed class ApplicationManagementDefaultTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Application with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read application: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -117,8 +117,8 @@ public sealed class ApplicationManagementDefaultTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Application with key `{model.Key}` NOT found.")
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Failed to update application: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -141,8 +141,8 @@ public sealed class ApplicationManagementDefaultTests
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Application with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read application: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 

@@ -69,7 +69,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         }
         catch (Exception ex)
         {
-            throw new NotFoundException($"Key not found: `{key}`.", ex);
+            throw new ReadException($"Failed to read user: `{key}`.", ex);
         }
     }
 
@@ -100,7 +100,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         }
         catch (Exception ex)
         {
-            throw new CreateException("An error occured during the creation of the user.", ex);
+            throw new CreateException("Failed to create user.", ex);
         }
     }
 
@@ -117,7 +117,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         }
         catch (Exception ex)
         {
-            throw new NotFoundException($"Key not found: `{key}`.", ex);
+            throw new UpdateException($"Failed to update user: `{key}`.", ex);
         }
     }
 
@@ -127,8 +127,15 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
-        await apiClient.Users.DeleteAsync(key.Value)
-                       .ConfigureAwait(false);
+        try
+        {
+            await apiClient.Users.DeleteAsync(key.Value)
+                           .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            throw new UpdateException($"Failed to delete user: `{key}`.", ex);
+        }
     }
 
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()

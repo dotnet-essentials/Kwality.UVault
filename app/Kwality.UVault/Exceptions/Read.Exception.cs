@@ -29,23 +29,23 @@ using System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
-public sealed class NotFoundException : Exception
+public sealed class ReadException : Exception
 {
-    public NotFoundException()
+    public ReadException()
     {
     }
 
-    public NotFoundException(string message)
+    public ReadException(string message)
         : base(message)
     {
     }
 
-    public NotFoundException(string message, Exception innerException)
+    public ReadException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
 
-    private NotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+    private ReadException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         : base(serializationInfo, streamingContext)
     {
     }

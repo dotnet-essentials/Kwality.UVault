@@ -60,8 +60,8 @@ public sealed class UserManagementTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Custom: User with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Custom: Failed to read user: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -177,7 +177,7 @@ public sealed class UserManagementTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<CreateException>()
-                 .WithMessage($"Custom: Another user with the same key `{model.Key}` already exists.")
+                 .WithMessage($"Custom: Failed to create user: `{model.Key}`. Duplicate key.")
                  .ConfigureAwait(false);
     }
 
@@ -219,8 +219,8 @@ public sealed class UserManagementTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Custom: User with key `{key}` NOT found.")
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Custom: Failed to update user: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -244,8 +244,8 @@ public sealed class UserManagementTests
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Custom: User with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Custom: Failed to read user: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -321,7 +321,7 @@ public sealed class UserManagementTests
         {
             if (!this.collection.ContainsKey(key))
             {
-                throw new NotFoundException($"Custom: User with key `{key}` NOT found.");
+                throw new ReadException($"Custom: Failed to read user: `{key}`. Not found.");
             }
 
             return Task.FromResult(this.collection[key]);
@@ -343,14 +343,14 @@ public sealed class UserManagementTests
                 return Task.FromResult(model.Key);
             }
 
-            throw new CreateException($"Custom: Another user with the same key `{model.Key}` already exists.");
+            throw new CreateException($"Custom: Failed to create user: `{model.Key}`. Duplicate key.");
         }
 
         public async Task UpdateAsync(IntKey key, Model model, IUserOperationMapper mapper)
         {
             if (!this.collection.ContainsKey(key))
             {
-                throw new NotFoundException($"Custom: User with key `{key}` NOT found.");
+                throw new UpdateException($"Custom: Failed to update user: `{key}`. Not found.");
             }
 
             this.collection.Remove(key);

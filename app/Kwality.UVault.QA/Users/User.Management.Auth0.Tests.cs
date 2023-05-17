@@ -31,7 +31,6 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
-using global::Auth0.Core.Exceptions;
 using global::Auth0.ManagementApi.Models;
 
 using JetBrains.Annotations;
@@ -77,8 +76,8 @@ public sealed class UserManagementAuth0Tests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Key not found: `{key.Value}`.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read user: `{key}`.")
                  .ConfigureAwait(false);
     }
 
@@ -332,7 +331,7 @@ public sealed class UserManagementAuth0Tests
             // ASSERT.
             await act.Should()
                      .ThrowAsync<CreateException>()
-                     .WithMessage("An error occured during the creation of the user.")
+                     .WithMessage("Failed to create user.")
                      .ConfigureAwait(false);
         }
         finally
@@ -412,8 +411,8 @@ public sealed class UserManagementAuth0Tests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Key not found: `{key.Value}`.")
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Failed to update user: `{key}`.")
                  .ConfigureAwait(false);
     }
 
@@ -443,8 +442,8 @@ public sealed class UserManagementAuth0Tests
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Key not found: `{key.Value}`.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read user: `{key}`.")
                  .ConfigureAwait(false);
     }
 

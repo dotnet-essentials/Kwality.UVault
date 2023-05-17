@@ -41,7 +41,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 
         if (application == null)
         {
-            throw new NotFoundException($"Application with key `{key}` NOT found.");
+            throw new ReadException($"Failed to read application: `{key}`. Not found.");
         }
 
         return Task.FromResult(application);
@@ -60,7 +60,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 
         if (application == null)
         {
-            throw new NotFoundException($"Application with key `{model.Key}` NOT found.");
+            throw new UpdateException($"Failed to update application: `{key}`. Not found.");
         }
 
         this.collection.Remove(application);
@@ -79,5 +79,20 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
         }
 
         return Task.CompletedTask;
+    }
+
+    public Task<TModel> RotateClientSecretAsync(TKey key)
+    {
+        TModel? application = this.collection.FirstOrDefault(u => u.Key.Equals(key));
+
+        if (application != null)
+        {
+            application.ClientSecret = Guid.NewGuid()
+                                           .ToString();
+
+            return Task.FromResult(application);
+        }
+
+        throw new UpdateException($"Failed to update application: `{key}`. Not found.");
     }
 }

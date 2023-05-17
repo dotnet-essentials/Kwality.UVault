@@ -34,8 +34,12 @@ public class ApplicationModel<TKey>
     {
         this.Key = key;
         this.Name = name;
+
+        this.ClientSecret = Guid.NewGuid()
+                                .ToString();
     }
 
     public TKey Key { get; set; }
     public string Name { get; set; }
+    public string ClientSecret { get; set; }
 }

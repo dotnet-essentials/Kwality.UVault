@@ -69,7 +69,7 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
         }
         catch (Exception ex)
         {
-            throw new NotFoundException($"Key not found: `{key}`.", ex);
+            throw new ReadException($"Failed to read application: `{key}`.", ex);
         }
     }
 
@@ -88,7 +88,7 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
         }
         catch (Exception ex)
         {
-            throw new CreateException("An error occured while creating the application.", ex);
+            throw new CreateException("Failed to create application.", ex);
         }
     }
 
@@ -105,7 +105,7 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
         }
         catch (Exception ex)
         {
-            throw new NotFoundException($"Key not found: `{key}`.", ex);
+            throw new UpdateException($"Failed to update application: `{key}`.", ex);
         }
     }
 
@@ -115,8 +115,33 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
-        await apiClient.Clients.DeleteAsync(key.Value)
-                       .ConfigureAwait(false);
+        try
+        {
+            await apiClient.Clients.DeleteAsync(key.Value)
+                           .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            throw new UpdateException($"Failed to delete application: `{key}`.", ex);
+        }
+    }
+
+    public async Task<TModel> RotateClientSecretAsync(StringKey key)
+    {
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
+                                                        .ConfigureAwait(false);
+
+        try
+        {
+            Client? client = await apiClient.Clients.RotateClientSecret(key.Value)
+                                            .ConfigureAwait(false);
+
+            return this.modelMapper.Map(client);
+        }
+        catch (Exception ex)
+        {
+            throw new UpdateException($"Failed to update application: `{key}`.", ex);
+        }
     }
 
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()

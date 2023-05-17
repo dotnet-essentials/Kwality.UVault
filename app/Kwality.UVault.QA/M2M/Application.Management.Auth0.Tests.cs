@@ -72,8 +72,8 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Key not found: `{key.Value}`.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read application: `{key}`.")
                  .ConfigureAwait(false);
     }
 
@@ -103,7 +103,9 @@ public sealed class ApplicationManagementAuth0Tests
             // ASSERT.
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model);
+                                                 .BeEquivalentTo(
+                                                     model, static options => options.Excluding(
+                                                         static application => application.ClientSecret));
         }
         finally
         {
@@ -146,7 +148,9 @@ public sealed class ApplicationManagementAuth0Tests
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model);
+                                                 .BeEquivalentTo(
+                                                     model, static options => options.Excluding(
+                                                         static application => application.ClientSecret));
         }
         finally
         {
@@ -179,8 +183,8 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Key not found: `{key.Value}`.")
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Failed to update application: `{key}`.")
                  .ConfigureAwait(false);
     }
 
@@ -210,8 +214,8 @@ public sealed class ApplicationManagementAuth0Tests
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Key not found: `{key.Value}`.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read application: `{key}`.")
                  .ConfigureAwait(false);
     }
 

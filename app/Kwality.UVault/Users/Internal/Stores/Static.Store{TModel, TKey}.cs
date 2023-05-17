@@ -41,7 +41,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
         if (user == null)
         {
-            throw new NotFoundException($"User with key `{key}` NOT found.");
+            throw new ReadException($"Failed to read user: `{key}`. Not found.");
         }
 
         return Task.FromResult(user);
@@ -61,7 +61,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
             return Task.FromResult(model.Key);
         }
 
-        throw new CreateException($"Another user with the same key `{model.Key}` already exists.");
+        throw new CreateException($"Failed to create user: `{model.Key}`. Duplicate key.");
     }
 
     public async Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
@@ -70,7 +70,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
         if (user == null)
         {
-            throw new NotFoundException($"User with key `{model.Key}` NOT found.");
+            throw new UpdateException($"Failed to update user: `{key}`. Not found.");
         }
 
         this.collection.Remove(user);

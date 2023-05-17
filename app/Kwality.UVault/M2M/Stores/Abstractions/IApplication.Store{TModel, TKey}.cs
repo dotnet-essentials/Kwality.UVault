@@ -35,4 +35,5 @@ public interface IApplicationStore<TModel, TKey>
     Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper);
     Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper);
     Task DeleteByKeyAsync(TKey key);
+    Task<TModel> RotateClientSecretAsync(TKey key);
 }

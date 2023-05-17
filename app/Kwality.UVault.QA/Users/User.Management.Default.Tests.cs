@@ -58,8 +58,8 @@ public sealed class UserManagementDefaultTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"User with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read user: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -170,7 +170,7 @@ public sealed class UserManagementDefaultTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<CreateException>()
-                 .WithMessage($"Another user with the same key `{model.Key}` already exists.")
+                 .WithMessage($"Failed to create user: `{model.Key}`. Duplicate key.")
                  .ConfigureAwait(false);
     }
 
@@ -210,8 +210,8 @@ public sealed class UserManagementDefaultTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"User with key `{model.Key}` NOT found.")
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Failed to update user: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -234,8 +234,8 @@ public sealed class UserManagementDefaultTests
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"User with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read user: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 

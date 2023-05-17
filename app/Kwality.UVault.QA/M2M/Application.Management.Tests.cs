@@ -58,8 +58,8 @@ public sealed class ApplicationManagementTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Custom: User with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Custom: Failed to read application: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -120,8 +120,8 @@ public sealed class ApplicationManagementTests
 
         // ASSERT.
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Custom: Application with key `{key}` NOT found.")
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Custom: Failed to update user: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -145,8 +145,8 @@ public sealed class ApplicationManagementTests
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
-                 .ThrowAsync<NotFoundException>()
-                 .WithMessage($"Custom: User with key `{key}` NOT found.")
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Custom: Failed to read application: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -222,7 +222,7 @@ public sealed class ApplicationManagementTests
         {
             if (!this.collection.ContainsKey(key))
             {
-                throw new NotFoundException($"Custom: User with key `{key}` NOT found.");
+                throw new ReadException($"Custom: Failed to read application: `{key}`. Not found.");
             }
 
             return Task.FromResult(this.collection[key]);
@@ -239,7 +239,7 @@ public sealed class ApplicationManagementTests
         {
             if (!this.collection.ContainsKey(key))
             {
-                throw new NotFoundException($"Custom: Application with key `{key}` NOT found.");
+                throw new UpdateException($"Custom: Failed to update user: `{key}`. Not found.");
             }
 
             this.collection.Remove(key);
@@ -256,6 +256,19 @@ public sealed class ApplicationManagementTests
             }
 
             return Task.CompletedTask;
+        }
+
+        public Task<Model> RotateClientSecretAsync(IntKey key)
+        {
+            if (this.collection.TryGetValue(key, out Model? model))
+            {
+                model.ClientSecret = Guid.NewGuid()
+                                         .ToString();
+
+                return Task.FromResult(model);
+            }
+
+            throw new UpdateException($"Failed to update application: `{key}`. Not found.");
         }
     }
 }

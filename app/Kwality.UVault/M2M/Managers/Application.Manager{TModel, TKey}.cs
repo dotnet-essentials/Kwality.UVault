@@ -65,4 +65,10 @@ public sealed class ApplicationManager<TModel, TKey>
     {
         return this.store.DeleteByKeyAsync(key);
     }
+
+    // Stryker disable once all
+    public Task<TModel> RotateClientSecretAsync(TKey key)
+    {
+        return this.store.RotateClientSecretAsync(key);
+    }
 }
