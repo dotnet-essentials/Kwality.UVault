@@ -164,6 +164,31 @@ public sealed class ApplicationManagementDefaultTests
                  .ConfigureAwait(false);
     }
 
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Rotate client secret succeeds.")]
+    internal async Task RotateClientSecret_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        IntKey key = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+                                  .ConfigureAwait(false);
+
+        string? initialClientSecret = model.ClientSecret;
+
+        // ACT.
+        await manager.RotateClientSecretAsync(key)
+                     .ConfigureAwait(false);
+
+        // ASSERT.
+        Model application = await manager.GetByKeyAsync(key)
+                                         .ConfigureAwait(false);
+
+        initialClientSecret.Should()
+                           .NotMatch(application.ClientSecret);
+    }
+
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model : ApplicationModel<IntKey>

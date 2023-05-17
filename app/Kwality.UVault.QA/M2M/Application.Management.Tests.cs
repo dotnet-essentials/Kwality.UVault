@@ -168,6 +168,32 @@ public sealed class ApplicationManagementTests
                  .ConfigureAwait(false);
     }
 
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Rotate client secret succeeds.")]
+    internal async Task RotateClientSecret_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager
+            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
+
+        string? initialClientSecret = model.ClientSecret;
+
+        // ACT.
+        await manager.RotateClientSecretAsync(key)
+                     .ConfigureAwait(false);
+
+        // ASSERT.
+        Model application = await manager.GetByKeyAsync(key)
+                                         .ConfigureAwait(false);
+
+        initialClientSecret.Should()
+                           .NotMatch(application.ClientSecret);
+    }
+
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model : ApplicationModel<IntKey>
@@ -264,6 +290,8 @@ public sealed class ApplicationManagementTests
             {
                 model.ClientSecret = Guid.NewGuid()
                                          .ToString();
+
+                this.collection[key] = model;
 
                 return Task.FromResult(model);
             }

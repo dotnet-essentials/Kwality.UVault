@@ -104,7 +104,8 @@ public sealed class ApplicationManagementAuth0Tests
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
                                                  .BeEquivalentTo(
-                                                     model, static options => options.Excluding(
+                                                     model,
+                                                     static options => options.Excluding(
                                                          static application => application.ClientSecret));
         }
         finally
@@ -149,7 +150,8 @@ public sealed class ApplicationManagementAuth0Tests
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
                                                  .BeEquivalentTo(
-                                                     model, static options => options.Excluding(
+                                                     model,
+                                                     static options => options.Excluding(
                                                          static application => application.ClientSecret));
         }
         finally
@@ -243,6 +245,53 @@ public sealed class ApplicationManagementAuth0Tests
                  .ConfigureAwait(false);
     }
 
+    [AutoData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Rotate client secret succeeds.")]
+    internal async Task RotateClientSecret_Succeeds(Model model)
+    {
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        StringKey? key = null;
+
+        try
+        {
+            key = await manager.CreateAsync(model, new CreateOperationMapper())
+                               .ConfigureAwait(false);
+
+            Model initialApplication = await manager.GetByKeyAsync(key)
+                                                    .ConfigureAwait(false);
+
+            // ACT.
+            await manager.RotateClientSecretAsync(key)
+                         .ConfigureAwait(false);
+
+            // ASSERT.
+            Model application = await manager.GetByKeyAsync(key)
+                                             .ConfigureAwait(false);
+
+            initialApplication.ClientSecret.Should()
+                              .NotMatch(application.ClientSecret);
+        }
+        finally
+        {
+            // Cleanup: Remove the application in Auth0.
+            if (key != null)
+            {
+                await manager.DeleteByKeyAsync(key)
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
     private static ApiConfiguration GetApiConfiguration()
     {
         return new ApiConfiguration(
@@ -265,7 +314,10 @@ public sealed class ApplicationManagementAuth0Tests
     {
         public Model Map(Client client)
         {
-            return new Model(new StringKey(client.Name));
+            return new Model(new StringKey(client.Name))
+            {
+                ClientSecret = client.ClientSecret,
+            };
         }
     }
 
