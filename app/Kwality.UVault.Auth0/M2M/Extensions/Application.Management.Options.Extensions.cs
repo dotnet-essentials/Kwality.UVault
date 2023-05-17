@@ -24,8 +24,6 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.M2M.Extensions;
 
-using global::Auth0.ManagementApi.Models;
-
 using JetBrains.Annotations;
 
 using Kwality.UVault.Auth0.Configuration;
