@@ -42,6 +42,7 @@ using Kwality.UVault.Auth0.M2M.Operations.Mappers;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
+using Kwality.UVault.Models;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.System;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
@@ -52,6 +53,227 @@ using Xunit;
 [Collection("Auth0")]
 public sealed class ApplicationManagementAuth0Tests
 {
+    [AutoDomainData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: More than the total amount) succeeds.")]
+    internal async Task GetAll_FirstPageWithMoreElementsThanTotal_Succeeds(Model model)
+    {
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        StringKey? key = null;
+
+        try
+        {
+            key = await manager.CreateAsync(model, new CreateOperationMapper())
+                               .ConfigureAwait(false);
+
+            // ACT.
+            PagedResultSet<Model> result = await manager.GetAllAsync(0, 10)
+                                                        .ConfigureAwait(false);
+
+            // ASSERT.
+            result.HasNextPage.Should()
+                  .BeFalse();
+
+            result.ResultSet.Count()
+                  .Should()
+                  .Be(3);
+
+            result.ResultSet.Skip(1)
+                  .Take(1)
+                  .First()
+                  .Should()
+                  .BeEquivalentTo(
+                      model, static options => options.Excluding(static application => application.ClientSecret));
+        }
+        finally
+        {
+            // Cleanup: Remove the application in Auth0.
+            if (key != null)
+            {
+                await manager.DeleteByKeyAsync(key)
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: More than the total amount) succeeds.")]
+    internal async Task GetAll_SecondPageWithMoreElementsThanTotal_Succeeds(Model model)
+    {
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        StringKey? key = null;
+
+        try
+        {
+            key = await manager.CreateAsync(model, new CreateOperationMapper())
+                               .ConfigureAwait(false);
+
+            // ACT.
+            PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
+                                                        .ConfigureAwait(false);
+
+            // ASSERT.
+            result.HasNextPage.Should()
+                  .BeFalse();
+
+            result.ResultSet.Count()
+                  .Should()
+                  .Be(0);
+        }
+        finally
+        {
+            // Cleanup: Remove the application in Auth0.
+            if (key != null)
+            {
+                await manager.DeleteByKeyAsync(key)
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: Less than the total amount) succeeds.")]
+    internal async Task GetAll_FirstPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        StringKey? keyOne = null;
+        StringKey? keyTwo = null;
+
+        try
+        {
+            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
+
+            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
+
+            // ACT.
+            PagedResultSet<Model> result = await manager.GetAllAsync(0, 2)
+                                                        .ConfigureAwait(false);
+
+            // ASSERT.
+            result.HasNextPage.Should()
+                  .BeTrue();
+
+            result.ResultSet.Count()
+                  .Should()
+                  .Be(2);
+
+            result.ResultSet.Skip(1)
+                  .Take(1)
+                  .First()
+                  .Should()
+                  .BeEquivalentTo(
+                      modelOne, static options => options.Excluding(static application => application.ClientSecret));
+        }
+        finally
+        {
+            // Cleanup: Remove the applications in Auth0.
+            if (keyOne != null)
+            {
+                await manager.DeleteByKeyAsync(keyOne)
+                             .ConfigureAwait(false);
+            }
+
+            if (keyTwo != null)
+            {
+                await manager.DeleteByKeyAsync(keyTwo)
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: Less than the total amount) succeeds.")]
+    internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        StringKey? keyOne = null;
+        StringKey? keyTwo = null;
+
+        try
+        {
+            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
+
+            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
+
+            // ACT.
+            PagedResultSet<Model> result = await manager.GetAllAsync(1, 2)
+                                                        .ConfigureAwait(false);
+
+            // ASSERT.
+            result.HasNextPage.Should()
+                  .BeFalse();
+
+            result.ResultSet.Count()
+                  .Should()
+                  .Be(2);
+
+            result.ResultSet
+                  .Take(1)
+                  .First()
+                  .Should()
+                  .BeEquivalentTo(
+                      modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+        }
+        finally
+        {
+            // Cleanup: Remove the applications in Auth0.
+            if (keyOne != null)
+            {
+                await manager.DeleteByKeyAsync(keyOne)
+                             .ConfigureAwait(false);
+            }
+
+            if (keyTwo != null)
+            {
+                await manager.DeleteByKeyAsync(keyTwo)
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
     [AutoData]
     [M2MManagement]
     [Auth0]

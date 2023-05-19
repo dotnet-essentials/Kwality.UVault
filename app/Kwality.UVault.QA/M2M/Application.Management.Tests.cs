@@ -38,12 +38,138 @@ using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
+using Kwality.UVault.Models;
 
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
 public sealed class ApplicationManagementTests
 {
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: More than the total amount) succeeds.")]
+    internal async Task GetAll_FirstPageWithMoreElementsThanTotal_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 10)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet
+              .Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  model, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: More than the total amount) succeeds.")]
+    internal async Task GetAll_SecondPageWithMoreElementsThanTotal_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(0);
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: Less than the total amount) succeeds.")]
+    internal async Task GetAll_FirstPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 1)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeTrue();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet
+              .Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelOne, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: Less than the total amount) succeeds.")]
+    internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(new Model(new IntKey(50), "50"), new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 2)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
     [AutoData]
     [M2MManagement]
     [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
@@ -243,6 +369,17 @@ public sealed class ApplicationManagementTests
 #pragma warning restore CA1812
     {
         private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
+
+        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize)
+        {
+            IEnumerable<Model> applications = this.collection.Skip(pageIndex * pageSize)
+                                                  .Take(pageSize)
+                                                  .Select(static kvp => kvp.Value);
+
+            var result = new PagedResultSet<Model>(applications, this.collection.Count > (pageIndex + 1) * pageSize);
+
+            return Task.FromResult(result);
+        }
 
         public Task<Model> GetByKeyAsync(IntKey key)
         {

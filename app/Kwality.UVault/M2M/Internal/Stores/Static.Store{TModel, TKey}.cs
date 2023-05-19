@@ -28,12 +28,23 @@ using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
+using Kwality.UVault.Models;
 
 internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey>
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
     private readonly IList<TModel> collection = new List<TModel>();
+
+    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
+    {
+        IEnumerable<TModel> applications = this.collection.Skip(pageIndex * pageSize)
+                                               .Take(pageSize);
+
+        var result = new PagedResultSet<TModel>(applications, this.collection.Count > (pageIndex + 1) * pageSize);
+
+        return Task.FromResult(result);
+    }
 
     public Task<TModel> GetByKeyAsync(TKey key)
     {

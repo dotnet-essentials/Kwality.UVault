@@ -24,8 +24,6 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.M2M;
 
-using AutoFixture;
-using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -34,17 +32,143 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Keys;
-using Kwality.UVault.QA.Internal.Factories;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Operations.Mappers;
+using Kwality.UVault.Models;
+using Kwality.UVault.QA.Internal.Factories;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
 public sealed class ApplicationManagementDefaultTests
 {
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: More than the total amount) succeeds.")]
+    internal async Task GetAll_FirstPageWithMoreElementsThanTotal_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 10)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet
+              .Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  model, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: More than the total amount) succeeds.")]
+    internal async Task GetAll_SecondPageWithMoreElementsThanTotal_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(0);
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: Less than the total amount) succeeds.")]
+    internal async Task GetAll_FirstPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 1)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeTrue();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet
+              .Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelOne, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: Less than the total amount) succeeds.")]
+    internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(new Model(new IntKey(50), "50"), new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 2)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
     [AutoData]
     [M2MManagement]
     [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
@@ -72,7 +196,7 @@ public sealed class ApplicationManagementDefaultTests
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
         // ACT.
-        IntKey key = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         // ASSERT.
@@ -89,7 +213,7 @@ public sealed class ApplicationManagementDefaultTests
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
-        IntKey userId = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey userId = await manager.CreateAsync(model, new CreateOperationMapper())
                                      .ConfigureAwait(false);
 
         // ACT.
@@ -130,7 +254,7 @@ public sealed class ApplicationManagementDefaultTests
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
-        IntKey key = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         // ACT.
@@ -172,7 +296,7 @@ public sealed class ApplicationManagementDefaultTests
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
-        IntKey key = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         string? initialClientSecret = model.ClientSecret;
