@@ -35,12 +35,6 @@ public class ApplicationModel<TKey>
         this.Key = key;
     }
 
-    public ApplicationModel(TKey key, string name)
-    {
-        this.Key = key;
-        this.Name = name;
-    }
-
     public TKey Key { get; set; }
     public string? Name { get; set; }
     public string? ClientSecret { get; set; }

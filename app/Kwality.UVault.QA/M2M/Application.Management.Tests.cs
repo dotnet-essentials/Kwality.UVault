@@ -326,8 +326,9 @@ public sealed class ApplicationManagementTests
 #pragma warning restore CA1812
     {
         public Model(IntKey key, string name)
-            : base(key, name)
+            : base(key)
         {
+            this.Name = name;
         }
     }
 
