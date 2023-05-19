@@ -304,6 +304,7 @@ public sealed class ApplicationManagementAuth0Tests
         public Model(StringKey name)
             : base(name)
         {
+            this.Name = name.Value;
         }
     }
 
@@ -316,6 +317,7 @@ public sealed class ApplicationManagementAuth0Tests
         {
             return new Model(new StringKey(client.Name))
             {
+                Name = client.Name,
                 ClientSecret = client.ClientSecret,
             };
         }
