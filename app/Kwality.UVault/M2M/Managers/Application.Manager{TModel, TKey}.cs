@@ -55,9 +55,9 @@ public sealed class ApplicationManager<TModel, TKey>
     }
 
     // Stryker disable once all
-    public Task<TKey> CreateAsync(TModel user, IApplicationOperationMapper mapper)
+    public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
     {
-        return this.store.CreateAsync(user, mapper);
+        return this.store.CreateAsync(model, mapper);
     }
 
     // Stryker disable once all
