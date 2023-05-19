@@ -46,8 +46,8 @@ public sealed class ApplicationManagementDefaultTests
 {
     [AutoData]
     [M2MManagement]
-    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: More than the total amount) succeeds.")]
-    internal async Task GetAll_FirstPageWithMoreElementsThanTotal_Succeeds(Model model)
+    [Theory(DisplayName = "Get all (pageIndex: 0, all data showed) succeeds.")]
+    internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
@@ -67,8 +67,7 @@ public sealed class ApplicationManagementDefaultTests
               .Should()
               .Be(1);
 
-        result.ResultSet
-              .Take(1)
+        result.ResultSet.Take(1)
               .First()
               .Should()
               .BeEquivalentTo(
@@ -77,8 +76,8 @@ public sealed class ApplicationManagementDefaultTests
 
     [AutoData]
     [M2MManagement]
-    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: More than the total amount) succeeds.")]
-    internal async Task GetAll_SecondPageWithMoreElementsThanTotal_Succeeds(Model model)
+    [Theory(DisplayName = "Get all (pageIndex: 1, all data showed) succeeds.")]
+    internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
@@ -101,8 +100,8 @@ public sealed class ApplicationManagementDefaultTests
 
     [AutoData]
     [M2MManagement]
-    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: Less than the total amount) succeeds.")]
-    internal async Task GetAll_FirstPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    [Theory(DisplayName = "Get all (pageIndex: 0, all data NOT showed) succeeds.")]
+    internal async Task GetAll_FirstPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
@@ -125,8 +124,7 @@ public sealed class ApplicationManagementDefaultTests
               .Should()
               .Be(1);
 
-        result.ResultSet
-              .Take(1)
+        result.ResultSet.Take(1)
               .First()
               .Should()
               .BeEquivalentTo(
@@ -135,8 +133,8 @@ public sealed class ApplicationManagementDefaultTests
 
     [AutoData]
     [M2MManagement]
-    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: Less than the total amount) succeeds.")]
-    internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    [Theory(DisplayName = "Get all (pageIndex: 1, all data NOT showed) succeeds.")]
+    internal async Task GetAll_SecondPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
@@ -144,14 +142,11 @@ public sealed class ApplicationManagementDefaultTests
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
 
-        await manager.CreateAsync(new Model(new IntKey(50), "50"), new CreateOperationMapper())
-                     .ConfigureAwait(false);
-
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
                      .ConfigureAwait(false);
 
         // ACT.
-        PagedResultSet<Model> result = await manager.GetAllAsync(1, 2)
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
                                                     .ConfigureAwait(false);
 
         // ASSERT.
@@ -223,6 +218,11 @@ public sealed class ApplicationManagementDefaultTests
                      .ConfigureAwait(false);
 
         // ASSERT.
+        (await manager.GetAllAsync(0, 100)
+                      .ConfigureAwait(false)).ResultSet.Count()
+                                             .Should()
+                                             .Be(1);
+
         (await manager.GetByKeyAsync(userId)
                       .ConfigureAwait(false)).Should()
                                              .BeEquivalentTo(model);
@@ -285,6 +285,24 @@ public sealed class ApplicationManagementDefaultTests
         // ASSERT.
         await act.Should()
                  .NotThrowAsync()
+                 .ConfigureAwait(false);
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Rotate client secret raises an exception when the key is NOT found.")]
+    internal async Task RotateClientSecret_UnknownKey_RaisesException(IntKey key)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        // ACT.
+        Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
+
+        // ASSERT.
+        await act.Should()
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Failed to update application: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 

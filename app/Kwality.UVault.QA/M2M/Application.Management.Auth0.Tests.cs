@@ -56,8 +56,8 @@ public sealed class ApplicationManagementAuth0Tests
     [AutoDomainData]
     [M2MManagement]
     [Auth0]
-    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: More than the total amount) succeeds.")]
-    internal async Task GetAll_FirstPageWithMoreElementsThanTotal_Succeeds(Model model)
+    [Theory(DisplayName = "Get all (pageIndex: 0, all data showed) succeeds.")]
+    internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
     {
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -108,8 +108,8 @@ public sealed class ApplicationManagementAuth0Tests
     [AutoDomainData]
     [M2MManagement]
     [Auth0]
-    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: More than the total amount) succeeds.")]
-    internal async Task GetAll_SecondPageWithMoreElementsThanTotal_Succeeds(Model model)
+    [Theory(DisplayName = "Get all (pageIndex: 1, all data showed) succeeds.")]
+    internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
     {
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -153,8 +153,8 @@ public sealed class ApplicationManagementAuth0Tests
     [AutoDomainData]
     [M2MManagement]
     [Auth0]
-    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: Less than the total amount) succeeds.")]
-    internal async Task GetAll_FirstPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    [Theory(DisplayName = "Get all (pageIndex: 1, all data NOT showed) succeeds.")]
+    internal async Task GetAll_SecondPageWhenNotAllDataShowed_Succeeds(Model model)
     {
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -165,19 +165,15 @@ public sealed class ApplicationManagementAuth0Tests
         ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
             options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
-        StringKey? keyOne = null;
-        StringKey? keyTwo = null;
+        StringKey? key = null;
 
         try
         {
-            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
-
-            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+            key = await manager.CreateAsync(model, new CreateOperationMapper())
+                               .ConfigureAwait(false);
 
             // ACT.
-            PagedResultSet<Model> result = await manager.GetAllAsync(0, 2)
+            PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
                                                         .ConfigureAwait(false);
 
             // ASSERT.
@@ -186,89 +182,20 @@ public sealed class ApplicationManagementAuth0Tests
 
             result.ResultSet.Count()
                   .Should()
-                  .Be(2);
+                  .Be(1);
 
-            result.ResultSet.Skip(1)
-                  .Take(1)
+            result.ResultSet.Take(1)
                   .First()
                   .Should()
                   .BeEquivalentTo(
-                      modelOne, static options => options.Excluding(static application => application.ClientSecret));
+                      model, static options => options.Excluding(static application => application.ClientSecret));
         }
         finally
         {
             // Cleanup: Remove the applications in Auth0.
-            if (keyOne != null)
+            if (key != null)
             {
-                await manager.DeleteByKeyAsync(keyOne)
-                             .ConfigureAwait(false);
-            }
-
-            if (keyTwo != null)
-            {
-                await manager.DeleteByKeyAsync(keyTwo)
-                             .ConfigureAwait(false);
-            }
-        }
-    }
-
-    [AutoDomainData]
-    [M2MManagement]
-    [Auth0]
-    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: Less than the total amount) succeeds.")]
-    internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
-    {
-        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-
-        // ARRANGE.
-        ApiConfiguration apiConfiguration = GetApiConfiguration();
-
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
-            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
-
-        StringKey? keyOne = null;
-        StringKey? keyTwo = null;
-
-        try
-        {
-            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
-
-            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
-
-            // ACT.
-            PagedResultSet<Model> result = await manager.GetAllAsync(1, 2)
-                                                        .ConfigureAwait(false);
-
-            // ASSERT.
-            result.HasNextPage.Should()
-                  .BeFalse();
-
-            result.ResultSet.Count()
-                  .Should()
-                  .Be(2);
-
-            result.ResultSet
-                  .Take(1)
-                  .First()
-                  .Should()
-                  .BeEquivalentTo(
-                      modelTwo, static options => options.Excluding(static application => application.ClientSecret));
-        }
-        finally
-        {
-            // Cleanup: Remove the applications in Auth0.
-            if (keyOne != null)
-            {
-                await manager.DeleteByKeyAsync(keyOne)
-                             .ConfigureAwait(false);
-            }
-
-            if (keyTwo != null)
-            {
-                await manager.DeleteByKeyAsync(keyTwo)
+                await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(false);
             }
         }
@@ -464,6 +391,31 @@ public sealed class ApplicationManagementAuth0Tests
         // ASSERT.
         await act.Should()
                  .NotThrowAsync()
+                 .ConfigureAwait(false);
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Rotate client secret raises an exception when the key is NOT found.")]
+    internal async Task RotateClientSecret_UnknownKey_RaisesException(StringKey key)
+    {
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        // ACT.
+        Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
+
+        // ASSERT.
+        await act.Should()
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Failed to update application: `{key}`.")
                  .ConfigureAwait(false);
     }
 

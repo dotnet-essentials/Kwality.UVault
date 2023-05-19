@@ -47,8 +47,8 @@ public sealed class ApplicationManagementTests
 {
     [AutoData]
     [M2MManagement]
-    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: More than the total amount) succeeds.")]
-    internal async Task GetAll_FirstPageWithMoreElementsThanTotal_Succeeds(Model model)
+    [Theory(DisplayName = "Get all (pageIndex: 0, all data showed) succeeds.")]
+    internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
@@ -78,8 +78,8 @@ public sealed class ApplicationManagementTests
 
     [AutoData]
     [M2MManagement]
-    [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: More than the total amount) succeeds.")]
-    internal async Task GetAll_SecondPageWithMoreElementsThanTotal_Succeeds(Model model)
+    [Theory(DisplayName = "Get all (pageIndex: 1, all data showed) succeeds.")]
+    internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
@@ -102,8 +102,8 @@ public sealed class ApplicationManagementTests
 
     [AutoData]
     [M2MManagement]
-    [Theory(DisplayName = "Get all (pageIndex: 0, pageSize: Less than the total amount) succeeds.")]
-    internal async Task GetAll_FirstPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
+    [Theory(DisplayName = "Get all (pageIndex: 0, all data NOT showed) succeeds.")]
+    internal async Task GetAll_FirstPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
@@ -145,14 +145,11 @@ public sealed class ApplicationManagementTests
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
 
-        await manager.CreateAsync(new Model(new IntKey(50), "50"), new CreateOperationMapper())
-                     .ConfigureAwait(false);
-
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
                      .ConfigureAwait(false);
 
         // ACT.
-        PagedResultSet<Model> result = await manager.GetAllAsync(1, 2)
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
                                                     .ConfigureAwait(false);
 
         // ASSERT.
@@ -296,6 +293,25 @@ public sealed class ApplicationManagementTests
 
     [AutoData]
     [M2MManagement]
+    [Theory(DisplayName = "Rotate client secret raises an exception when the key is NOT found.")]
+    internal async Task RotateClientSecret_UnknownKey_RaisesException(IntKey key)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager
+            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+
+        // ACT.
+        Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
+
+        // ASSERT.
+        await act.Should()
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Custom: Failed to update application: `{key}`. Not found.")
+                 .ConfigureAwait(false);
+    }
+
+    [AutoData]
+    [M2MManagement]
     [Theory(DisplayName = "Rotate client secret succeeds.")]
     internal async Task RotateClientSecret_Succeeds(Model model)
     {
@@ -434,7 +450,7 @@ public sealed class ApplicationManagementTests
                 return Task.FromResult(model);
             }
 
-            throw new UpdateException($"Failed to update application: `{key}`. Not found.");
+            throw new UpdateException($"Custom: Failed to update application: `{key}`. Not found.");
         }
     }
 }
