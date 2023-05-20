@@ -24,6 +24,9 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Models;
 
+using JetBrains.Annotations;
+
+[PublicAPI]
 public sealed class PagedResultSet<TModel>
 {
     public PagedResultSet(IEnumerable<TModel> resultSet, bool hasNextPage)
