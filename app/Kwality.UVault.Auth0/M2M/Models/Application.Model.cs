@@ -36,7 +36,7 @@ using Kwality.UVault.M2M.Models;
 public class ApplicationModel : ApplicationModel<StringKey>
 {
     public ApplicationModel(StringKey key)
-        : base(key, (key ?? throw new ArgumentNullException(nameof(key))).Value)
+        : base(key)
     {
     }
 }

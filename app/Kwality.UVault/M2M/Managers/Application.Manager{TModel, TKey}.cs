@@ -29,6 +29,7 @@ using JetBrains.Annotations;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
+using Kwality.UVault.Models;
 
 [PublicAPI]
 public sealed class ApplicationManager<TModel, TKey>
@@ -42,6 +43,11 @@ public sealed class ApplicationManager<TModel, TKey>
         this.store = store;
     }
 
+    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
+    {
+        return this.store.GetAllAsync(pageIndex, pageSize);
+    }
+
     // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
@@ -49,9 +55,9 @@ public sealed class ApplicationManager<TModel, TKey>
     }
 
     // Stryker disable once all
-    public Task<TKey> CreateAsync(TModel user, IApplicationOperationMapper mapper)
+    public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
     {
-        return this.store.CreateAsync(user, mapper);
+        return this.store.CreateAsync(model, mapper);
     }
 
     // Stryker disable once all

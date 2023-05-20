@@ -45,7 +45,7 @@ public sealed class ApplicationCreateOperationMapperTests
     internal void Map_InvalidDestination_RaisesException(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new ApplicationCreateOperationMapper();
+        var mapper = new CreateOperationMapper();
 
         // ACT.
         Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
@@ -62,7 +62,7 @@ public sealed class ApplicationCreateOperationMapperTests
     internal void Map_Succeeds(ModelOne model)
     {
         // ARRANGE.
-        var mapper = new ApplicationCreateOperationMapper();
+        var mapper = new CreateOperationMapper();
 
         // ACT.
         ModelOne result = mapper.Create<ModelOne, ModelOne>(model);

@@ -22,20 +22,19 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.M2M.Stores.Abstractions;
+namespace Kwality.UVault.Models;
 
-using Kwality.UVault.M2M.Models;
-using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
-using Kwality.UVault.Models;
+using JetBrains.Annotations;
 
-public interface IApplicationStore<TModel, TKey>
-    where TModel : ApplicationModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+[PublicAPI]
+public sealed class PagedResultSet<TModel>
 {
-    Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize);
-    Task<TModel> GetByKeyAsync(TKey key);
-    Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper);
-    Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper);
-    Task DeleteByKeyAsync(TKey key);
-    Task<TModel> RotateClientSecretAsync(TKey key);
+    public PagedResultSet(IEnumerable<TModel> resultSet, bool hasNextPage)
+    {
+        this.ResultSet = resultSet;
+        this.HasNextPage = hasNextPage;
+    }
+
+    public IEnumerable<TModel> ResultSet { get; }
+    public bool HasNextPage { get; }
 }

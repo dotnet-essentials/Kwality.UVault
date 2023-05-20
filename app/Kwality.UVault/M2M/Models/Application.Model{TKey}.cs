@@ -30,13 +30,12 @@ using JetBrains.Annotations;
 public class ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    public ApplicationModel(TKey key, string name)
+    public ApplicationModel(TKey key)
     {
         this.Key = key;
-        this.Name = name;
     }
 
     public TKey Key { get; set; }
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public string? ClientSecret { get; set; }
 }

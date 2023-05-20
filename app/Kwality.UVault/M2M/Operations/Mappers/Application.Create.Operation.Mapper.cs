@@ -30,7 +30,7 @@ using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
 [PublicAPI]
-public sealed class ApplicationCreateOperationMapper : IApplicationOperationMapper
+public sealed class CreateOperationMapper : IApplicationOperationMapper
 {
     public TDestination Create<TSource, TDestination>(TSource source)
         where TDestination : class

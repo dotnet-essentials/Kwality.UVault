@@ -26,6 +26,7 @@ namespace Kwality.UVault.Auth0.M2M.Stores;
 
 using global::Auth0.ManagementApi;
 using global::Auth0.ManagementApi.Models;
+using global::Auth0.ManagementApi.Paging;
 
 using JetBrains.Annotations;
 
@@ -37,6 +38,7 @@ using Kwality.UVault.Auth0.M2M.Models;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
+using Kwality.UVault.Models;
 
 [UsedImplicitly]
 internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, StringKey>
@@ -52,6 +54,30 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
         this.managementClient = managementClient;
         this.apiConfiguration = apiConfiguration;
         this.modelMapper = modelMapper;
+    }
+
+    public async Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
+    {
+        using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
+                                                        .ConfigureAwait(false);
+
+        try
+        {
+            IPagedList<Client>? clients = await apiClient
+                                                .Clients.GetAllAsync(
+                                                    new GetClientsRequest(),
+                                                    new PaginationInfo(pageIndex, pageSize, true))
+                                                .ConfigureAwait(false);
+
+            IList<TModel> models = clients.Select(client => this.modelMapper.Map(client))
+                                          .ToList();
+
+            return new PagedResultSet<TModel>(models, clients.Paging.Total > (pageIndex + 1) * pageSize);
+        }
+        catch (Exception ex)
+        {
+            throw new ReadException("Failed to read applications.", ex);
+        }
     }
 
     // Stryker disable once all

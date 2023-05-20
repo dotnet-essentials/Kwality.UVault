@@ -24,8 +24,6 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.M2M;
 
-using AutoFixture;
-using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -34,17 +32,138 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Keys;
-using Kwality.UVault.QA.Internal.Factories;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Operations.Mappers;
+using Kwality.UVault.Models;
+using Kwality.UVault.QA.Internal.Factories;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
 public sealed class ApplicationManagementDefaultTests
 {
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 0, all data showed) succeeds.")]
+    internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 10)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  model, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 1, all data showed) succeeds.")]
+    internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(0);
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 0, all data NOT showed) succeeds.")]
+    internal async Task GetAll_FirstPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 1)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeTrue();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelOne, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Theory(DisplayName = "Get all (pageIndex: 1, all data NOT showed) succeeds.")]
+    internal async Task GetAll_SecondPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        // ACT.
+        PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
+                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        result.HasNextPage.Should()
+              .BeFalse();
+
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.Take(1)
+              .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
     [AutoData]
     [M2MManagement]
     [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
@@ -72,7 +191,7 @@ public sealed class ApplicationManagementDefaultTests
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
         // ACT.
-        IntKey key = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         // ASSERT.
@@ -89,7 +208,7 @@ public sealed class ApplicationManagementDefaultTests
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
-        IntKey userId = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey userId = await manager.CreateAsync(model, new CreateOperationMapper())
                                      .ConfigureAwait(false);
 
         // ACT.
@@ -99,6 +218,11 @@ public sealed class ApplicationManagementDefaultTests
                      .ConfigureAwait(false);
 
         // ASSERT.
+        (await manager.GetAllAsync(0, 100)
+                      .ConfigureAwait(false)).ResultSet.Count()
+                                             .Should()
+                                             .Be(1);
+
         (await manager.GetByKeyAsync(userId)
                       .ConfigureAwait(false)).Should()
                                              .BeEquivalentTo(model);
@@ -130,7 +254,7 @@ public sealed class ApplicationManagementDefaultTests
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
-        IntKey key = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         // ACT.
@@ -166,13 +290,31 @@ public sealed class ApplicationManagementDefaultTests
 
     [AutoData]
     [M2MManagement]
+    [Theory(DisplayName = "Rotate client secret raises an exception when the key is NOT found.")]
+    internal async Task RotateClientSecret_UnknownKey_RaisesException(IntKey key)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        // ACT.
+        Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
+
+        // ASSERT.
+        await act.Should()
+                 .ThrowAsync<UpdateException>()
+                 .WithMessage($"Failed to update application: `{key}`. Not found.")
+                 .ConfigureAwait(false);
+    }
+
+    [AutoData]
+    [M2MManagement]
     [Theory(DisplayName = "Rotate client secret succeeds.")]
     internal async Task RotateClientSecret_Succeeds(Model model)
     {
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
-        IntKey key = await manager.CreateAsync(model, new ApplicationCreateOperationMapper())
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         string? initialClientSecret = model.ClientSecret;
@@ -195,8 +337,9 @@ public sealed class ApplicationManagementDefaultTests
 #pragma warning restore CA1812
     {
         public Model(IntKey key, string name)
-            : base(key, name)
+            : base(key)
         {
+            this.Name = name;
         }
     }
 }
