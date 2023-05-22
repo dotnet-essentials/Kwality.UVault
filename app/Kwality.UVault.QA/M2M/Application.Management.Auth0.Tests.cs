@@ -79,7 +79,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            PagedResultSet<Model> result = await manager.GetAllAsync(0, 10)
+            PagedResultSet<Model> result = await manager.GetAllAsync(0, 3)
                                                         .ConfigureAwait(false);
 
             // ASSERT.

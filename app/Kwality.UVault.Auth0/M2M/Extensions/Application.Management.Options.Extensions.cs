@@ -33,6 +33,8 @@ using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 using Kwality.UVault.Auth0.M2M.Models;
 using Kwality.UVault.Auth0.M2M.Stores;
 using Kwality.UVault.M2M.Options;
+using Kwality.UVault.System;
+using Kwality.UVault.System.Abstractions;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -48,6 +50,7 @@ public static class ApplicationManagementOptionsExtensions
 
         // Register additional services.
         options.ServiceCollection.AddScoped<IModelMapper<TModel>, TMapper>();
+        options.ServiceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         options.ServiceCollection.AddHttpClient<ManagementClient>();
         options.ServiceCollection.AddSingleton(configuration);
     }

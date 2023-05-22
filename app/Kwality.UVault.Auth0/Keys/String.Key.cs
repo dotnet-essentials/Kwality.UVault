@@ -24,7 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.Keys;
 
-using System.Diagnostics.CodeAnalysis;
+using global::System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 

@@ -24,9 +24,9 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.IAM;
 
-using System.Diagnostics.CodeAnalysis;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
+using global::System.Diagnostics.CodeAnalysis;
+using global::System.IdentityModel.Tokens.Jwt;
+using global::System.Net;
 
 using Kwality.UVault.Extensions;
 using Kwality.UVault.IAM.Extensions;

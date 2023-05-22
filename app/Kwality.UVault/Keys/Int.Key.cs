@@ -24,8 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Keys;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+using global::System.Diagnostics.CodeAnalysis;
+using global::System.Globalization;
 
 using JetBrains.Annotations;
 

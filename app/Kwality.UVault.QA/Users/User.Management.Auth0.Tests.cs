@@ -24,14 +24,14 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.Users;
 
-using System.Net.Http.Json;
-
 using AutoFixture;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
 using global::Auth0.ManagementApi.Models;
+
+using global::System.Net.Http.Json;
 
 using JetBrains.Annotations;
 

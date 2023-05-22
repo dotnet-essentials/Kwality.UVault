@@ -24,12 +24,21 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.Internal.API.Models;
 
-using System.Text.Json.Serialization;
+using global::System.Text.Json.Serialization;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.System.Abstractions;
+
 internal sealed class ApiManagementToken
 {
+    private readonly DateTime issuedTimeStamp;
+
+    public ApiManagementToken()
+    {
+        this.issuedTimeStamp = DateTime.Now;
+    }
+
     [JsonPropertyName("access_token")]
     public string? AccessToken
     {
@@ -37,5 +46,22 @@ internal sealed class ApiManagementToken
 
         [UsedImplicitly]
         set;
+    }
+
+    [JsonPropertyName("expires_in")]
+    public int ExpiresIn
+    {
+        get;
+
+        [UsedImplicitly]
+        set;
+    }
+
+    // NOTE: A token is expired one the amount of seconds (see "Expired In") is passed.
+    //       To ensure that we don't use an expired token, a safety mechanism is built in.
+    //       The time at which the token is used isn't the same as the time at which the token is checked.
+    public bool IsExpired(IDateTimeProvider dateTimeProvider)
+    {
+        return dateTimeProvider.Now.AddMinutes(1) >= this.issuedTimeStamp.AddSeconds(this.ExpiresIn);
     }
 }

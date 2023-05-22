@@ -24,23 +24,33 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.Internal.API.Clients;
 
-using System.Net.Http.Json;
+using global::System.Net.Http.Json;
 
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
 using Kwality.UVault.Auth0.Internal.API.Models;
+using Kwality.UVault.System.Abstractions;
 
 internal sealed class ManagementClient
 {
+    private readonly IDateTimeProvider dateTimeProvider;
     private readonly HttpClient httpClient;
+    private ApiManagementToken? lastRequestedManagementToken;
 
-    public ManagementClient(HttpClient httpClient)
+    public ManagementClient(HttpClient httpClient, IDateTimeProvider dateTimeProvider)
     {
         this.httpClient = httpClient;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
+        if (this.lastRequestedManagementToken is { AccessToken: not null, } &&
+            !this.lastRequestedManagementToken.IsExpired(this.dateTimeProvider))
+        {
+            return this.lastRequestedManagementToken.AccessToken;
+        }
+
         var data = new[]
         {
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
@@ -59,12 +69,12 @@ internal sealed class ManagementClient
             await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 `User Management` token.")
                 .ConfigureAwait(false);
 
-            ApiManagementToken? managementToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
-                                                              .ConfigureAwait(false);
+            this.lastRequestedManagementToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
+                                                            .ConfigureAwait(false);
 
-            return string.IsNullOrEmpty(managementToken?.AccessToken)
+            return string.IsNullOrEmpty(this.lastRequestedManagementToken?.AccessToken)
                 ? throw new ManagementApiException("The `API Management Token / Access Token` token is `null`.")
-                : managementToken.AccessToken;
+                : this.lastRequestedManagementToken.AccessToken;
         }
         catch (Exception ex) when (ex is not ManagementApiException)
         {

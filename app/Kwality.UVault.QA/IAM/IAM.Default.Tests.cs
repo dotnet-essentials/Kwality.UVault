@@ -24,12 +24,12 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.IAM;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
+
+using global::System.Diagnostics.CodeAnalysis;
+using global::System.Net;
 
 using Kwality.UVault.Extensions;
 using Kwality.UVault.IAM.Extensions;
