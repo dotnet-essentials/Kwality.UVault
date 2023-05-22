@@ -32,6 +32,8 @@ using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.Users.Mapping.Abstractions;
 using Kwality.UVault.Auth0.Users.Models;
 using Kwality.UVault.Auth0.Users.Stores;
+using Kwality.UVault.System;
+using Kwality.UVault.System.Abstractions;
 using Kwality.UVault.Users.Options;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +50,7 @@ public static class UserManagementOptionsExtensions
 
         // Register additional services.
         options.ServiceCollection.AddScoped<IModelMapper<TModel>, TMapper>();
+        options.ServiceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         options.ServiceCollection.AddHttpClient<ManagementClient>();
         options.ServiceCollection.AddSingleton(configuration);
     }
