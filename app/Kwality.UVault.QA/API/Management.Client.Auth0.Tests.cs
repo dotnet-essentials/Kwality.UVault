@@ -56,7 +56,7 @@ public sealed class Auth0ManagementClientTests
             new Uri("http://localhost/"), string.Empty, string.Empty, string.Empty);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the REST endpoint can't be requested.")]
     internal async Task RequestToken_RequestFails_RaisesException(
@@ -76,7 +76,7 @@ public sealed class Auth0ManagementClientTests
                  .ConfigureAwait(false);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result differs from HTTP OK (NO Content).")]
     internal async Task RequestToken_ResponseNoOkWithoutContent_RaisesException(
@@ -102,7 +102,7 @@ public sealed class Auth0ManagementClientTests
                  .ConfigureAwait(false);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result differs from HTTP OK.")]
     internal async Task RequestToken_ResponseNoOk_RaisesException(
@@ -128,7 +128,7 @@ public sealed class Auth0ManagementClientTests
                  .ConfigureAwait(false);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result is NOT valid JSON.")]
     internal async Task RequestToken_ResponseNoValidJson_RaisesException(
@@ -154,7 +154,7 @@ public sealed class Auth0ManagementClientTests
                  .ConfigureAwait(false);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result does NOT contain an access token.")]
     internal async Task RequestToken_ResponseNoAccessToken_RaisesException(
@@ -180,7 +180,7 @@ public sealed class Auth0ManagementClientTests
                  .ConfigureAwait(false);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result does contain an empty access token.")]
     internal async Task RequestToken_ResponseEmptyAccessToken_RaisesException(
@@ -206,7 +206,7 @@ public sealed class Auth0ManagementClientTests
                  .ConfigureAwait(false);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns the access token.")]
     internal async Task RequestToken_ReturnsAccessToken(
@@ -230,7 +230,7 @@ public sealed class Auth0ManagementClientTests
               .Be(apiToken);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns the cached access token.")]
     internal async Task RequestToken_LastTokenNotExpired_ReturnsCachedAccessToken(
@@ -271,7 +271,7 @@ public sealed class Auth0ManagementClientTests
                  .Be(resultTwo);
     }
 
-    [UserManagement]
+    [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns a new access token.")]
     internal async Task RequestToken_LastTokenExpired_ReturnsNewAccessToken(
