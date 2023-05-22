@@ -24,19 +24,20 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.API;
 
-using System.Net;
-
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
+using global::System.Net;
+
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
 using Kwality.UVault.Auth0.Internal.API.Clients;
 using Kwality.UVault.QA.Internal.Extensions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
+using Kwality.UVault.System.Abstractions;
 
 using Moq;
 
@@ -232,14 +233,18 @@ public sealed class Auth0ManagementClientTests
     [UserManagement]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns the cached access token.")]
-    internal async Task RequestToken_ReturnsCachedAccessToken(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+    internal async Task RequestToken_LastTokenNotExpired_ReturnsCachedAccessToken(
+        [Frozen] Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
+        ManagementClient managementClient)
     {
         // MOCK SETUP.
+        dateTimeProvider.Setup(static x => x.Now)
+                        .Returns(DateTime.Now);
+
         using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage
         {
             StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"Token 1\"}"),
+            Content = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}"),
         };
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageOne);
@@ -252,7 +257,7 @@ public sealed class Auth0ManagementClientTests
         using var managementApiTokenHttpResponseMessageTwo = new HttpResponseMessage
         {
             StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"Token 2\"}"),
+            Content = new StringContent("{\"access_token\":\"Token 2\",\"expires_in\": 86400}"),
         };
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageTwo);
@@ -264,6 +269,47 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         resultOne.Should()
                  .Be(resultTwo);
+    }
+
+    [UserManagement]
+    [AutoDomainData]
+    [Theory(DisplayName = $"{testPrefix} returns a new access token.")]
+    internal async Task RequestToken_LastTokenExpired_ReturnsNewAccessToken(
+        [Frozen] Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
+        ManagementClient managementClient)
+    {
+        // MOCK SETUP.
+        dateTimeProvider.Setup(static x => x.Now)
+                        .Returns(DateTime.Now.AddHours(24));
+
+        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}"),
+        };
+
+        messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageOne);
+
+        // ACT.
+        string resultOne = await managementClient.GetTokenAsync(this.apiConfiguration)
+                                                 .ConfigureAwait(false);
+
+        // MOCK SETUP.
+        using var managementApiTokenHttpResponseMessageTwo = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("{\"access_token\":\"Token 2\",\"expires_in\": 86400}"),
+        };
+
+        messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageTwo);
+
+        // ACT.
+        string resultTwo = await managementClient.GetTokenAsync(this.apiConfiguration)
+                                                 .ConfigureAwait(false);
+
+        // ASSERT.
+        resultOne.Should()
+                 .NotBe(resultTwo);
     }
 
     [AttributeUsage(AttributeTargets.Method)]

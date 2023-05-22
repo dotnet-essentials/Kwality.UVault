@@ -24,8 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.Exceptions;
 
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
+using global::System.Diagnostics.CodeAnalysis;
+using global::System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]

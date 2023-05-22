@@ -22,31 +22,11 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Exceptions;
+namespace Kwality.UVault.System;
 
-using global::System.Diagnostics.CodeAnalysis;
-using global::System.Runtime.Serialization;
+using Kwality.UVault.System.Abstractions;
 
-[Serializable]
-[ExcludeFromCodeCoverage]
-public sealed class CreateException : Exception
+public sealed class DateTimeProvider : IDateTimeProvider
 {
-    public CreateException()
-    {
-    }
-
-    public CreateException(string message)
-        : base(message)
-    {
-    }
-
-    public CreateException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
-
-    private CreateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
-    {
-    }
+    public DateTime Now => DateTime.Now;
 }

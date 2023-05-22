@@ -24,7 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.M2M.Models;
 
-using System.Diagnostics.CodeAnalysis;
+using global::System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 

@@ -24,7 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.Users.Models;
 
-using System.Diagnostics.CodeAnalysis;
+using global::System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -48,4 +48,3 @@ public class UserModel : UserModel<StringKey>
 
     public string? Password { get; set; }
 }
-

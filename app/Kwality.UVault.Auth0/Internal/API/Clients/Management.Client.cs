@@ -24,25 +24,29 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.Internal.API.Clients;
 
-using System.Net.Http.Json;
+using global::System.Net.Http.Json;
 
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
 using Kwality.UVault.Auth0.Internal.API.Models;
+using Kwality.UVault.System.Abstractions;
 
 internal sealed class ManagementClient
 {
+    private readonly IDateTimeProvider dateTimeProvider;
     private readonly HttpClient httpClient;
     private ApiManagementToken? lastRequestedManagementToken;
 
-    public ManagementClient(HttpClient httpClient)
+    public ManagementClient(HttpClient httpClient, IDateTimeProvider dateTimeProvider)
     {
         this.httpClient = httpClient;
+        this.dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
-        if (this.lastRequestedManagementToken is { AccessToken: not null, IsExpired: false, })
+        if (this.lastRequestedManagementToken is { AccessToken: not null, } &&
+            !this.lastRequestedManagementToken.IsExpired(this.dateTimeProvider))
         {
             return this.lastRequestedManagementToken.AccessToken;
         }
