@@ -229,6 +229,43 @@ public sealed class Auth0ManagementClientTests
               .Be(apiToken);
     }
 
+    [UserManagement]
+    [AutoDomainData]
+    [Theory(DisplayName = $"{testPrefix} returns the cached access token.")]
+    internal async Task RequestToken_ReturnsCachedAccessToken(
+        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+    {
+        // MOCK SETUP.
+        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("{\"access_token\":\"Token 1\"}"),
+        };
+
+        messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageOne);
+
+        // ACT.
+        string resultOne = await managementClient.GetTokenAsync(this.apiConfiguration)
+                                                 .ConfigureAwait(false);
+
+        // MOCK SETUP.
+        using var managementApiTokenHttpResponseMessageTwo = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("{\"access_token\":\"Token 2\"}"),
+        };
+
+        messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageTwo);
+
+        // ACT.
+        string resultTwo = await managementClient.GetTokenAsync(this.apiConfiguration)
+                                                 .ConfigureAwait(false);
+
+        // ASSERT.
+        resultOne.Should()
+                 .Be(resultTwo);
+    }
+
     [AttributeUsage(AttributeTargets.Method)]
     private sealed class AutoDomainDataAttribute : AutoDataAttribute
     {

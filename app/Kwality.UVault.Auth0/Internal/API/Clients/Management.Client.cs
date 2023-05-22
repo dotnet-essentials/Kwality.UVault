@@ -33,6 +33,7 @@ using Kwality.UVault.Auth0.Internal.API.Models;
 internal sealed class ManagementClient
 {
     private readonly HttpClient httpClient;
+    private ApiManagementToken? lastRequestedManagementToken;
 
     public ManagementClient(HttpClient httpClient)
     {
@@ -41,6 +42,11 @@ internal sealed class ManagementClient
 
     public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
+        if (this.lastRequestedManagementToken is { AccessToken: not null, IsExpired: false, })
+        {
+            return this.lastRequestedManagementToken.AccessToken;
+        }
+
         var data = new[]
         {
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
@@ -59,12 +65,12 @@ internal sealed class ManagementClient
             await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 `User Management` token.")
                 .ConfigureAwait(false);
 
-            ApiManagementToken? managementToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
-                                                              .ConfigureAwait(false);
+            this.lastRequestedManagementToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
+                                                            .ConfigureAwait(false);
 
-            return string.IsNullOrEmpty(managementToken?.AccessToken)
+            return string.IsNullOrEmpty(this.lastRequestedManagementToken?.AccessToken)
                 ? throw new ManagementApiException("The `API Management Token / Access Token` token is `null`.")
-                : managementToken.AccessToken;
+                : this.lastRequestedManagementToken.AccessToken;
         }
         catch (Exception ex) when (ex is not ManagementApiException)
         {
