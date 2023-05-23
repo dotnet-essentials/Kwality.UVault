@@ -43,7 +43,7 @@ body:
     id: components
     attributes:
       label: Which component(s) does the API change targets?
-      multiple: false
+      multiple: true
       options:
         - Core
         - Identity & access management
