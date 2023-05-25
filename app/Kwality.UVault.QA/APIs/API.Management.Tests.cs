@@ -167,6 +167,24 @@ public sealed class ApiManagementTests
                  .ConfigureAwait(false);
     }
 
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "Delete succeeds when the key is not found.")]
+    internal async Task Delete_UnknownKey_Succeeds(IntKey key)
+    {
+        // ARRANGE.
+        ApiManager<Model, IntKey> manager
+            = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+
+        // ACT.
+        Func<Task> act = () => manager.DeleteByKeyAsync(key);
+
+        // ASSERT.
+        await act.Should()
+                 .NotThrowAsync()
+                 .ConfigureAwait(false);
+    }
+
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model : ApiModel<IntKey>
