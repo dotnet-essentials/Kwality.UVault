@@ -31,7 +31,9 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
+using Kwality.UVault.Extensions;
 using Kwality.UVault.Keys;
+using Kwality.UVault.M2M.Extensions;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.M2M.Managers;
@@ -40,11 +42,70 @@ using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
 public sealed class ApplicationManagementTests
 {
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
+    internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseApplicationManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
+    internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseApplicationManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
+    internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseApplicationManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Transient &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
     [AutoData]
     [M2MManagement]
     [Theory(DisplayName = "Get all (pageIndex: 0, all data showed) succeeds.")]

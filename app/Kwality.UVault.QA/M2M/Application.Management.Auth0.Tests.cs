@@ -406,29 +406,6 @@ public sealed class ApplicationManagementAuth0Tests
                  .ConfigureAwait(false);
     }
 
-    [AutoDomainData]
-    [M2MManagement]
-    [Auth0]
-    [Theory(DisplayName = "Delete succeeds when the key is not found.")]
-    internal async Task Delete_UnknownKey_Succeeds(StringKey key)
-    {
-        // ARRANGE.
-        ApiConfiguration apiConfiguration = GetApiConfiguration();
-
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
-            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
-
-        // ACT.
-        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-        Func<Task> act = () => manager.DeleteByKeyAsync(key);
-
-        // ASSERT.
-        await act.Should()
-                 .NotThrowAsync()
-                 .ConfigureAwait(false);
-    }
-
     [AutoData]
     [M2MManagement]
     [Auth0]

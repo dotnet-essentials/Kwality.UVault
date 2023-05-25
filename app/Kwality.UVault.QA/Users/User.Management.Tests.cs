@@ -33,19 +33,80 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
+using Kwality.UVault.Extensions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
+using Kwality.UVault.Users.Extensions;
 using Kwality.UVault.Users.Managers;
 using Kwality.UVault.Users.Models;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
 public sealed class UserManagementTests
 {
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
+    internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseUserManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
+    internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseUserManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
+    internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseUserManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Transient &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
     [AutoData]
     [UserManagement]
     [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]

@@ -30,20 +30,81 @@ using FluentAssertions;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.APIs.Extensions;
 using Kwality.UVault.APIs.Managers;
 using Kwality.UVault.APIs.Models;
 using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.APIs.Stores.Abstractions;
 using Kwality.UVault.Exceptions;
+using Kwality.UVault.Extensions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
+
+using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
 public sealed class ApiManagementTests
 {
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
+    internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseApiManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
+    internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseApiManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
+    internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(
+            static (_, options)
+                => options.UseApiManagement<Model, IntKey>(
+                    static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(
+                    static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) &&
+                                         descriptor.Lifetime == ServiceLifetime.Transient &&
+                                         descriptor.ImplementationType == typeof(Store));
+    }
+
     [AutoData]
     [ApiManagement]
     [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
@@ -54,8 +115,6 @@ public sealed class ApiManagementTests
             = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        Thread.Sleep(TimeSpan.FromSeconds(2));
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         // ASSERT.
@@ -105,6 +164,24 @@ public sealed class ApiManagementTests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Custom: Failed to read API: `{key}`. Not found.")
+                 .ConfigureAwait(false);
+    }
+
+    [AutoData]
+    [ApiManagement]
+    [Theory(DisplayName = "Delete succeeds when the key is not found.")]
+    internal async Task Delete_UnknownKey_Succeeds(IntKey key)
+    {
+        // ARRANGE.
+        ApiManager<Model, IntKey> manager
+            = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+
+        // ACT.
+        Func<Task> act = () => manager.DeleteByKeyAsync(key);
+
+        // ASSERT.
+        await act.Should()
+                 .NotThrowAsync()
                  .ConfigureAwait(false);
     }
 
