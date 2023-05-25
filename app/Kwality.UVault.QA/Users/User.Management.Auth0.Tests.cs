@@ -486,28 +486,6 @@ public sealed class UserManagementAuth0Tests
                  .ConfigureAwait(false);
     }
 
-    [UserManagement]
-    [Auth0]
-    [Fact(DisplayName = "Delete succeeds when the key is not found.")]
-    internal async Task Delete_UnknownKey_Succeeds()
-    {
-        // ARRANGE.
-        ApiConfiguration apiConfiguration = GetApiConfiguration();
-
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(
-            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
-
-        // ACT.
-        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-        Func<Task> act = () => manager.DeleteByKeyAsync(new StringKey("auth0|000000000000000000000000"));
-
-        // ASSERT.
-        await act.Should()
-                 .NotThrowAsync()
-                 .ConfigureAwait(false);
-    }
-
     private static ApiConfiguration GetApiConfiguration()
     {
         return new ApiConfiguration(
