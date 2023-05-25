@@ -30,7 +30,6 @@ using FluentAssertions;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.APIs.Stores.Abstractions;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Extensions;
 using Kwality.UVault.Keys;
