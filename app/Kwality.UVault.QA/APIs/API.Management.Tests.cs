@@ -54,8 +54,6 @@ public sealed class ApiManagementTests
             = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        Thread.Sleep(TimeSpan.FromSeconds(2));
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         // ASSERT.
