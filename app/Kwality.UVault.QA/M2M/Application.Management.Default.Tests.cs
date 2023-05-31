@@ -208,13 +208,13 @@ public sealed class ApplicationManagementDefaultTests
         // ARRANGE.
         ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
 
-        IntKey userId = await manager.CreateAsync(model, new CreateOperationMapper())
-                                     .ConfigureAwait(false);
+        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
+                                  .ConfigureAwait(false);
 
         // ACT.
         model.Name = "UVault (Sample application)";
 
-        await manager.UpdateAsync(userId, model, new ApplicationUpdateOperationMapper())
+        await manager.UpdateAsync(key, model, new ApplicationUpdateOperationMapper())
                      .ConfigureAwait(false);
 
         // ASSERT.
@@ -223,7 +223,7 @@ public sealed class ApplicationManagementDefaultTests
                                              .Should()
                                              .Be(1);
 
-        (await manager.GetByKeyAsync(userId)
+        (await manager.GetByKeyAsync(key)
                       .ConfigureAwait(false)).Should()
                                              .BeEquivalentTo(model);
     }

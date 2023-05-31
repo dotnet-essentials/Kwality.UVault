@@ -182,17 +182,17 @@ public sealed class UserManagementDefaultTests
         // ARRANGE.
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
-        IntKey userId = await manager.CreateAsync(model, new UserCreateOperationMapper())
-                                     .ConfigureAwait(false);
+        IntKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
+                                  .ConfigureAwait(false);
 
         // ACT.
         model.Email = "kwality.uvault@github.com";
 
-        await manager.UpdateAsync(userId, model, new UserUpdateOperationMapper())
+        await manager.UpdateAsync(key, model, new UserUpdateOperationMapper())
                      .ConfigureAwait(false);
 
         // ASSERT.
-        (await manager.GetByKeyAsync(userId)
+        (await manager.GetByKeyAsync(key)
                       .ConfigureAwait(false)).Should()
                                              .BeEquivalentTo(model);
     }
