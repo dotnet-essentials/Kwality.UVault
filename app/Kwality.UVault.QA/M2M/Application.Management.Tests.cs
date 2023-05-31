@@ -28,19 +28,22 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
+using global::System.Linq.Expressions;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Extensions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.M2M.Extensions;
-using Kwality.UVault.QA.Internal.Factories;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
+using Kwality.UVault.QA.Internal.Factories;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -56,9 +59,8 @@ public sealed class ApplicationManagementTests
     {
         // ARRANGE.
         services.AddUVault(
-            static (_, options)
-                => options.UseApplicationManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
+                static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
@@ -94,9 +96,8 @@ public sealed class ApplicationManagementTests
     {
         // ARRANGE.
         services.AddUVault(
-            static (_, options)
-                => options.UseApplicationManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
+                static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
@@ -130,8 +131,7 @@ public sealed class ApplicationManagementTests
               .Should()
               .Be(1);
 
-        result.ResultSet
-              .Take(1)
+        result.ResultSet.Take(1)
               .First()
               .Should()
               .BeEquivalentTo(
@@ -190,8 +190,7 @@ public sealed class ApplicationManagementTests
               .Should()
               .Be(1);
 
-        result.ResultSet
-              .Take(1)
+        result.ResultSet.Take(1)
               .First()
               .Should()
               .BeEquivalentTo(
@@ -452,11 +451,18 @@ public sealed class ApplicationManagementTests
     {
         private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
 
-        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize)
+        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter = null)
         {
-            IEnumerable<Model> applications = this.collection.Skip(pageIndex * pageSize)
-                                                  .Take(pageSize)
-                                                  .Select(static kvp => kvp.Value);
+            IQueryable<KeyValuePair<IntKey, Model>> dataSet = this.collection.AsQueryable();
+
+            if (filter != null)
+            {
+                dataSet = dataSet.Where(filter.Create<Expression<Func<KeyValuePair<IntKey, Model>, bool>>>());
+            }
+
+            IEnumerable<Model> applications = dataSet.Skip(pageIndex * pageSize)
+                                                     .Take(pageSize)
+                                                     .Select(static kvp => kvp.Value);
 
             var result = new PagedResultSet<Model>(applications, this.collection.Count > (pageIndex + 1) * pageSize);
 

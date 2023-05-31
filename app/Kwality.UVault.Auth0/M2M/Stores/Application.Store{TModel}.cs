@@ -36,6 +36,7 @@ using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 using Kwality.UVault.Auth0.M2M.Models;
 using Kwality.UVault.Exceptions;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
@@ -56,17 +57,19 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
         this.modelMapper = modelMapper;
     }
 
-    public async Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
+    public async Task<PagedResultSet<TModel>> GetAllAsync(
+        int pageIndex, int pageSize, IApplicationFilter? filter = null)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);
 
         try
         {
+            GetClientsRequest request = filter == null ? new GetClientsRequest() : filter.Create<GetClientsRequest>();
+
             IPagedList<Client>? clients = await apiClient
                                                 .Clients.GetAllAsync(
-                                                    new GetClientsRequest(),
-                                                    new PaginationInfo(pageIndex, pageSize, true))
+                                                    request, new PaginationInfo(pageIndex, pageSize, true))
                                                 .ConfigureAwait(false);
 
             IList<TModel> models = clients.Select(client => this.modelMapper.Map(client))

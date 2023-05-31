@@ -38,6 +38,7 @@ using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.M2M.Extensions;
 using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 using Kwality.UVault.Auth0.M2M.Models;
+using Kwality.UVault.Auth0.M2M.Operations.Filters;
 using Kwality.UVault.Auth0.M2M.Operations.Mappers;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Managers;
@@ -72,7 +73,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper())
+            key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(false);
 
             // ACT.
@@ -130,7 +131,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper())
+            key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(false);
 
             // ACT.
@@ -181,7 +182,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper())
+            key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(false);
 
             // ACT.
@@ -214,6 +215,75 @@ public sealed class ApplicationManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
+                             .ConfigureAwait(false);
+            }
+        }
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all with filter succeeds.")]
+    internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        StringKey? keyOne = null;
+        StringKey? keyTwo = null;
+
+        try
+        {
+            // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(ClientApplicationType.Native))
+                                  .ConfigureAwait(false);
+
+            keyTwo = await manager.CreateAsync(
+                                      modelTwo, new CreateOperationMapper(ClientApplicationType.NonInteractive))
+                                  .ConfigureAwait(false);
+
+            // ACT.
+            // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            PagedResultSet<Model> result = await manager
+                                                 .GetAllAsync(
+                                                     0, 10, new OperationFilter(ClientApplicationType.NonInteractive))
+                                                 .ConfigureAwait(false);
+
+            // ASSERT.
+            result.ResultSet.Count()
+                  .Should()
+                  .Be(1);
+
+            result.ResultSet.First()
+                  .Should()
+                  .BeEquivalentTo(
+                      modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+        }
+        finally
+        {
+            // Cleanup: Remove the applications in Auth0.
+            if (keyOne != null)
+            {
+                // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+
+                await manager.DeleteByKeyAsync(keyOne)
+                             .ConfigureAwait(false);
+            }
+
+            if (keyTwo != null)
+            {
+                // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+
+                await manager.DeleteByKeyAsync(keyTwo)
                              .ConfigureAwait(false);
             }
         }
@@ -263,7 +333,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper())
+            key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(false);
 
             // ASSERT.
@@ -310,7 +380,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper())
+            key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(false);
 
             // ACT.
@@ -385,7 +455,8 @@ public sealed class ApplicationManagementAuth0Tests
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
-        StringKey key = await manager.CreateAsync(model, new CreateOperationMapper())
+        StringKey key = await manager.CreateAsync(
+                                         model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                      .ConfigureAwait(false);
 
         // ACT.
@@ -449,7 +520,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper())
+            key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(false);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -520,8 +591,33 @@ public sealed class ApplicationManagementAuth0Tests
         }
     }
 
+    private sealed class OperationFilter : Auth0ApplicationFilter
+    {
+        private readonly ClientApplicationType applicationType;
+
+        public OperationFilter(ClientApplicationType applicationType)
+        {
+            this.applicationType = applicationType;
+        }
+
+        protected override GetClientsRequest Map()
+        {
+            return new GetClientsRequest
+            {
+                AppType = new[] { this.applicationType, },
+            };
+        }
+    }
+
     private sealed class CreateOperationMapper : Auth0ApplicationCreateOperationMapper
     {
+        private readonly ClientApplicationType applicationType;
+
+        public CreateOperationMapper(ClientApplicationType applicationType)
+        {
+            this.applicationType = applicationType;
+        }
+
         protected override ClientCreateRequest Map<TSource>(TSource source)
         {
             if (source is Model model)
@@ -530,6 +626,7 @@ public sealed class ApplicationManagementAuth0Tests
                 return new ClientCreateRequest
                 {
                     Name = model.Key.Value,
+                    ApplicationType = this.applicationType,
                 };
             }
 

@@ -24,8 +24,11 @@
 // =====================================================================================================================
 namespace Kwality.UVault.M2M.Internal.Stores;
 
+using global::System.Linq.Expressions;
+
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
@@ -36,10 +39,17 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 {
     private readonly IList<TModel> collection = new List<TModel>();
 
-    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
+    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter = null)
     {
-        IEnumerable<TModel> applications = this.collection.Skip(pageIndex * pageSize)
-                                               .Take(pageSize);
+        IQueryable<TModel> dataSet = this.collection.AsQueryable();
+
+        if (filter != null)
+        {
+            dataSet = dataSet.Where(filter.Create<Expression<Func<TModel, bool>>>());
+        }
+
+        IEnumerable<TModel> applications = dataSet.Skip(pageIndex * pageSize)
+                                                  .Take(pageSize);
 
         var result = new PagedResultSet<TModel>(applications, this.collection.Count > (pageIndex + 1) * pageSize);
 

@@ -22,60 +22,10 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.M2M.Managers;
+namespace Kwality.UVault.M2M.Operations.Filters.Abstractions;
 
-using JetBrains.Annotations;
-
-using Kwality.UVault.M2M.Models;
-using Kwality.UVault.M2M.Operations.Filters.Abstractions;
-using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
-using Kwality.UVault.M2M.Stores.Abstractions;
-using Kwality.UVault.Models;
-
-[PublicAPI]
-public sealed class ApplicationManager<TModel, TKey>
-    where TModel : ApplicationModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+public interface IApplicationFilter
 {
-    private readonly IApplicationStore<TModel, TKey> store;
-
-    public ApplicationManager(IApplicationStore<TModel, TKey> store)
-    {
-        this.store = store;
-    }
-
-    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter = null)
-    {
-        return this.store.GetAllAsync(pageIndex, pageSize, filter);
-    }
-
-    // Stryker disable once all
-    public Task<TModel> GetByKeyAsync(TKey key)
-    {
-        return this.store.GetByKeyAsync(key);
-    }
-
-    // Stryker disable once all
-    public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
-    {
-        return this.store.CreateAsync(model, mapper);
-    }
-
-    // Stryker disable once all
-    public Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
-    {
-        return this.store.UpdateAsync(key, model, mapper);
-    }
-
-    // Stryker disable once all
-    public Task DeleteByKeyAsync(TKey key)
-    {
-        return this.store.DeleteByKeyAsync(key);
-    }
-
-    // Stryker disable once all
-    public Task<TModel> RotateClientSecretAsync(TKey key)
-    {
-        return this.store.RotateClientSecretAsync(key);
-    }
+    TDestination Create<TDestination>()
+        where TDestination : class;
 }
