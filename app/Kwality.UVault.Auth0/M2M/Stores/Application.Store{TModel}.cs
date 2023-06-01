@@ -57,8 +57,7 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
         this.modelMapper = modelMapper;
     }
 
-    public async Task<PagedResultSet<TModel>> GetAllAsync(
-        int pageIndex, int pageSize, IApplicationFilter? filter = null)
+    public async Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
                                                         .ConfigureAwait(false);

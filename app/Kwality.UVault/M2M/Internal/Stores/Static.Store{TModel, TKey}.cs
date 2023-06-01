@@ -39,7 +39,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 {
     private readonly IList<TModel> collection = new List<TModel>();
 
-    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter = null)
+    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
     {
         IQueryable<TModel> dataSet = this.collection.AsQueryable();
 

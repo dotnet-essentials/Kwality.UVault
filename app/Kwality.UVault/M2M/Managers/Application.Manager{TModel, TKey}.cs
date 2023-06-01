@@ -44,7 +44,12 @@ public sealed class ApplicationManager<TModel, TKey>
         this.store = store;
     }
 
-    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter = null)
+    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
+    {
+        return this.GetAllAsync(pageIndex, pageSize, null);
+    }
+
+    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
     {
         return this.store.GetAllAsync(pageIndex, pageSize, filter);
     }

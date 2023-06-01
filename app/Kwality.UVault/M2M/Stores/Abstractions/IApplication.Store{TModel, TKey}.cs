@@ -33,7 +33,7 @@ public interface IApplicationStore<TModel, TKey>
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter = null);
+    Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter);
     Task<TModel> GetByKeyAsync(TKey key);
     Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper);
     Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper);

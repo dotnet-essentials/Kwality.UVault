@@ -451,7 +451,7 @@ public sealed class ApplicationManagementTests
     {
         private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
 
-        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter = null)
+        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
         {
             IQueryable<KeyValuePair<IntKey, Model>> dataSet = this.collection.AsQueryable();
 
