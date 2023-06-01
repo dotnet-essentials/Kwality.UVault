@@ -49,6 +49,6 @@ internal sealed class IAMFeatureDiscoverer : ITraitDiscoverer
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {
-        yield return new KeyValuePair<string, string>("Feature", "IAM (Identity & Access Management)");
+        yield return new KeyValuePair<string, string>("Feature", "IAM (Identity & access Management)");
     }
 }
