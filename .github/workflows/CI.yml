@@ -120,7 +120,7 @@ jobs:
           path: ./app/TestResults-${{ matrix.dotnet }}
 
   inspect:
-    needs: [ build-and-test ]
+    needs: [ build ]
     runs-on: ubuntu-latest
     steps:
       - name: GIT Clone
