@@ -28,12 +28,15 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
+using global::System.Linq.Expressions;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers;
 using Kwality.UVault.Models;
 using Kwality.UVault.QA.Internal.Factories;
@@ -159,6 +162,36 @@ public sealed class ApplicationManagementDefaultTests
 
         result.ResultSet.Take(1)
               .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all with filter succeeds.")]
+    internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>();
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        PagedResultSet<Model> result = await manager
+                                             .GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
+                                             .ConfigureAwait(false);
+
+        // ASSERT.
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.First()
               .Should()
               .BeEquivalentTo(
                   modelTwo, static options => options.Excluding(static application => application.ClientSecret));
@@ -329,6 +362,35 @@ public sealed class ApplicationManagementDefaultTests
 
         initialClientSecret.Should()
                            .NotMatch(application.ClientSecret);
+    }
+
+    private sealed class OperationFilter : IApplicationFilter
+    {
+        private readonly string name;
+
+        public OperationFilter(string name)
+        {
+            this.name = name;
+        }
+
+        public TDestination Create<TDestination>()
+            where TDestination : class
+        {
+            if (typeof(TDestination) != typeof(Func<Model, bool>))
+            {
+                throw new ReadException(
+                    $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
+            }
+
+            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+            return ((Func<Model, bool>)Filter as TDestination)!;
+
+            // The filter which is filters out data in the store.
+            bool Filter(Model model)
+            {
+                return model.Name == this.name;
+            }
+        }
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".

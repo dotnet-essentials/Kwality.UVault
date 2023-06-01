@@ -28,8 +28,6 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
-using global::System.Linq.Expressions;
-
 using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
@@ -233,6 +231,37 @@ public sealed class ApplicationManagementTests
 
     [AutoData]
     [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all with filter succeeds.")]
+    internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager
+            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        PagedResultSet<Model> result = await manager
+                                             .GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
+                                             .ConfigureAwait(false);
+
+        // ASSERT.
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.First()
+              .Should()
+              .BeEquivalentTo(
+                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
     [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
     internal async Task GetByKey_UnknownKey_RaisesException(IntKey key)
     {
@@ -412,6 +441,35 @@ public sealed class ApplicationManagementTests
         }
     }
 
+    private sealed class OperationFilter : IApplicationFilter
+    {
+        private readonly string name;
+
+        public OperationFilter(string name)
+        {
+            this.name = name;
+        }
+
+        public TDestination Create<TDestination>()
+            where TDestination : class
+        {
+            if (typeof(TDestination) != typeof(Func<KeyValuePair<IntKey, Model>, bool>))
+            {
+                throw new ReadException(
+                    $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
+            }
+
+            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+            return ((Func<KeyValuePair<IntKey, Model>, bool>)Filter as TDestination)!;
+
+            // The filter which is filters out data in the store.
+            bool Filter(KeyValuePair<IntKey, Model> kvp)
+            {
+                return kvp.Value.Name == this.name;
+            }
+        }
+    }
+
     private sealed class CreateOperationMapper : IApplicationOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
@@ -457,7 +515,9 @@ public sealed class ApplicationManagementTests
 
             if (filter != null)
             {
-                dataSet = dataSet.Where(filter.Create<Expression<Func<KeyValuePair<IntKey, Model>, bool>>>());
+                dataSet = dataSet.AsEnumerable()
+                                 .Where(filter.Create<Func<KeyValuePair<IntKey, Model>, bool>>())
+                                 .AsQueryable();
             }
 
             IEnumerable<Model> applications = dataSet.Skip(pageIndex * pageSize)

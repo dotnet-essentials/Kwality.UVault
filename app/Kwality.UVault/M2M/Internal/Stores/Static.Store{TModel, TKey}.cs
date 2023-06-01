@@ -24,8 +24,6 @@
 // =====================================================================================================================
 namespace Kwality.UVault.M2M.Internal.Stores;
 
-using global::System.Linq.Expressions;
-
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Operations.Filters.Abstractions;
@@ -45,7 +43,9 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 
         if (filter != null)
         {
-            dataSet = dataSet.Where(filter.Create<Expression<Func<TModel, bool>>>());
+            dataSet = dataSet.AsEnumerable()
+                             .Where(filter.Create<Func<TModel, bool>>())
+                             .AsQueryable();
         }
 
         IEnumerable<TModel> applications = dataSet.Skip(pageIndex * pageSize)
