@@ -62,6 +62,6 @@ internal sealed class ApiManagementToken
     //       The time at which the token is used isn't the same as the time at which the token is checked.
     public bool IsExpired(IDateTimeProvider dateTimeProvider)
     {
-        return dateTimeProvider.Now.AddMinutes(1) >= this.issuedTimeStamp.AddSeconds(this.ExpiresIn);
+        return dateTimeProvider.Now.AddMinutes(1) > this.issuedTimeStamp.AddSeconds(this.ExpiresIn);
     }
 }
