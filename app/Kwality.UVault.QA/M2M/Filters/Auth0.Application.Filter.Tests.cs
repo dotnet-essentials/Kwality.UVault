@@ -22,46 +22,60 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Internal.API.Models;
+namespace Kwality.UVault.QA.M2M.Filters;
 
-using global::System.Text.Json.Serialization;
+using FluentAssertions;
 
-using JetBrains.Annotations;
+using global::Auth0.ManagementApi.Models;
 
-using Kwality.UVault.System.Abstractions;
+using global::System.Linq.Expressions;
 
-internal sealed class ApiManagementToken
+using Kwality.UVault.Auth0.M2M.Operations.Filters;
+using Kwality.UVault.Exceptions;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
+
+using Xunit;
+
+// ReSharper disable once MemberCanBeFileLocal
+public sealed class Auth0ApplicationFilterTests
 {
-    private readonly DateTime issuedTimeStamp;
-
-    public ApiManagementToken()
+    [M2MManagement]
+    [Fact(DisplayName = "Map to an invalid destination raises an exception.")]
+    internal void Map_InvalidDestination_RaisesException()
     {
-        this.issuedTimeStamp = DateTime.Now;
+        // ARRANGE.
+        var mapper = new ApplicationFilter();
+
+        // ACT.
+        Action act = () => mapper.Create<Expression<Func<string, bool>>>();
+
+        // ASSERT.
+        act.Should()
+           .Throw<CreateException>()
+           .WithMessage($"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{nameof(GetClientsRequest)}`.");
     }
 
-    [JsonPropertyName("access_token")]
-    public string? AccessToken
+    [M2MManagement]
+    [Fact(DisplayName = "Map succeeds.")]
+    internal void Map_Succeeds()
     {
-        get;
+        // ARRANGE.
+        var mapper = new ApplicationFilter();
 
-        [UsedImplicitly]
-        set;
+        // ACT.
+        var result = mapper.Create<GetClientsRequest>();
+
+        // ASSERT.
+        result.Should()
+              .BeEquivalentTo(new GetClientsRequest());
     }
 
-    [JsonPropertyName("expires_in")]
-    public int ExpiresIn
+    private sealed class ApplicationFilter : Auth0ApplicationFilter
     {
-        get;
-
-        [UsedImplicitly]
-        set;
-    }
-
-    // NOTE: A token is expired one the amount of seconds (see "Expired In") is passed.
-    //       To ensure that we don't use an expired token, a safety mechanism is built in.
-    //       The time at which the token is used isn't the same as the time at which the token is checked.
-    public bool IsExpired(IDateTimeProvider dateTimeProvider)
-    {
-        return dateTimeProvider.Now.AddMinutes(1) > this.issuedTimeStamp.AddSeconds(this.ExpiresIn);
+        protected override GetClientsRequest Map()
+        {
+            return new GetClientsRequest();
+        }
     }
 }

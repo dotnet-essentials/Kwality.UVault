@@ -25,6 +25,7 @@
 namespace Kwality.UVault.M2M.Stores.Abstractions;
 
 using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.Models;
 
@@ -32,7 +33,7 @@ public interface IApplicationStore<TModel, TKey>
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize);
+    Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter);
     Task<TModel> GetByKeyAsync(TKey key);
     Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper);
     Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper);

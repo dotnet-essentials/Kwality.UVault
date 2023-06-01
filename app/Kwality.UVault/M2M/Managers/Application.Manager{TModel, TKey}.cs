@@ -27,6 +27,7 @@ namespace Kwality.UVault.M2M.Managers;
 using JetBrains.Annotations;
 
 using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
@@ -45,7 +46,12 @@ public sealed class ApplicationManager<TModel, TKey>
 
     public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
     {
-        return this.store.GetAllAsync(pageIndex, pageSize);
+        return this.GetAllAsync(pageIndex, pageSize, null);
+    }
+
+    public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
+    {
+        return this.store.GetAllAsync(pageIndex, pageSize, filter);
     }
 
     // Stryker disable once all

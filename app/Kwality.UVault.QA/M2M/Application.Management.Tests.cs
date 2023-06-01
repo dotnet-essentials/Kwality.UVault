@@ -34,13 +34,14 @@ using Kwality.UVault.Exceptions;
 using Kwality.UVault.Extensions;
 using Kwality.UVault.Keys;
 using Kwality.UVault.M2M.Extensions;
-using Kwality.UVault.QA.Internal.Factories;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
+using Kwality.UVault.QA.Internal.Factories;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -56,9 +57,8 @@ public sealed class ApplicationManagementTests
     {
         // ARRANGE.
         services.AddUVault(
-            static (_, options)
-                => options.UseApplicationManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
+                static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
@@ -94,9 +94,8 @@ public sealed class ApplicationManagementTests
     {
         // ARRANGE.
         services.AddUVault(
-            static (_, options)
-                => options.UseApplicationManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
+                static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
@@ -130,8 +129,7 @@ public sealed class ApplicationManagementTests
               .Should()
               .Be(1);
 
-        result.ResultSet
-              .Take(1)
+        result.ResultSet.Take(1)
               .First()
               .Should()
               .BeEquivalentTo(
@@ -190,8 +188,7 @@ public sealed class ApplicationManagementTests
               .Should()
               .Be(1);
 
-        result.ResultSet
-              .Take(1)
+        result.ResultSet.Take(1)
               .First()
               .Should()
               .BeEquivalentTo(
@@ -227,6 +224,37 @@ public sealed class ApplicationManagementTests
 
         result.ResultSet.Take(1)
               .First()
+              .Should()
+              .BeEquivalentTo(
+                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+    }
+
+    [AutoData]
+    [M2MManagement]
+    [Auth0]
+    [Theory(DisplayName = "Get all with filter succeeds.")]
+    internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
+    {
+        // ARRANGE.
+        ApplicationManager<Model, IntKey> manager
+            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+
+        await manager.CreateAsync(modelOne, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        await manager.CreateAsync(modelTwo, new CreateOperationMapper())
+                     .ConfigureAwait(false);
+
+        PagedResultSet<Model> result = await manager
+                                             .GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
+                                             .ConfigureAwait(false);
+
+        // ASSERT.
+        result.ResultSet.Count()
+              .Should()
+              .Be(1);
+
+        result.ResultSet.First()
               .Should()
               .BeEquivalentTo(
                   modelTwo, static options => options.Excluding(static application => application.ClientSecret));
@@ -413,6 +441,35 @@ public sealed class ApplicationManagementTests
         }
     }
 
+    private sealed class OperationFilter : IApplicationFilter
+    {
+        private readonly string name;
+
+        public OperationFilter(string name)
+        {
+            this.name = name;
+        }
+
+        public TDestination Create<TDestination>()
+            where TDestination : class
+        {
+            if (typeof(TDestination) != typeof(Func<KeyValuePair<IntKey, Model>, bool>))
+            {
+                throw new ReadException(
+                    $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
+            }
+
+            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
+            return ((Func<KeyValuePair<IntKey, Model>, bool>)Filter as TDestination)!;
+
+            // The filter which is filters out data in the store.
+            bool Filter(KeyValuePair<IntKey, Model> kvp)
+            {
+                return kvp.Value.Name == this.name;
+            }
+        }
+    }
+
     private sealed class CreateOperationMapper : IApplicationOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
@@ -452,11 +509,20 @@ public sealed class ApplicationManagementTests
     {
         private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
 
-        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize)
+        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
         {
-            IEnumerable<Model> applications = this.collection.Skip(pageIndex * pageSize)
-                                                  .Take(pageSize)
-                                                  .Select(static kvp => kvp.Value);
+            IQueryable<KeyValuePair<IntKey, Model>> dataSet = this.collection.AsQueryable();
+
+            if (filter != null)
+            {
+                dataSet = dataSet.AsEnumerable()
+                                 .Where(filter.Create<Func<KeyValuePair<IntKey, Model>, bool>>())
+                                 .AsQueryable();
+            }
+
+            IEnumerable<Model> applications = dataSet.Skip(pageIndex * pageSize)
+                                                     .Take(pageSize)
+                                                     .Select(static kvp => kvp.Value);
 
             var result = new PagedResultSet<Model>(applications, this.collection.Count > (pageIndex + 1) * pageSize);
 
