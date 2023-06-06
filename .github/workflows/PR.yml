@@ -75,7 +75,7 @@ jobs:
 
   test:
     needs: [ build ]
-    name: Build on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+    name: Test on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
