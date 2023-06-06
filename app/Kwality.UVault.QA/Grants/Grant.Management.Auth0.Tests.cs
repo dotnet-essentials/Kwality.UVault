@@ -42,7 +42,6 @@ using Kwality.UVault.Auth0.Grants.Operations.Mappers;
 using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Grants.Managers;
-using Kwality.UVault.Grants.Operations.Mappers;
 using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 using Kwality.UVault.Models;
 using Kwality.UVault.QA.Internal.Factories;
