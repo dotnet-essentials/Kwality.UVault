@@ -28,8 +28,6 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
-using global::System.Linq.Expressions;
-
 using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
