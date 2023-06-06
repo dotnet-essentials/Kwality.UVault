@@ -47,7 +47,7 @@ jobs:
 
   build:
     needs: [ verify ]
-    name: Test on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+    name: Build on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -75,7 +75,7 @@ jobs:
 
   test:
     needs: [ build ]
-    name: Build on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+    name: Test on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -243,6 +243,7 @@ jobs:
 
       - name: Upload mutation results.
         uses: actions/upload-artifact@v3
+        if: ${{ always() }}
         with:
           name: Mutation results (${{ matrix.projects }})
           path: app/Kwality.UVault.QA/StrykerOutput-${{ matrix.projects }}
