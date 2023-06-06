@@ -97,7 +97,7 @@ public sealed class GrantManagementAuth0Tests
         }
         finally
         {
-            // Cleanup: Remove the Grant in Auth0.
+            // Cleanup: Remove the client grant in Auth0.
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -145,7 +145,7 @@ public sealed class GrantManagementAuth0Tests
         }
         finally
         {
-            // Cleanup: Remove the Grant in Auth0.
+            // Cleanup: Remove the client grant in Auth0.
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -202,7 +202,7 @@ public sealed class GrantManagementAuth0Tests
         }
         finally
         {
-            // Cleanup: Remove the Grants in Auth0.
+            // Cleanup: Remove the client grants in Auth0.
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -268,7 +268,7 @@ public sealed class GrantManagementAuth0Tests
         }
         finally
         {
-            // Cleanup: Remove the Grants in Auth0.
+            // Cleanup: Remove the client grants in Auth0.
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -319,7 +319,7 @@ public sealed class GrantManagementAuth0Tests
         }
         finally
         {
-            // Cleanup: Remove the Grant in Auth0.
+            // Cleanup: Remove the client grant in Auth0.
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -368,7 +368,7 @@ public sealed class GrantManagementAuth0Tests
         }
         finally
         {
-            // Cleanup: Remove the Grant in Auth0.
+            // Cleanup: Remove the client grant in Auth0.
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
