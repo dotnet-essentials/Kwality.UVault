@@ -243,6 +243,7 @@ jobs:
 
       - name: Upload mutation results.
         uses: actions/upload-artifact@v3
+        if: ${{ always() }}
         with:
           name: Mutation results (${{ matrix.projects }})
           path: app/Kwality.UVault.QA/StrykerOutput-${{ matrix.projects }}
