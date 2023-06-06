@@ -47,7 +47,7 @@ jobs:
 
   build:
     needs: [ verify ]
-    name: Test on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+    name: Build on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
