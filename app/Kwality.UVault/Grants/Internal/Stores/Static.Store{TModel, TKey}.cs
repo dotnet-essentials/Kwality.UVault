@@ -69,7 +69,7 @@ internal sealed class StaticStore<TModel, TKey> : IGrantStore<TModel, TKey>
 
         if (grant == null)
         {
-            throw new UpdateException($"Failed to update grant: `{key}`. Not found.");
+            throw new UpdateException($"Failed to update client grant: `{key}`. Not found.");
         }
 
         this.collection.Remove(grant);

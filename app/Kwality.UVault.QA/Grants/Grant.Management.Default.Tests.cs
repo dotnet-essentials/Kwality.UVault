@@ -251,7 +251,7 @@ public sealed class GrantManagementDefaultTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<UpdateException>()
-                 .WithMessage($"Failed to update Grant: `{key}`. Not found.")
+                 .WithMessage($"Failed to update client grant: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 

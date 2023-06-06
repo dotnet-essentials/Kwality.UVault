@@ -289,7 +289,7 @@ public sealed class GrantManagementTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<UpdateException>()
-                 .WithMessage($"Custom: Failed to update grant: `{key}`. Not found.")
+                 .WithMessage($"Custom: Failed to update client grant: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
@@ -441,7 +441,7 @@ public sealed class GrantManagementTests
         {
             if (!this.collection.ContainsKey(key))
             {
-                throw new UpdateException($"Custom: Failed to update grant: `{key}`. Not found.");
+                throw new UpdateException($"Custom: Failed to update client grant: `{key}`. Not found.");
             }
 
             this.collection.Remove(key);
