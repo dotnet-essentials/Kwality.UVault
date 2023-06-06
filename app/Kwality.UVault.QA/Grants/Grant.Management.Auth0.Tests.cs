@@ -24,7 +24,6 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.Grants;
 
-using AutoFixture;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
