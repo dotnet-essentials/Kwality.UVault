@@ -54,7 +54,7 @@ using Xunit;
 [Collection("Auth0")]
 public sealed class GrantManagementAuth0Tests
 {
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Get all (pageIndex: 0, all data showed) succeeds.")]
@@ -108,7 +108,7 @@ public sealed class GrantManagementAuth0Tests
         }
     }
 
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Get all (pageIndex: 1, all data showed) succeeds.")]
@@ -156,7 +156,7 @@ public sealed class GrantManagementAuth0Tests
         }
     }
 
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Get all (pageIndex: 1, all data NOT showed) succeeds.")]
@@ -222,7 +222,7 @@ public sealed class GrantManagementAuth0Tests
         }
     }
 
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Get all with filter succeeds.")]
@@ -288,7 +288,7 @@ public sealed class GrantManagementAuth0Tests
         }
     }
 
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Create succeeds.")]
@@ -330,7 +330,7 @@ public sealed class GrantManagementAuth0Tests
         }
     }
 
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Update succeeds.")]
@@ -379,7 +379,7 @@ public sealed class GrantManagementAuth0Tests
         }
     }
 
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Update raises an exception when the key is not found.")]
@@ -401,7 +401,7 @@ public sealed class GrantManagementAuth0Tests
                  .ConfigureAwait(false);
     }
 
-    [AutoDomainData]
+    [AutoData]
     [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Delete succeeds.")]
@@ -517,24 +517,6 @@ public sealed class GrantManagementAuth0Tests
             }
 
             throw new UpdateException($"Invalid {nameof(IGrantOperationMapper)}: Source is NOT `{nameof(Model)}`.");
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method)]
-    private sealed class AutoDomainDataAttribute : AutoDataAttribute
-    {
-        public AutoDomainDataAttribute()
-            : base(
-                static () =>
-                {
-                    var fixture = new Fixture();
-
-                    // Customize AutoFixture.
-                    fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
-
-                    return fixture;
-                })
-        {
         }
     }
 }
