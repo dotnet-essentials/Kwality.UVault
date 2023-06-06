@@ -34,7 +34,7 @@ concurrency: testing
 on:
   workflow_dispatch:
   pull_request_target:
-    types: [ labeled ]
+    types: [ labeled, synchronize ]
 
 # JOBS.
 jobs:
