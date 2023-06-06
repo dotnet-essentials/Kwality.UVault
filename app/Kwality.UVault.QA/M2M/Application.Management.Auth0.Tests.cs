@@ -80,7 +80,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            PagedResultSet<Model> result = await manager.GetAllAsync(0, 3)
+            PagedResultSet<Model> result = await manager.GetAllAsync(0, 5)
                                                         .ConfigureAwait(false);
 
             // ASSERT.
@@ -89,9 +89,9 @@ public sealed class ApplicationManagementAuth0Tests
 
             result.ResultSet.Count()
                   .Should()
-                  .Be(3);
+                  .Be(5);
 
-            result.ResultSet.Skip(1)
+            result.ResultSet.Skip(3)
                   .Take(1)
                   .First()
                   .Should()
@@ -166,7 +166,7 @@ public sealed class ApplicationManagementAuth0Tests
     [AutoDomainData]
     [M2MManagement]
     [Auth0]
-    [Theory(DisplayName = "Get all (pageIndex: 1, all data NOT showed) succeeds.")]
+    [Theory(DisplayName = "Get all (pageIndex: 3, all data NOT showed) succeeds.")]
     internal async Task GetAll_SecondPageWhenNotAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
@@ -189,7 +189,7 @@ public sealed class ApplicationManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
+            PagedResultSet<Model> result = await manager.GetAllAsync(3, 1)
                                                         .ConfigureAwait(false);
 
             // ASSERT.
