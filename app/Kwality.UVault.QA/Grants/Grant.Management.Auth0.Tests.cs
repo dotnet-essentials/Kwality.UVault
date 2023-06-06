@@ -71,7 +71,7 @@ public sealed class GrantManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1")))
+            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                .ConfigureAwait(false);
 
             // ACT.
@@ -125,7 +125,7 @@ public sealed class GrantManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1")))
+            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                .ConfigureAwait(false);
 
             // ACT.
@@ -174,10 +174,10 @@ public sealed class GrantManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1")))
+            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                   .ConfigureAwait(false);
 
-            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_2")))
+            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_2_CLIENT_ID")))
                                   .ConfigureAwait(false);
 
             // ACT.
@@ -240,10 +240,10 @@ public sealed class GrantManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1")))
+            keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                   .ConfigureAwait(false);
 
-            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_2")))
+            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_2_CLIENT_ID")))
                                   .ConfigureAwait(false);
 
             // ACT.
@@ -306,7 +306,7 @@ public sealed class GrantManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1")))
+            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                .ConfigureAwait(false);
 
             // ASSERT.
@@ -347,7 +347,7 @@ public sealed class GrantManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1")))
+            key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                .ConfigureAwait(false);
 
             // ACT.
@@ -415,7 +415,7 @@ public sealed class GrantManagementAuth0Tests
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
-        StringKey key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1")))
+        StringKey key = await manager.CreateAsync(model, new CreateOperationMapper(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                      .ConfigureAwait(false);
 
         // ACT.
