@@ -124,6 +124,36 @@ public sealed class ApiManagementAuth0Tests
     [AutoDomainData]
     [ApiManagement]
     [Auth0]
+    [Theory(DisplayName = "Delete succeeds when the key is not found.")]
+    internal async Task Delete_UnknownKey_Succeeds(StringKey key)
+    {
+        // ARRANGE.
+        ApiConfiguration apiConfiguration = GetApiConfiguration();
+
+        ApiManager<Model, StringKey> manager = new ApiManagerFactory().Create<Model, StringKey>(
+            options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        // ACT.
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+
+        await manager.DeleteByKeyAsync(key)
+                     .ConfigureAwait(false);
+
+        // ASSERT.
+        // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+        Thread.Sleep(TimeSpan.FromSeconds(2));
+        Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
+
+        await act.Should()
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read API: `{key}`.")
+                 .ConfigureAwait(false);
+    }
+
+    [AutoDomainData]
+    [ApiManagement]
+    [Auth0]
     [Theory(DisplayName = "Delete succeeds.")]
     internal async Task Delete_Succeeds(Model model)
     {
