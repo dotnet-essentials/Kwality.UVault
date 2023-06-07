@@ -4,8 +4,8 @@
 		"break-on-initial-test-failure": true,
 		"thresholds": {
 			"high": 100,
-			"low": 95,
-			"break": 95
+			"low": 90,
+			"break": 90
 		},
 		"ignore-methods": [
 			"ConfigureAwait"

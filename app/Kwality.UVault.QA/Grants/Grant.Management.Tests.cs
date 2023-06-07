@@ -22,7 +22,7 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.M2M;
+namespace Kwality.UVault.QA.Grants;
 
 using AutoFixture.Xunit2;
 
@@ -32,13 +32,13 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Extensions;
+using Kwality.UVault.Grants.Extensions;
+using Kwality.UVault.Grants.Managers;
+using Kwality.UVault.Grants.Models;
+using Kwality.UVault.Grants.Operations.Filters.Abstractions;
+using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
+using Kwality.UVault.Grants.Stores.Abstractions;
 using Kwality.UVault.Keys;
-using Kwality.UVault.M2M.Extensions;
-using Kwality.UVault.M2M.Managers;
-using Kwality.UVault.M2M.Models;
-using Kwality.UVault.M2M.Operations.Filters.Abstractions;
-using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
-using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
@@ -48,71 +48,54 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 // ReSharper disable once MemberCanBeFileLocal
-public sealed class ApplicationManagementTests
+public sealed class GrantManagementTests
 {
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
-                static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+        services.AddUVault(static (_, options) => options.UseGrantManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Singleton && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
     internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseApplicationManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+        services.AddUVault(static (_, options) => options.UseGrantManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Scoped && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
     internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
-                static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+        services.AddUVault(static (_, options) => options.UseGrantManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Transient &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Transient && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Get all (pageIndex: 0, all data showed) succeeds.")]
     internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -132,18 +115,16 @@ public sealed class ApplicationManagementTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  model, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(model);
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Get all (pageIndex: 1, all data showed) succeeds.")]
     internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -162,13 +143,12 @@ public sealed class ApplicationManagementTests
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Get all (pageIndex: 0, all data NOT showed) succeeds.")]
     internal async Task GetAll_FirstPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -191,18 +171,16 @@ public sealed class ApplicationManagementTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  modelOne, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelOne);
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Get all (pageIndex: 1, pageSize: Less than the total amount) succeeds.")]
     internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -225,19 +203,17 @@ public sealed class ApplicationManagementTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelTwo);
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Auth0]
     [Theory(DisplayName = "Get all with filter succeeds.")]
     internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -245,91 +221,67 @@ public sealed class ApplicationManagementTests
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
                      .ConfigureAwait(false);
 
-        PagedResultSet<Model> result = await manager
-                                             .GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
-                                             .ConfigureAwait(false);
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Scopes))
+                                                    .ConfigureAwait(false);
 
         // ASSERT.
         result.ResultSet.Count()
               .Should()
               .Be(1);
 
-        result.ResultSet.First()
-              .Should()
-              .BeEquivalentTo(
-                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+        (await manager.GetAllAsync(0, 100)
+                      .ConfigureAwait(false)).ResultSet.Should()
+                                             .ContainEquivalentOf(modelTwo);
     }
 
     [AutoData]
-    [M2MManagement]
-    [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
-    internal async Task GetByKey_UnknownKey_RaisesException(IntKey key)
-    {
-        // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
-
-        // ACT.
-        Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
-
-        // ASSERT.
-        await act.Should()
-                 .ThrowAsync<ReadException>()
-                 .WithMessage($"Custom: Failed to read application: `{key}`. Not found.")
-                 .ConfigureAwait(false);
-    }
-
-    [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Create succeeds.")]
     internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+        await manager.CreateAsync(model, new CreateOperationMapper())
+                     .ConfigureAwait(false);
 
         // ASSERT.
-        (await manager.GetByKeyAsync(key)
-                      .ConfigureAwait(false)).Should()
-                                             .BeEquivalentTo(model);
+        (await manager.GetAllAsync(0, 100)
+                      .ConfigureAwait(false)).ResultSet.Should()
+                                             .ContainEquivalentOf(model);
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Update succeeds.")]
     internal async Task Update_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         // ACT.
-        model.Name = "UVault (Sample application)";
+        model.Scopes = new[] { "newScope", "newScope2", };
 
         await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                      .ConfigureAwait(false);
 
         // ASSERT.
-        (await manager.GetByKeyAsync(key)
-                      .ConfigureAwait(false)).Should()
-                                             .BeEquivalentTo(model);
+        (await manager.GetAllAsync(0, 100)
+                      .ConfigureAwait(false)).ResultSet.Should()
+                                             .ContainEquivalentOf(model);
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Update raises an exception when the key is not found.")]
     internal async Task Update_UnknownKey_RaisesException(IntKey key, Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
@@ -337,18 +289,17 @@ public sealed class ApplicationManagementTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<UpdateException>()
-                 .WithMessage($"Custom: Failed to update application: `{key}`. Not found.")
+                 .WithMessage($"Custom: Failed to update client grant: `{key}`. Not found.")
                  .ConfigureAwait(false);
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Delete succeeds.")]
     internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -358,22 +309,18 @@ public sealed class ApplicationManagementTests
                      .ConfigureAwait(false);
 
         // ASSERT.
-        Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
-
-        await act.Should()
-                 .ThrowAsync<ReadException>()
-                 .WithMessage($"Custom: Failed to read application: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+        (await manager.GetAllAsync(0, 100)
+                      .ConfigureAwait(false)).ResultSet.Should()
+                                             .BeEmpty();
     }
 
     [AutoData]
-    [M2MManagement]
+    [GrantManagement]
     [Theory(DisplayName = "Delete succeeds when the key is not found.")]
     internal async Task Delete_UnknownKey_Succeeds(IntKey key)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.DeleteByKeyAsync(key);
@@ -384,70 +331,27 @@ public sealed class ApplicationManagementTests
                  .ConfigureAwait(false);
     }
 
-    [AutoData]
-    [M2MManagement]
-    [Theory(DisplayName = "Rotate client secret raises an exception when the key is NOT found.")]
-    internal async Task RotateClientSecret_UnknownKey_RaisesException(IntKey key)
-    {
-        // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
-
-        // ACT.
-        Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
-
-        // ASSERT.
-        await act.Should()
-                 .ThrowAsync<UpdateException>()
-                 .WithMessage($"Custom: Failed to update application: `{key}`. Not found.")
-                 .ConfigureAwait(false);
-    }
-
-    [AutoData]
-    [M2MManagement]
-    [Theory(DisplayName = "Rotate client secret succeeds.")]
-    internal async Task RotateClientSecret_Succeeds(Model model)
-    {
-        // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
-
-        IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
-
-        string? initialClientSecret = model.ClientSecret;
-
-        // ACT.
-        await manager.RotateClientSecretAsync(key)
-                     .ConfigureAwait(false);
-
-        // ASSERT.
-        Model application = await manager.GetByKeyAsync(key)
-                                         .ConfigureAwait(false);
-
-        initialClientSecret.Should()
-                           .NotMatch(application.ClientSecret);
-    }
-
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Model : ApplicationModel<IntKey>
+    internal sealed class Model : GrantModel<IntKey>
 #pragma warning restore CA1812
     {
-        public Model(IntKey key, string name)
+        public Model(IntKey key, IEnumerable<string> scopes)
             : base(key)
         {
-            this.Name = name;
+            this.Scopes = scopes;
         }
+
+        public IEnumerable<string> Scopes { get; set; }
     }
 
-    private sealed class OperationFilter : IApplicationFilter
+    private sealed class OperationFilter : IGrantFilter
     {
-        private readonly string name;
+        private readonly IEnumerable<string> scopes;
 
-        public OperationFilter(string name)
+        public OperationFilter(IEnumerable<string> scopes)
         {
-            this.name = name;
+            this.scopes = scopes;
         }
 
         public TDestination Create<TDestination>()
@@ -455,8 +359,7 @@ public sealed class ApplicationManagementTests
         {
             if (typeof(TDestination) != typeof(Func<KeyValuePair<IntKey, Model>, bool>))
             {
-                throw new ReadException(
-                    $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
+                throw new ReadException($"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -465,20 +368,19 @@ public sealed class ApplicationManagementTests
             // The filter which is filters out data in the store.
             bool Filter(KeyValuePair<IntKey, Model> kvp)
             {
-                return kvp.Value.Name == this.name;
+                return Equals(kvp.Value.Scopes, this.scopes);
             }
         }
     }
 
-    private sealed class CreateOperationMapper : IApplicationOperationMapper
+    private sealed class CreateOperationMapper : IGrantOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new CreateException(
-                    $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new CreateException($"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -486,15 +388,14 @@ public sealed class ApplicationManagementTests
         }
     }
 
-    private sealed class UpdateOperationMapper : IApplicationOperationMapper
+    private sealed class UpdateOperationMapper : IGrantOperationMapper
     {
         public TDestination Create<TSource, TDestination>(TSource source)
             where TDestination : class
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new UpdateException(
-                    $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new UpdateException($"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -504,12 +405,12 @@ public sealed class ApplicationManagementTests
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Store : IApplicationStore<Model, IntKey>
+    internal sealed class Store : IGrantStore<Model, IntKey>
 #pragma warning restore CA1812
     {
         private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
 
-        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
+        public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IGrantFilter? filter)
         {
             IQueryable<KeyValuePair<IntKey, Model>> dataSet = this.collection.AsQueryable();
 
@@ -520,37 +421,27 @@ public sealed class ApplicationManagementTests
                                  .AsQueryable();
             }
 
-            IEnumerable<Model> applications = dataSet.Skip(pageIndex * pageSize)
-                                                     .Take(pageSize)
-                                                     .Select(static kvp => kvp.Value);
+            IEnumerable<Model> grants = dataSet.Skip(pageIndex * pageSize)
+                                               .Take(pageSize)
+                                               .Select(static kvp => kvp.Value);
 
-            var result = new PagedResultSet<Model>(applications, this.collection.Count > (pageIndex + 1) * pageSize);
+            var result = new PagedResultSet<Model>(grants, this.collection.Count > (pageIndex + 1) * pageSize);
 
             return Task.FromResult(result);
         }
 
-        public Task<Model> GetByKeyAsync(IntKey key)
-        {
-            if (!this.collection.ContainsKey(key))
-            {
-                throw new ReadException($"Custom: Failed to read application: `{key}`. Not found.");
-            }
-
-            return Task.FromResult(this.collection[key]);
-        }
-
-        public Task<IntKey> CreateAsync(Model model, IApplicationOperationMapper mapper)
+        public Task<IntKey> CreateAsync(Model model, IGrantOperationMapper mapper)
         {
             this.collection.Add(model.Key, mapper.Create<Model, Model>(model));
 
             return Task.FromResult(model.Key);
         }
 
-        public async Task UpdateAsync(IntKey key, Model model, IApplicationOperationMapper mapper)
+        public async Task UpdateAsync(IntKey key, Model model, IGrantOperationMapper mapper)
         {
             if (!this.collection.ContainsKey(key))
             {
-                throw new UpdateException($"Custom: Failed to update application: `{key}`. Not found.");
+                throw new UpdateException($"Custom: Failed to update client grant: `{key}`. Not found.");
             }
 
             this.collection.Remove(key);
@@ -567,21 +458,6 @@ public sealed class ApplicationManagementTests
             }
 
             return Task.CompletedTask;
-        }
-
-        public Task<Model> RotateClientSecretAsync(IntKey key)
-        {
-            if (this.collection.TryGetValue(key, out Model? model))
-            {
-                model.ClientSecret = Guid.NewGuid()
-                                         .ToString();
-
-                this.collection[key] = model;
-
-                return Task.FromResult(model);
-            }
-
-            throw new UpdateException($"Custom: Failed to update application: `{key}`. Not found.");
         }
     }
 }

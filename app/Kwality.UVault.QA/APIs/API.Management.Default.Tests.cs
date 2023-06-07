@@ -80,6 +80,27 @@ public sealed class ApiManagementDefaultTests
 
     [AutoData]
     [ApiManagement]
+    [Theory(DisplayName = "Delete succeeds when the key is not found.")]
+    internal async Task Delete_UnknownKey_Succeeds(IntKey key)
+    {
+        // ARRANGE.
+        ApiManager<Model, IntKey> manager = new ApiManagerFactory().Create<Model, IntKey>();
+
+        // ACT.
+        await manager.DeleteByKeyAsync(key)
+                     .ConfigureAwait(false);
+
+        // ASSERT.
+        Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
+
+        await act.Should()
+                 .ThrowAsync<ReadException>()
+                 .WithMessage($"Failed to read API: `{key}`. Not found.")
+                 .ConfigureAwait(false);
+    }
+
+    [AutoData]
+    [ApiManagement]
     [Theory(DisplayName = "Delete succeeds.")]
     internal async Task Delete_Succeeds(Model model)
     {
