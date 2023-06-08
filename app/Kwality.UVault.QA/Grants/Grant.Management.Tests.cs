@@ -208,7 +208,6 @@ public sealed class GrantManagementTests
 
     [AutoData]
     [GrantManagement]
-    [Auth0]
     [Theory(DisplayName = "Get all with filter succeeds.")]
     internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
     {

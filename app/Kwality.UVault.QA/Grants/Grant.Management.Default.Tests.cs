@@ -164,7 +164,6 @@ public sealed class GrantManagementDefaultTests
 
     [AutoData]
     [GrantManagement]
-    [Auth0]
     [Theory(DisplayName = "Get all with filter succeeds.")]
     internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
     {
@@ -278,7 +277,6 @@ public sealed class GrantManagementDefaultTests
 
     [AutoData]
     [GrantManagement]
-    [Auth0]
     [Theory(DisplayName = "Delete succeeds when the key is not found.")]
     internal async Task Delete_UnknownKey_Succeeds(IntKey key)
     {
