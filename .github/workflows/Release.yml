@@ -25,7 +25,7 @@
 
 # GENERAL INFORMATION.
 name: Release (NuGet)
-run-name: "Release (NuGet) (branch: \u0022${{ github.ref_name }}\u0022)\u0022"
+run-name: "Release (NuGet) (branch: \u0022${{ github.ref_name }}\u0022)"
 
 # TRIGGER(S).
 on:
