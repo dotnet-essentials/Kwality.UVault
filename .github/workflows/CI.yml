@@ -118,7 +118,7 @@ jobs:
 
       - name: Upload test results.
         uses: actions/upload-artifact@v3
-        if: steps.check_dir.outputs.dir_exists == 'true'
+        if: always() && steps.check_dir.outputs.dir_exists == 'true'
         with:
           name: Test results (.NET ${{ matrix.dotnet }})
           path: ./app/TestResults-${{ matrix.dotnet }}
@@ -231,6 +231,7 @@ jobs:
 
       - name: Upload mutation results.
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: Mutation results (${{ matrix.projects }})
           path: app/Kwality.UVault.QA/StrykerOutput-${{ matrix.projects }}
