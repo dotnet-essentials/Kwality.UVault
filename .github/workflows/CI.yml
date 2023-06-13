@@ -110,6 +110,7 @@ jobs:
 
       - name: Check if directory containing test results does exist.
         id: check_dir
+        if: always()
         run: |
           if [ -d "./app/TestResults-${{ matrix.dotnet }}" ]; then
             echo "dir_exists=true" >> $GITHUB_OUTPUT
