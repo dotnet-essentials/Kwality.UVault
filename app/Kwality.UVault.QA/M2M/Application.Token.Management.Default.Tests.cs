@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,46 +22,40 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Auth0.Internal.API.Models;
+namespace Kwality.UVault.QA.M2M;
 
-using global::System.Text.Json.Serialization;
+using AutoFixture.Xunit2;
 
-using JetBrains.Annotations;
+using FluentAssertions;
 
-using Kwality.UVault.System.Abstractions;
+using global::System.Diagnostics.CodeAnalysis;
 
-internal sealed class ApiManagementToken
+using Kwality.UVault.Keys;
+using Kwality.UVault.M2M.Managers;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.QA.Internal.Factories;
+using Kwality.UVault.QA.Internal.Xunit.Traits;
+
+using Xunit;
+
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
+public sealed class ApplicationTokenManagementDefaultTests
 {
-    private readonly DateTime issuedTimeStamp;
-
-    public ApiManagementToken()
+    [AutoData]
+    [M2MTokenManagement]
+    [Theory(DisplayName = "Get access token succeeds.")]
+    internal async Task GetToken_Succeeds(ApplicationModel<IntKey> model, string audience, string grantType)
     {
-        this.issuedTimeStamp = DateTime.Now;
-    }
+        // ARRANGE.
+        ApplicationTokenManager<ApplicationTokenManagerFactory.Model, ApplicationModel<IntKey>, IntKey> manager
+            = new ApplicationTokenManagerFactory().Create<ApplicationTokenManagerFactory.Model, ApplicationModel<IntKey>, IntKey>();
 
-    [JsonPropertyName("access_token")]
-    public string? AccessToken
-    {
-        get;
+        // ACT.
+        ApplicationTokenManagerFactory.Model result = await manager.GetAccessTokenAsync(model, audience, grantType)
+                                                                   .ConfigureAwait(false);
 
-        [UsedImplicitly]
-        set;
-    }
-
-    [JsonPropertyName("expires_in")]
-    public int ExpiresIn
-    {
-        get;
-
-        [UsedImplicitly]
-        set;
-    }
-
-    // NOTE: A token is expired one the amount of seconds (see "Expired In") is passed.
-    //       To ensure that we don't use an expired token, a safety mechanism is built in.
-    //       The time at which the token is used isn't the same as the time at which the token is checked.
-    public bool IsExpired(IDateTimeProvider dateTimeProvider)
-    {
-        return dateTimeProvider.Now.AddMinutes(1) > this.issuedTimeStamp.AddSeconds(this.ExpiresIn);
+        // ASSERT.
+        result.Token.Should()
+              .NotBeNullOrWhiteSpace();
     }
 }

@@ -26,9 +26,10 @@ namespace Kwality.UVault.Auth0.Internal.API.Clients;
 
 using global::System.Net.Http.Json;
 
+using Kwality.UVault.Auth0.API.Models;
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
-using Kwality.UVault.Auth0.Internal.API.Models;
+using Kwality.UVault.Auth0.M2M.Configuration;
 using Kwality.UVault.System.Abstractions;
 
 internal sealed class ManagementClient
@@ -43,7 +44,7 @@ internal sealed class ManagementClient
         this.dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
+    public async Task<string> GetTokenAsync(ApiConfiguration configuration)
     {
         if (this.lastRequestedManagementToken is { AccessToken: not null, } &&
             !this.lastRequestedManagementToken.IsExpired(this.dateTimeProvider))
@@ -54,14 +55,14 @@ internal sealed class ManagementClient
         var data = new[]
         {
             new KeyValuePair<string, string>("grant_type", "client_credentials"),
-            new KeyValuePair<string, string>("client_id", apiConfiguration.ClientId),
-            new KeyValuePair<string, string>("client_secret", apiConfiguration.ClientSecret),
-            new KeyValuePair<string, string>("audience", apiConfiguration.Audience),
+            new KeyValuePair<string, string>("client_id", configuration.ClientId),
+            new KeyValuePair<string, string>("client_secret", configuration.ClientSecret),
+            new KeyValuePair<string, string>("audience", configuration.Audience),
         };
 
         using var formData = new FormUrlEncodedContent(data);
 
-        HttpResponseMessage result = await this.GetOAuthTokenAsync(apiConfiguration.TokenEndpoint, formData)
+        HttpResponseMessage result = await this.GetOAuthTokenAsync(configuration.TokenEndpoint, formData)
                                                .ConfigureAwait(false);
 
         try
@@ -80,6 +81,48 @@ internal sealed class ManagementClient
         {
             throw new ManagementApiException(
                 "Failed to retrieve an Auth0 `User Management` token. Reason: Invalid HTTP response.", ex);
+        }
+    }
+
+    public async Task<ApiManagementToken> GetM2MTokenAsync(
+        M2MConfiguration configuration,
+        string clientId,
+        string clientSecret,
+        string audience,
+        string grantType)
+    {
+        var data = new[]
+        {
+            new KeyValuePair<string, string>("grant_type", grantType),
+            new KeyValuePair<string, string>("client_id", clientId),
+            new KeyValuePair<string, string>("client_secret", clientSecret),
+            new KeyValuePair<string, string>("audience", audience),
+        };
+
+        using var formData = new FormUrlEncodedContent(data);
+
+        HttpResponseMessage result = await this.GetOAuthTokenAsync(configuration.TokenEndpoint, formData)
+                                               .ConfigureAwait(false);
+
+        try
+        {
+            await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 `M2M` token.")
+                .ConfigureAwait(false);
+
+            ApiManagementToken? apiToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
+                                                       .ConfigureAwait(false);
+
+            if (apiToken == null)
+            {
+                throw new ManagementApiException("The `M2M Token` token is `null`.");
+            }
+
+            return apiToken;
+        }
+        catch (Exception ex) when (ex is not ManagementApiException)
+        {
+            throw new ManagementApiException(
+                "Failed to retrieve an Auth0 `M2M` token. Reason: Invalid HTTP response.", ex);
         }
     }
 
