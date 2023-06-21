@@ -26,12 +26,12 @@ namespace Kwality.UVault.Auth0.M2M.Stores;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Auth0.API.Models;
 using Kwality.UVault.Auth0.Internal.API.Clients;
 using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.M2M.Configuration;
 using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 using Kwality.UVault.Auth0.M2M.Models;
+using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;

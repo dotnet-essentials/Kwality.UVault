@@ -47,6 +47,7 @@ internal sealed class StaticTokenStore<TToken, TModel, TKey> : IApplicationToken
             throw new ArgumentException($"The {typeof(IApplicationTokenStoreStaticTokenGenerator<TToken, TModel, TKey>).FullName} service should not be null");
         }
 
+        // ReSharper disable once InvertIf
         if (!this.tokenStore.ContainsKey(application.Key))
         {
             TToken value = await this.tokenGenerator.GenerateToken(application, audience, grantType)

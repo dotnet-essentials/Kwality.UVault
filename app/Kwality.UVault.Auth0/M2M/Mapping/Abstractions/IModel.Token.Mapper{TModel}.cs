@@ -24,7 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 
-using Kwality.UVault.Auth0.API.Models;
+using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.M2M.Models;
 
 public interface IModelTokenMapper<out TModel>

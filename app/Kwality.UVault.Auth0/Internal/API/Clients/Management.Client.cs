@@ -26,10 +26,10 @@ namespace Kwality.UVault.Auth0.Internal.API.Clients;
 
 using global::System.Net.Http.Json;
 
-using Kwality.UVault.Auth0.API.Models;
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
 using Kwality.UVault.Auth0.M2M.Configuration;
+using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.System.Abstractions;
 
 internal sealed class ManagementClient

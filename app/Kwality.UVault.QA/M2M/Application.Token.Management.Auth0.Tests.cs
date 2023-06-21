@@ -30,12 +30,12 @@ using global::System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Auth0.API.Models;
 using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.M2M.Configuration;
 using Kwality.UVault.Auth0.M2M.Extensions;
 using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 using Kwality.UVault.Auth0.M2M.Models;
+using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.QA.Internal.Factories;
