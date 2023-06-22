@@ -36,6 +36,7 @@ using Kwality.UVault.Auth0.M2M.Extensions;
 using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
 using Kwality.UVault.Auth0.M2M.Models;
 using Kwality.UVault.Auth0.Models;
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.QA.Internal.Factories;
@@ -77,21 +78,86 @@ public sealed class ApplicationTokenManagementAuth0Tests
               .Be(86400);
     }
 
+    [M2MTokenManagement]
+    [Fact(DisplayName = "Get access token is failed when app does not exist.")]
+    internal async Task GetToken_Failed()
+    {
+        // ARRANGE.
+        M2MConfiguration configuration = GetM2MConfiguration();
+
+        ApplicationTokenManager<AccessTokenModel, ApplicationModel, StringKey> manager
+            = new ApplicationTokenManagerFactory().Create<AccessTokenModel, ApplicationModel, StringKey>(
+                options =>
+                    options.UseAuth0Store<AccessTokenModel, ApplicationModel, TokenModelMapper>(configuration));
+
+        var appModel = new ApplicationModel(new StringKey("clientId"))
+        {
+            Name = "clientId",
+            ClientSecret = "clientSecret",
+        };
+
+        string audience = GetAudience();
+        const string grantType = "client_credentials";
+
+        // ACT.
+        Func<Task<AccessTokenModel>> act = async () => await manager.GetAccessTokenAsync(appModel, audience, grantType)
+                                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        await act.Should()
+                 .ThrowAsync<ReadException>()
+                 .WithMessage("Failed to retrieve an access token.")
+                 .ConfigureAwait(false);
+    }
+
+    [M2MTokenManagement]
+    [Fact(DisplayName = "Get access token is failed when client secret is null.")]
+    internal async Task ClientSecretIsNull_GetToken_Failed()
+    {
+        // ARRANGE.
+        M2MConfiguration configuration = GetM2MConfiguration();
+
+        ApplicationTokenManager<AccessTokenModel, ApplicationModel, StringKey> manager
+            = new ApplicationTokenManagerFactory().Create<AccessTokenModel, ApplicationModel, StringKey>(
+                options =>
+                    options.UseAuth0Store<AccessTokenModel, ApplicationModel, TokenModelMapper>(configuration));
+
+        var appModel = new ApplicationModel(new StringKey("clientId"))
+        {
+            Name = "clientId",
+            ClientSecret = null,
+        };
+
+        string audience = GetAudience();
+        const string grantType = "client_credentials";
+
+        // ACT.
+        Func<Task<AccessTokenModel>> act = async () => await manager.GetAccessTokenAsync(appModel, audience, grantType)
+                                                                    .ConfigureAwait(false);
+
+        // ASSERT.
+        await act.Should()
+                 .ThrowAsync<ReadException>()
+                 .WithMessage("Failed to retrieve an access token.")
+                 .WithInnerException(typeof(ArgumentNullException))
+                 .ConfigureAwait(false);
+    }
+
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class AccessTokenModel : TokenModel
 #pragma warning restore CA1812
     {
+        public AccessTokenModel()
+        {
+        }
+
         public AccessTokenModel(string? token, string tokenType, int expiresIn)
         {
             this.Token = token;
             this.TokenType = tokenType;
             this.ExpiresIn = expiresIn;
         }
-
-        public string? Token { get; }
-        public string TokenType { get; }
-        public int ExpiresIn { get; }
     }
 
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]

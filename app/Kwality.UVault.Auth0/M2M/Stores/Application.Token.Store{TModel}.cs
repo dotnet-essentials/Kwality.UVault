@@ -60,7 +60,7 @@ internal sealed class ApplicationTokenStore<TToken, TModel> : IApplicationTokenS
             ArgumentNullException.ThrowIfNull(application.ClientSecret);
 
             ApiManagementToken managementApiToken = await this.managementClient.GetM2MTokenAsync(
-                                                                  this.m2MConfiguration, application.Key.ToString(),
+                                                                  this.m2MConfiguration.TokenEndpoint, application.Key.ToString(),
                                                                   application.ClientSecret, audience, grantType)
                                                               .ConfigureAwait(false);
 

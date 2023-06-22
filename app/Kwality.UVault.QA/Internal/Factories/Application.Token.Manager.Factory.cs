@@ -24,14 +24,11 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.Internal.Factories;
 
-using JetBrains.Annotations;
-
 using Kwality.UVault.Extensions;
 using Kwality.UVault.M2M.Extensions;
 using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Options;
-using Kwality.UVault.M2M.Stores.Abstractions;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -45,12 +42,11 @@ internal sealed class ApplicationTokenManagerFactory
     }
 
     public ApplicationTokenManager<TToken, TModel, TKey> Create<TToken, TModel, TKey>()
-        where TToken : TokenModel
+        where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
         this.serviceCollection.AddUVault(static (_, options) => options.UseApplicationTokenManagement<TToken, TModel, TKey>(null));
-        this.serviceCollection.AddSingleton<IApplicationTokenStoreStaticTokenGenerator<Model, TModel, TKey>, ApplicationStoreStaticTokenGenerator<TModel, TKey>>();
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<ApplicationTokenManager<TToken, TModel, TKey>>();
@@ -58,7 +54,7 @@ internal sealed class ApplicationTokenManagerFactory
 
     public ApplicationTokenManager<TToken, TModel, TKey> Create<TToken, TModel, TKey>(
         Action<ApplicationTokenManagementOptions<TToken, TModel, TKey>>? action)
-        where TToken : TokenModel
+        where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -68,31 +64,5 @@ internal sealed class ApplicationTokenManagerFactory
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<ApplicationTokenManager<TToken, TModel, TKey>>();
-    }
-
-    internal sealed class ApplicationStoreStaticTokenGenerator<TModel, TKey> : IApplicationTokenStoreStaticTokenGenerator<Model, TModel, TKey>
-        where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        public Task<Model> GenerateToken(TModel application, string audience, string grantType)
-        {
-            return Task.FromResult(
-                new Model(
-                    Guid.NewGuid()
-                        .ToString()));
-        }
-    }
-
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
-    [UsedImplicitly]
-    internal sealed class Model : TokenModel
-#pragma warning restore CA1812
-    {
-        public Model(string token)
-        {
-            this.Token = token;
-        }
-
-        public string Token { get; }
     }
 }

@@ -28,34 +28,34 @@ using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
 internal sealed class StaticTokenStore<TToken, TModel, TKey> : IApplicationTokenStore<TToken, TModel, TKey>
-    where TToken : TokenModel
+    where TToken : TokenModel, new()
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
     private readonly IDictionary<TKey, TToken> tokenStore = new Dictionary<TKey, TToken>();
-    private readonly IApplicationTokenStoreStaticTokenGenerator<TToken, TModel, TKey> tokenGenerator;
 
-    public StaticTokenStore(IApplicationTokenStoreStaticTokenGenerator<TToken, TModel, TKey> tokenGenerator)
+    public Task<TToken> GetAccessTokenAsync(TModel application, string audience, string grantType)
     {
-        this.tokenGenerator = tokenGenerator;
+        if (this.tokenStore.TryGetValue(application.Key, out TToken? value1))
+        {
+            return Task.FromResult(value1);
+        }
+
+        var value = new TToken
+        {
+            Token = GenerateToken(),
+            ExpiresIn = 86400,
+            TokenType = "Bearer",
+        };
+
+        this.tokenStore.Add(application.Key, value);
+
+        return Task.FromResult(this.tokenStore[application.Key]);
     }
 
-    public async Task<TToken> GetAccessTokenAsync(TModel application, string audience, string grantType)
+    private static string GenerateToken()
     {
-        if (this.tokenGenerator == null)
-        {
-            throw new ArgumentException($"The {typeof(IApplicationTokenStoreStaticTokenGenerator<TToken, TModel, TKey>).FullName} service should not be null");
-        }
-
-        // ReSharper disable once InvertIf
-        if (!this.tokenStore.ContainsKey(application.Key))
-        {
-            TToken value = await this.tokenGenerator.GenerateToken(application, audience, grantType)
-                                     .ConfigureAwait(false);
-
-            this.tokenStore.Add(application.Key, value);
-        }
-
-        return this.tokenStore[application.Key];
+        return Guid.NewGuid()
+                   .ToString();
     }
 }

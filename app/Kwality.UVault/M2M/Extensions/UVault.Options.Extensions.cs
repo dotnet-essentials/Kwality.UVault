@@ -59,7 +59,7 @@ public static class UVaultOptionsExtensions
 
     public static void UseApplicationTokenManagement<TToken, TModel, TKey>(
         this UVaultOptions options, Action<ApplicationTokenManagementOptions<TToken, TModel, TKey>>? action)
-        where TToken : TokenModel
+        where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {

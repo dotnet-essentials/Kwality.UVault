@@ -27,7 +27,9 @@ namespace Kwality.UVault.M2M.Models;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public abstract class TokenModel
+public class TokenModel
 {
-    // NOTE: Intentionally left blank.
+    public string? Token { get; init; }
+    public int ExpiresIn { get; init; }
+    public string TokenType { get; init; } = string.Empty;
 }

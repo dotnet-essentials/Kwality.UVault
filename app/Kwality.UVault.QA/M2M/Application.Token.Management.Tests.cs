@@ -122,12 +122,14 @@ public sealed class ApplicationTokenManagementTests
     internal sealed class Model : TokenModel
 #pragma warning restore CA1812
     {
+        public Model()
+        {
+        }
+
         public Model(string token)
         {
             this.Token = token;
         }
-
-        public string Token { get; }
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".

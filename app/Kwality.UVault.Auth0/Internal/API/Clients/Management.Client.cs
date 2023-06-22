@@ -28,7 +28,6 @@ using global::System.Net.Http.Json;
 
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
-using Kwality.UVault.Auth0.M2M.Configuration;
 using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.System.Abstractions;
 
@@ -52,40 +51,21 @@ internal sealed class ManagementClient
             return this.lastRequestedManagementToken.AccessToken;
         }
 
-        var data = new[]
-        {
-            new KeyValuePair<string, string>("grant_type", "client_credentials"),
-            new KeyValuePair<string, string>("client_id", configuration.ClientId),
-            new KeyValuePair<string, string>("client_secret", configuration.ClientSecret),
-            new KeyValuePair<string, string>("audience", configuration.Audience),
-        };
+        this.lastRequestedManagementToken = await this.GetM2MTokenAsync(
+                                                          configuration.TokenEndpoint,
+                                                          configuration.ClientId,
+                                                          configuration.ClientSecret,
+                                                          configuration.Audience,
+                                                          "client_credentials")
+                                                      .ConfigureAwait(false);
 
-        using var formData = new FormUrlEncodedContent(data);
-
-        HttpResponseMessage result = await this.GetOAuthTokenAsync(configuration.TokenEndpoint, formData)
-                                               .ConfigureAwait(false);
-
-        try
-        {
-            await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 `User Management` token.")
-                .ConfigureAwait(false);
-
-            this.lastRequestedManagementToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
-                                                            .ConfigureAwait(false);
-
-            return string.IsNullOrEmpty(this.lastRequestedManagementToken?.AccessToken)
-                ? throw new ManagementApiException("The `API Management Token / Access Token` token is `null`.")
-                : this.lastRequestedManagementToken.AccessToken;
-        }
-        catch (Exception ex) when (ex is not ManagementApiException)
-        {
-            throw new ManagementApiException(
-                "Failed to retrieve an Auth0 `User Management` token. Reason: Invalid HTTP response.", ex);
-        }
+        return string.IsNullOrEmpty(this.lastRequestedManagementToken?.AccessToken)
+            ? throw new ManagementApiException("The Auth0 access token is `null`.")
+            : this.lastRequestedManagementToken.AccessToken;
     }
 
     public async Task<ApiManagementToken> GetM2MTokenAsync(
-        M2MConfiguration configuration,
+        Uri tokenEndpoint,
         string clientId,
         string clientSecret,
         string audience,
@@ -101,12 +81,12 @@ internal sealed class ManagementClient
 
         using var formData = new FormUrlEncodedContent(data);
 
-        HttpResponseMessage result = await this.GetOAuthTokenAsync(configuration.TokenEndpoint, formData)
+        HttpResponseMessage result = await this.GetOAuthTokenAsync(tokenEndpoint, formData)
                                                .ConfigureAwait(false);
 
         try
         {
-            await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 `M2M` token.")
+            await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 access token.")
                 .ConfigureAwait(false);
 
             ApiManagementToken? apiToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
@@ -114,7 +94,7 @@ internal sealed class ManagementClient
 
             if (apiToken == null)
             {
-                throw new ManagementApiException("The `M2M Token` token is `null`.");
+                throw new ManagementApiException("The Auth0 access token is `null`.");
             }
 
             return apiToken;
@@ -122,7 +102,7 @@ internal sealed class ManagementClient
         catch (Exception ex) when (ex is not ManagementApiException)
         {
             throw new ManagementApiException(
-                "Failed to retrieve an Auth0 `M2M` token. Reason: Invalid HTTP response.", ex);
+                "Failed to retrieve an Auth0 access token. Reason: Invalid HTTP response.", ex);
         }
     }
 
@@ -135,7 +115,7 @@ internal sealed class ManagementClient
         }
         catch (Exception ex)
         {
-            throw new ManagementApiException("Failed to retrieve an Auth0 `User Management` token.", ex);
+            throw new ManagementApiException("Failed to retrieve an Auth0 access token.", ex);
         }
     }
 

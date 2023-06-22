@@ -35,6 +35,7 @@ using global::System.Net;
 using Kwality.UVault.Auth0.Configuration;
 using Kwality.UVault.Auth0.Exceptions;
 using Kwality.UVault.Auth0.Internal.API.Clients;
+using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.QA.Internal.Extensions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 using Kwality.UVault.System.Abstractions;
@@ -60,7 +61,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the REST endpoint can't be requested.")]
     internal async Task RequestToken_RequestFails_RaisesException(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         messageHandler.SetupSendAsyncException();
@@ -72,7 +74,38 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("Failed to retrieve an Auth0 `User Management` token.")
+                 .WithMessage("Failed to retrieve an Auth0 access token.")
+                 .ConfigureAwait(false);
+    }
+
+    [Auth0]
+    [AutoDomainData]
+    [Theory(DisplayName = "Request token fails when the DateTimeProvider is null.")]
+    internal async Task RequestToken_NullDateTimeProvider_RaisesException(
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, HttpClient httpClient, string apiToken)
+    {
+        // MOCK SETUP.
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("{\"access_token\":\"" + apiToken + "\"}"),
+        };
+
+        messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
+#pragma warning disable CS8625
+        var managementClient = new ManagementClient(httpClient, null);
+#pragma warning restore CS8625
+
+        await managementClient.GetTokenAsync(this.apiConfiguration)
+                              .ConfigureAwait(false);
+
+        Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
+                                                           .ConfigureAwait(false);
+
+        // ASSERT.
+        await act.Should()
+                 .ThrowAsync<ArgumentNullException>()
                  .ConfigureAwait(false);
     }
 
@@ -80,7 +113,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result differs from HTTP OK (NO Content).")]
     internal async Task RequestToken_ResponseNoOkWithoutContent_RaisesException(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -98,7 +132,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("Failed to retrieve an Auth0 `User Management` token. HTTP 400.")
+                 .WithMessage("Failed to retrieve an Auth0 access token. HTTP 400.")
                  .ConfigureAwait(false);
     }
 
@@ -106,7 +140,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result differs from HTTP OK.")]
     internal async Task RequestToken_ResponseNoOk_RaisesException(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string response)
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string response)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -124,7 +159,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage($"Failed to retrieve an Auth0 `User Management` token. HTTP 401: `{response}`.")
+                 .WithMessage($"Failed to retrieve an Auth0 access token. HTTP 401: `{response}`.")
                  .ConfigureAwait(false);
     }
 
@@ -132,7 +167,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result is NOT valid JSON.")]
     internal async Task RequestToken_ResponseNoValidJson_RaisesException(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -150,7 +186,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("Failed to retrieve an Auth0 `User Management` token. Reason: Invalid HTTP response.")
+                 .WithMessage("Failed to retrieve an Auth0 access token. Reason: Invalid HTTP response.")
                  .ConfigureAwait(false);
     }
 
@@ -158,7 +194,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result does NOT contain an access token.")]
     internal async Task RequestToken_ResponseNoAccessToken_RaisesException(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -176,7 +213,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("The `API Management Token / Access Token` token is `null`.")
+                 .WithMessage("The Auth0 access token is `null`.")
                  .ConfigureAwait(false);
     }
 
@@ -184,7 +221,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result does contain an empty access token.")]
     internal async Task RequestToken_ResponseEmptyAccessToken_RaisesException(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -202,7 +240,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("The `API Management Token / Access Token` token is `null`.")
+                 .WithMessage("The Auth0 access token is `null`.")
                  .ConfigureAwait(false);
     }
 
@@ -210,7 +248,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns the access token.")]
     internal async Task RequestToken_ReturnsAccessToken(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string apiToken)
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string apiToken)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -234,7 +273,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns the cached access token.")]
     internal async Task RequestToken_LastTokenNotExpired_ReturnsCachedAccessToken(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
         ManagementClient managementClient)
     {
         // MOCK SETUP.
@@ -275,7 +315,8 @@ public sealed class Auth0ManagementClientTests
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns a new access token.")]
     internal async Task RequestToken_LastTokenExpired_ReturnsNewAccessToken(
-        [Frozen] Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
         ManagementClient managementClient)
     {
         // MOCK SETUP.
@@ -310,6 +351,50 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         resultOne.Should()
                  .NotBe(resultTwo);
+    }
+
+    [Auth0]
+    [AutoDomainData]
+    [Theory(DisplayName = $"{testPrefix} returns a new access token.")]
+    internal async Task RequestM2MToken_ReturnsNewAccessToken(
+        [Frozen]
+        Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
+        ManagementClient managementClient)
+    {
+        // MOCK SETUP.
+        dateTimeProvider.Setup(static x => x.Now)
+                        .Returns(DateTime.Now);
+
+        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}"),
+        };
+
+        messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageOne);
+
+        // ACT.
+        ApiManagementToken result = await managementClient.GetM2MTokenAsync(
+                                                              this.apiConfiguration.TokenEndpoint,
+                                                              this.apiConfiguration.ClientId,
+                                                              this.apiConfiguration.ClientSecret,
+                                                              this.apiConfiguration.Audience,
+                                                              "client_credentials")
+                                                          .ConfigureAwait(false);
+
+        // ASSERT.
+        result.AccessToken.Should()
+              .Be("Token 1");
+
+        result.ExpiresIn.Should()
+              .Be(86400);
+
+        result.TokenType.Should()
+              .BeEmpty();
+
+        result.IsExpired(dateTimeProvider.Object)
+              .Should()
+              .BeFalse();
     }
 
     [AttributeUsage(AttributeTargets.Method)]
