@@ -63,11 +63,11 @@ public static class UVaultOptionsExtensions
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
+        options.UseApplicationManagement<TModel, TKey>();
         options.Services.AddScoped<ApplicationTokenManager<TToken, TModel, TKey>>();
 
         options.Services
-               .AddScoped<IApplicationTokenStore<TToken, TModel, TKey>,
-                   StaticTokenStore<TToken, TModel, TKey>>();
+               .AddScoped<IApplicationTokenStore<TToken, TModel, TKey>, StaticTokenStore<TToken, TModel, TKey>>();
 
         // Configure UVault's User M2M Token management component.
         action?.Invoke(new ApplicationTokenManagementOptions<TToken, TModel, TKey>(options.Services));
