@@ -42,13 +42,12 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class ApplicationTokenManagementOptionsExtensions
 {
-    public static void UseAuth0Store<TToken, TModel, TMapper>(
-        this ApplicationTokenManagementOptions<TToken, TModel, StringKey> options, M2MConfiguration configuration)
+    public static void UseAuth0Store<TToken, TMapper>(
+        this ApplicationTokenManagementOptions<TToken> options, M2MConfiguration configuration)
         where TToken : TokenModel
-        where TModel : ApplicationModel
         where TMapper : class, IModelTokenMapper<TToken>
     {
-        options.UseStore<ApplicationTokenStore<TToken, TModel>>();
+        options.UseStore<ApplicationTokenStore<TToken>>();
 
         // Register additional services.
         options.ServiceCollection.AddScoped<IModelTokenMapper<TToken>, TMapper>();

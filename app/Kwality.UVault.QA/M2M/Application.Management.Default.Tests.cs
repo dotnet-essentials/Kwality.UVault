@@ -71,8 +71,7 @@ public sealed class ApplicationManagementDefaultTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  model, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(model, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -128,8 +127,7 @@ public sealed class ApplicationManagementDefaultTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  modelOne, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelOne, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -161,8 +159,7 @@ public sealed class ApplicationManagementDefaultTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelTwo, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -179,9 +176,8 @@ public sealed class ApplicationManagementDefaultTests
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
                      .ConfigureAwait(false);
 
-        PagedResultSet<Model> result = await manager
-                                             .GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
-                                             .ConfigureAwait(false);
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
+                                                    .ConfigureAwait(false);
 
         // ASSERT.
         result.ResultSet.Count()
@@ -190,8 +186,7 @@ public sealed class ApplicationManagementDefaultTests
 
         result.ResultSet.First()
               .Should()
-              .BeEquivalentTo(
-                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelTwo, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -374,8 +369,7 @@ public sealed class ApplicationManagementDefaultTests
         {
             if (typeof(TDestination) != typeof(Func<Model, bool>))
             {
-                throw new ReadException(
-                    $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
+                throw new ReadException($"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.

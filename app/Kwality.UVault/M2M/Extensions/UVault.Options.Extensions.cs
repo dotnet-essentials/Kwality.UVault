@@ -46,7 +46,26 @@ public static class UVaultOptionsExtensions
     }
 
     public static void UseApplicationManagement<TModel, TKey>(
-        this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? action)
+        this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        UseAndConfigureApplicationManagement(options, applicationManagementOptions);
+    }
+
+    public static void UseApplicationTokenManagement<TToken, TModel, TKey>(
+        this UVaultOptions options,
+        Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
+        where TToken : TokenModel, new()
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        UseAndConfigureApplicationManagement<TModel, TKey>(options, null);
+        UseAndConfigureApplicationTokenManagement<TToken, TKey>(options, applicationTokenManagementOptions);
+    }
+
+    private static void UseAndConfigureApplicationManagement<TModel, TKey>(
+        UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions)
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -54,22 +73,18 @@ public static class UVaultOptionsExtensions
         options.Services.AddScoped<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 
         // Configure UVault's M2M management component.
-        action?.Invoke(new ApplicationManagementOptions<TModel, TKey>(options.Services));
+        applicationManagementOptions?.Invoke(new ApplicationManagementOptions<TModel, TKey>(options.Services));
     }
 
-    public static void UseApplicationTokenManagement<TToken, TModel, TKey>(
-        this UVaultOptions options, Action<ApplicationTokenManagementOptions<TToken, TModel, TKey>>? action)
+    private static void UseAndConfigureApplicationTokenManagement<TToken, TKey>(
+        UVaultOptions options, Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
         where TToken : TokenModel, new()
-        where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        options.UseApplicationManagement<TModel, TKey>();
-        options.Services.AddScoped<ApplicationTokenManager<TToken, TModel, TKey>>();
-
-        options.Services
-               .AddScoped<IApplicationTokenStore<TToken, TModel, TKey>, StaticTokenStore<TToken, TModel, TKey>>();
+        options.Services.AddScoped<ApplicationTokenManager<TToken>>();
+        options.Services.AddScoped<IApplicationTokenStore<TToken>, StaticTokenStore<TToken>>();
 
         // Configure UVault's User M2M Token management component.
-        action?.Invoke(new ApplicationTokenManagementOptions<TToken, TModel, TKey>(options.Services));
+        applicationTokenManagementOptions?.Invoke(new ApplicationTokenManagementOptions<TToken>(options.Services));
     }
 }

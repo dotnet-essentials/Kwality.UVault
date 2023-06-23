@@ -56,16 +56,11 @@ public sealed class ApplicationManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
-                static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+        services.AddUVault(static (_, options) => options.UseApplicationManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Singleton && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -74,17 +69,11 @@ public sealed class ApplicationManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseApplicationManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+        services.AddUVault(static (_, options) => options.UseApplicationManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Scoped && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -93,16 +82,11 @@ public sealed class ApplicationManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options) => options.UseApplicationManagement<Model, IntKey>(
-                static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+        services.AddUVault(static (_, options) => options.UseApplicationManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Transient &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Transient && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -111,8 +95,7 @@ public sealed class ApplicationManagementTests
     internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -132,8 +115,7 @@ public sealed class ApplicationManagementTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  model, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(model, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -142,8 +124,7 @@ public sealed class ApplicationManagementTests
     internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -167,8 +148,7 @@ public sealed class ApplicationManagementTests
     internal async Task GetAll_FirstPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -191,8 +171,7 @@ public sealed class ApplicationManagementTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  modelOne, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelOne, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -201,8 +180,7 @@ public sealed class ApplicationManagementTests
     internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -225,8 +203,7 @@ public sealed class ApplicationManagementTests
         result.ResultSet.Take(1)
               .First()
               .Should()
-              .BeEquivalentTo(
-                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelTwo, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -235,8 +212,7 @@ public sealed class ApplicationManagementTests
     internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -244,9 +220,8 @@ public sealed class ApplicationManagementTests
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
                      .ConfigureAwait(false);
 
-        PagedResultSet<Model> result = await manager
-                                             .GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
-                                             .ConfigureAwait(false);
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
+                                                    .ConfigureAwait(false);
 
         // ASSERT.
         result.ResultSet.Count()
@@ -255,8 +230,7 @@ public sealed class ApplicationManagementTests
 
         result.ResultSet.First()
               .Should()
-              .BeEquivalentTo(
-                  modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+              .BeEquivalentTo(modelTwo, static options => options.Excluding(static application => application.ClientSecret));
     }
 
     [AutoData]
@@ -265,8 +239,7 @@ public sealed class ApplicationManagementTests
     internal async Task GetByKey_UnknownKey_RaisesException(IntKey key)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -284,8 +257,7 @@ public sealed class ApplicationManagementTests
     internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -303,8 +275,7 @@ public sealed class ApplicationManagementTests
     internal async Task Update_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -327,8 +298,7 @@ public sealed class ApplicationManagementTests
     internal async Task Update_UnknownKey_RaisesException(IntKey key, Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
@@ -346,8 +316,7 @@ public sealed class ApplicationManagementTests
     internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -371,8 +340,7 @@ public sealed class ApplicationManagementTests
     internal async Task Delete_UnknownKey_Succeeds(IntKey key)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.DeleteByKeyAsync(key);
@@ -389,8 +357,7 @@ public sealed class ApplicationManagementTests
     internal async Task RotateClientSecret_UnknownKey_RaisesException(IntKey key)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
@@ -408,8 +375,7 @@ public sealed class ApplicationManagementTests
     internal async Task RotateClientSecret_Succeeds(Model model)
     {
         // ARRANGE.
-        ApplicationManager<Model, IntKey> manager
-            = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApplicationManager<Model, IntKey> manager = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -454,8 +420,7 @@ public sealed class ApplicationManagementTests
         {
             if (typeof(TDestination) != typeof(Func<KeyValuePair<IntKey, Model>, bool>))
             {
-                throw new ReadException(
-                    $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
+                throw new ReadException($"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -476,8 +441,7 @@ public sealed class ApplicationManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new CreateException(
-                    $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new CreateException($"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -492,8 +456,7 @@ public sealed class ApplicationManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new UpdateException(
-                    $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new UpdateException($"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.

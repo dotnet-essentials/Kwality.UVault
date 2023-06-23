@@ -56,17 +56,11 @@ public sealed class UserManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseUserManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+        services.AddUVault(static (_, options) => options.UseUserManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Singleton && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -75,17 +69,11 @@ public sealed class UserManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseUserManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+        services.AddUVault(static (_, options) => options.UseUserManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Scoped && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -94,17 +82,11 @@ public sealed class UserManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseUserManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+        services.AddUVault(static (_, options) => options.UseUserManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Transient &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Transient && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -113,8 +95,7 @@ public sealed class UserManagementTests
     internal async Task GetByKey_UnknownKey_RaisesException(IntKey key)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -132,8 +113,7 @@ public sealed class UserManagementTests
     internal async Task GetByEmail_UnknownEmail_ReturnsEmptyCollection(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -153,8 +133,7 @@ public sealed class UserManagementTests
     internal async Task GetByEmail_SingleMatch_ReturnsMatches(List<Model> models)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         foreach (Model model in models)
         {
@@ -180,8 +159,7 @@ public sealed class UserManagementTests
     internal async Task GetByEmail_MultipleMatches_ReturnsMatches(List<Model> models)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         foreach (Model model in models)
         {
@@ -207,8 +185,7 @@ public sealed class UserManagementTests
     internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -226,8 +203,7 @@ public sealed class UserManagementTests
     internal async Task Create_KeyExists_RaisesException(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -248,8 +224,7 @@ public sealed class UserManagementTests
     internal async Task Update_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -272,8 +247,7 @@ public sealed class UserManagementTests
     internal async Task Update_UnknownKey_RaisesException(IntKey key, Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
@@ -291,8 +265,7 @@ public sealed class UserManagementTests
     internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -316,8 +289,7 @@ public sealed class UserManagementTests
     internal async Task Delete_UnknownKey_Succeeds(IntKey key)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager
-            = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.DeleteByKeyAsync(key);
@@ -346,8 +318,7 @@ public sealed class UserManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new CreateException(
-                    $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new CreateException($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -362,8 +333,7 @@ public sealed class UserManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new UpdateException(
-                    $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new UpdateException($"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.

@@ -28,6 +28,8 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
+using global::System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.Extensions;
@@ -51,16 +53,11 @@ public sealed class ApplicationTokenManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options) => options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(
-                static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+        services.AddUVault(static (_, options) => options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationTokenStore<Model, ApplicationModel<IntKey>, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApplicationTokenStore<Model>) && descriptor.Lifetime == ServiceLifetime.Singleton && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -69,16 +66,11 @@ public sealed class ApplicationTokenManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options) => options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(
-                static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+        services.AddUVault(static (_, options) => options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationTokenStore<Model, ApplicationModel<IntKey>, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApplicationTokenStore<Model>) && descriptor.Lifetime == ServiceLifetime.Scoped && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -87,34 +79,34 @@ public sealed class ApplicationTokenManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options) => options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(
-                static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+        services.AddUVault(static (_, options) => options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApplicationTokenStore<Model, ApplicationModel<IntKey>, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Transient &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApplicationTokenStore<Model>) && descriptor.Lifetime == ServiceLifetime.Transient && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
     [M2MTokenManagement]
     [Theory(DisplayName = "Get access token succeeds.")]
-    internal async Task GetToken_Succeeds(ApplicationModel<IntKey> model, string audience, string grantType)
+    internal async Task GetToken_Succeeds(string clientId, string clientSecret, string audience, string grantType)
     {
         // ARRANGE.
-        ApplicationTokenManager<Model, ApplicationModel<IntKey>, IntKey> manager
-            = new ApplicationTokenManagerFactory().Create<Model, ApplicationModel<IntKey>, IntKey>(static options => options.UseStore<Store>());
+        ApplicationTokenManager<Model> manager = new ApplicationTokenManagerFactory().Create<Model, ApplicationModel<IntKey>, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
-        Model result = await manager.GetAccessTokenAsync(model, audience, grantType)
+        Model result = await manager.GetAccessTokenAsync(clientId, clientSecret, audience, grantType)
                                     .ConfigureAwait(false);
 
         // ASSERT.
         result.Token.Should()
               .NotBeNullOrWhiteSpace();
+
+        result.ExpiresIn.Should()
+              .Be(86400);
+
+        result.TokenType.Should()
+              .Be("Bearer");
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
@@ -126,23 +118,24 @@ public sealed class ApplicationTokenManagementTests
         {
         }
 
-        public Model(string token)
+        public Model(string token, int expiresIn, string tokenType)
+            : base(token, expiresIn, tokenType)
         {
-            this.Token = token;
         }
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Store : IApplicationTokenStore<Model, ApplicationModel<IntKey>, IntKey>
+    internal sealed class Store : IApplicationTokenStore<Model>
 #pragma warning restore CA1812
     {
-        public Task<Model> GetAccessTokenAsync(ApplicationModel<IntKey> application, string audience, string grantType)
+        [SuppressMessage("Performance", "CA1822:Mark members as static")]
+        public Task<Model> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)
         {
             return Task.FromResult(
                 new Model(
                     Guid.NewGuid()
-                        .ToString()));
+                        .ToString(), 86400, "Bearer"));
         }
     }
 }

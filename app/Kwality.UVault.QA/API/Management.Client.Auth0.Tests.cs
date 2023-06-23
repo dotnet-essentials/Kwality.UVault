@@ -53,16 +53,13 @@ public sealed class Auth0ManagementClientTests
 
     public Auth0ManagementClientTests()
     {
-        this.apiConfiguration = new ApiConfiguration(
-            new Uri("http://localhost/"), string.Empty, string.Empty, string.Empty);
+        this.apiConfiguration = new ApiConfiguration(new Uri("http://localhost/"), string.Empty, string.Empty, string.Empty);
     }
 
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the REST endpoint can't be requested.")]
-    internal async Task RequestToken_RequestFails_RaisesException(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+    internal async Task RequestToken_RequestFails_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         messageHandler.SetupSendAsyncException();
@@ -81,9 +78,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = "Request token fails when the DateTimeProvider is null.")]
-    internal async Task RequestToken_NullDateTimeProvider_RaisesException(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, HttpClient httpClient, string apiToken)
+    internal async Task RequestToken_NullDateTimeProvider_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, HttpClient httpClient, string apiToken)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -112,9 +107,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result differs from HTTP OK (NO Content).")]
-    internal async Task RequestToken_ResponseNoOkWithoutContent_RaisesException(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+    internal async Task RequestToken_ResponseNoOkWithoutContent_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -139,9 +132,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result differs from HTTP OK.")]
-    internal async Task RequestToken_ResponseNoOk_RaisesException(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string response)
+    internal async Task RequestToken_ResponseNoOk_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string response)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -166,9 +157,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result is NOT valid JSON.")]
-    internal async Task RequestToken_ResponseNoValidJson_RaisesException(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+    internal async Task RequestToken_ResponseNoValidJson_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -193,9 +182,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result does NOT contain an access token.")]
-    internal async Task RequestToken_ResponseNoAccessToken_RaisesException(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+    internal async Task RequestToken_ResponseNoAccessToken_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -220,9 +207,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the result does contain an empty access token.")]
-    internal async Task RequestToken_ResponseEmptyAccessToken_RaisesException(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
+    internal async Task RequestToken_ResponseEmptyAccessToken_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -247,9 +232,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns the access token.")]
-    internal async Task RequestToken_ReturnsAccessToken(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string apiToken)
+    internal async Task RequestToken_ReturnsAccessToken([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string apiToken)
     {
         // MOCK SETUP.
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
@@ -272,10 +255,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns the cached access token.")]
-    internal async Task RequestToken_LastTokenNotExpired_ReturnsCachedAccessToken(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
-        ManagementClient managementClient)
+    internal async Task RequestToken_LastTokenNotExpired_ReturnsCachedAccessToken([Frozen] Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider, ManagementClient managementClient)
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
@@ -314,10 +294,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns a new access token.")]
-    internal async Task RequestToken_LastTokenExpired_ReturnsNewAccessToken(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
-        ManagementClient managementClient)
+    internal async Task RequestToken_LastTokenExpired_ReturnsNewAccessToken([Frozen] Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider, ManagementClient managementClient)
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
@@ -356,10 +333,7 @@ public sealed class Auth0ManagementClientTests
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} returns a new access token.")]
-    internal async Task RequestM2MToken_ReturnsNewAccessToken(
-        [Frozen]
-        Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider,
-        ManagementClient managementClient)
+    internal async Task RequestM2MToken_ReturnsNewAccessToken([Frozen] Mock<HttpMessageHandler> messageHandler, [Frozen] Mock<IDateTimeProvider> dateTimeProvider, ManagementClient managementClient)
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
@@ -375,10 +349,7 @@ public sealed class Auth0ManagementClientTests
 
         // ACT.
         ApiManagementToken result = await managementClient.GetM2MTokenAsync(
-                                                              this.apiConfiguration.TokenEndpoint,
-                                                              this.apiConfiguration.ClientId,
-                                                              this.apiConfiguration.ClientSecret,
-                                                              this.apiConfiguration.Audience,
+                                                              this.apiConfiguration.TokenEndpoint, this.apiConfiguration.ClientId, this.apiConfiguration.ClientSecret, this.apiConfiguration.Audience,
                                                               "client_credentials")
                                                           .ConfigureAwait(false);
 
@@ -408,9 +379,8 @@ public sealed class Auth0ManagementClientTests
                     fixture.Customize(new AutoMoqCustomization());
 
                     fixture.Customize<HttpClient>(
-                        static composer => composer
-                                           .FromFactory(static (HttpMessageHandler handler) => new HttpClient(handler))
-                                           .OmitAutoProperties());
+                        static composer => composer.FromFactory(static (HttpMessageHandler handler) => new HttpClient(handler))
+                                                   .OmitAutoProperties());
 
                     return fixture;
                 })

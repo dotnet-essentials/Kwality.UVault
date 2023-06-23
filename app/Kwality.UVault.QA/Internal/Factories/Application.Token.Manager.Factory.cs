@@ -41,28 +41,29 @@ internal sealed class ApplicationTokenManagerFactory
         this.serviceCollection = new ServiceCollection();
     }
 
-    public ApplicationTokenManager<TToken, TModel, TKey> Create<TToken, TModel, TKey>()
-        where TToken : TokenModel, new()
-        where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseApplicationTokenManagement<TToken, TModel, TKey>(null));
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<ApplicationTokenManager<TToken, TModel, TKey>>();
-    }
-
-    public ApplicationTokenManager<TToken, TModel, TKey> Create<TToken, TModel, TKey>(
-        Action<ApplicationTokenManagementOptions<TToken, TModel, TKey>>? action)
+    public ApplicationTokenManager<TToken> Create<TToken, TModel, TKey>()
         where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
         this.serviceCollection.AddUVault(
-            (_, options) =>
-                options.UseApplicationTokenManagement(action));
+            static (_, options) => options.UseApplicationTokenManagement<TToken, TModel, TKey>(null));
 
         return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<ApplicationTokenManager<TToken, TModel, TKey>>();
+                   .GetRequiredService<ApplicationTokenManager<TToken>>();
+    }
+
+    public ApplicationTokenManager<TToken> Create<TToken, TModel, TKey>(
+        Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
+        where TToken : TokenModel, new()
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        this.serviceCollection.AddUVault(
+            (_, options)
+                => options.UseApplicationTokenManagement<TToken, TModel, TKey>(applicationTokenManagementOptions));
+
+        return this.serviceCollection.BuildServiceProvider()
+                   .GetRequiredService<ApplicationTokenManager<TToken>>();
     }
 }

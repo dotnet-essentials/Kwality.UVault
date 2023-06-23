@@ -29,7 +29,18 @@ using JetBrains.Annotations;
 [PublicAPI]
 public class TokenModel
 {
+    public TokenModel()
+    {
+    }
+
+    public TokenModel(string token, int expiresIn, string tokenType)
+    {
+        this.Token = token;
+        this.ExpiresIn = expiresIn;
+        this.TokenType = tokenType;
+    }
+
     public string? Token { get; init; }
     public int ExpiresIn { get; init; }
-    public string TokenType { get; init; } = string.Empty;
+    public string? TokenType { get; init; }
 }
