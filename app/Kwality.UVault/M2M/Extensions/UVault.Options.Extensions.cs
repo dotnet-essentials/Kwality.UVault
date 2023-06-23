@@ -46,14 +46,45 @@ public static class UVaultOptionsExtensions
     }
 
     public static void UseApplicationManagement<TModel, TKey>(
-        this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? action)
+        this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        UseAndConfigureApplicationManagement(options, applicationManagementOptions);
+    }
+
+    public static void UseApplicationTokenManagement<TToken, TModel, TKey>(
+        this UVaultOptions options,
+        Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
+        where TToken : TokenModel, new()
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        UseAndConfigureApplicationManagement<TModel, TKey>(options, null);
+        UseAndConfigureApplicationTokenManagement<TToken, TKey>(options, applicationTokenManagementOptions);
+    }
+
+    private static void UseAndConfigureApplicationManagement<TModel, TKey>(
+        UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions)
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
         options.Services.AddScoped<ApplicationManager<TModel, TKey>>();
         options.Services.AddScoped<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 
-        // Configure UVault's User Management component.
-        action?.Invoke(new ApplicationManagementOptions<TModel, TKey>(options.Services));
+        // Configure UVault's M2M management component.
+        applicationManagementOptions?.Invoke(new ApplicationManagementOptions<TModel, TKey>(options.Services));
+    }
+
+    private static void UseAndConfigureApplicationTokenManagement<TToken, TKey>(
+        UVaultOptions options, Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
+        where TToken : TokenModel, new()
+        where TKey : IEqualityComparer<TKey>
+    {
+        options.Services.AddScoped<ApplicationTokenManager<TToken>>();
+        options.Services.AddScoped<IApplicationTokenStore<TToken>, StaticTokenStore<TToken>>();
+
+        // Configure UVault's User M2M Token management component.
+        applicationTokenManagementOptions?.Invoke(new ApplicationTokenManagementOptions<TToken>(options.Services));
     }
 }

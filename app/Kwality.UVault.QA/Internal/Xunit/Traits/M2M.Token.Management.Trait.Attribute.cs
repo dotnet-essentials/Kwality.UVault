@@ -22,67 +22,33 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.APIs.Mappers;
+namespace Kwality.UVault.QA.Internal.Xunit.Traits;
 
-using AutoFixture.Xunit2;
-
-using FluentAssertions;
+using global::Xunit.Abstractions;
+using global::Xunit.Sdk;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.APIs.Operations.Mappers;
-using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
-using Kwality.UVault.Exceptions;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
-
-using Xunit;
-
-public sealed class ApiCreateOperationMapperTests
+// ReSharper disable once InconsistentNaming
+#pragma warning disable S101 // "Types should be named in PascalCase".
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+[TraitDiscoverer("Kwality.UVault.QA.Internal.Xunit.Traits.M2MTokenManagementFeatureDiscoverer", "Kwality.UVault.QA")]
+internal sealed class M2MTokenManagementAttribute : Attribute, ITraitAttribute
+#pragma warning restore S101
 {
-    [ApiManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
-    internal void Map_InvalidDestination_RaisesException(ModelOne model)
+    // NOTE: Intentionally left blank.
+}
+
+// ReSharper disable once InconsistentNaming
+#pragma warning disable S101 // "Types should be named in PascalCase".
+#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
+[UsedImplicitly]
+internal sealed class M2MTokenManagementFeatureDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
+#pragma warning restore S101
+{
+    public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {
-        // ARRANGE.
-        var mapper = new CreateOperationMapper();
-
-        // ACT.
-        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
-
-        // ASSERT.
-        act.Should()
-           .Throw<CreateException>()
-           .WithMessage($"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
-    }
-
-    [ApiManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map succeeds.")]
-    internal void Map_Succeeds(ModelOne model)
-    {
-        // ARRANGE.
-        var mapper = new CreateOperationMapper();
-
-        // ACT.
-        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
-
-        // ASSERT.
-        result.Should()
-              .BeEquivalentTo(model);
-    }
-
-    [UsedImplicitly]
-    internal sealed class ModelOne
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
-    }
-
-    [UsedImplicitly]
-    internal sealed class ModelTwo
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        yield return new KeyValuePair<string, string>("Feature", "M2M (Machine 2 Machine) token");
     }
 }

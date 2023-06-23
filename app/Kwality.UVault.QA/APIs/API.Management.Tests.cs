@@ -54,17 +54,11 @@ public sealed class ApiManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseApiManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+        services.AddUVault(static (_, options) => options.UseApiManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Singleton &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Singleton && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -73,17 +67,11 @@ public sealed class ApiManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseApiManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+        services.AddUVault(static (_, options) => options.UseApiManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Scoped &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Scoped && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -92,17 +80,11 @@ public sealed class ApiManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(
-            static (_, options)
-                => options.UseApiManagement<Model, IntKey>(
-                    static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+        services.AddUVault(static (_, options) => options.UseApiManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(
-                    static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) &&
-                                         descriptor.Lifetime == ServiceLifetime.Transient &&
-                                         descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Transient && descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -111,8 +93,7 @@ public sealed class ApiManagementTests
     internal async Task GetByKey_UnknownKey_RaisesException(IntKey key)
     {
         // ARRANGE.
-        ApiManager<Model, IntKey> manager
-            = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApiManager<Model, IntKey> manager = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -130,8 +111,7 @@ public sealed class ApiManagementTests
     internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        ApiManager<Model, IntKey> manager
-            = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApiManager<Model, IntKey> manager = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -148,8 +128,7 @@ public sealed class ApiManagementTests
     internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        ApiManager<Model, IntKey> manager
-            = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApiManager<Model, IntKey> manager = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -173,8 +152,7 @@ public sealed class ApiManagementTests
     internal async Task Delete_UnknownKey_Succeeds(IntKey key)
     {
         // ARRANGE.
-        ApiManager<Model, IntKey> manager
-            = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        ApiManager<Model, IntKey> manager = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.DeleteByKeyAsync(key);
@@ -203,8 +181,7 @@ public sealed class ApiManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new CreateException(
-                    $"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new CreateException($"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.

@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,42 +22,35 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Internal.Factories;
+namespace Kwality.UVault.Auth0.M2M.Extensions;
 
-using Kwality.UVault.Extensions;
-using Kwality.UVault.Users.Extensions;
-using Kwality.UVault.Users.Managers;
-using Kwality.UVault.Users.Models;
-using Kwality.UVault.Users.Options;
+using JetBrains.Annotations;
+
+using Kwality.UVault.Auth0.Internal.API.Clients;
+using Kwality.UVault.Auth0.M2M.Configuration;
+using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
+using Kwality.UVault.Auth0.M2M.Stores;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Options;
+using Kwality.UVault.System;
+using Kwality.UVault.System.Abstractions;
 
 using Microsoft.Extensions.DependencyInjection;
 
-internal sealed class UserManagerFactory
+[PublicAPI]
+public static class ApplicationTokenManagementOptionsExtensions
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public UserManagerFactory()
+    public static void UseAuth0Store<TToken, TMapper>(
+        this ApplicationTokenManagementOptions<TToken> options, M2MConfiguration configuration)
+        where TToken : TokenModel
+        where TMapper : class, IModelTokenMapper<TToken>
     {
-        this.serviceCollection = new ServiceCollection();
-    }
+        options.UseStore<ApplicationTokenStore<TToken>>();
 
-    public UserManager<TModel, TKey> Create<TModel, TKey>()
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseUserManagement<TModel, TKey>());
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
-    }
-
-    public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? action)
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault((_, options) => options.UseUserManagement(action));
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
+        // Register additional services.
+        options.ServiceCollection.AddScoped<IModelTokenMapper<TToken>, TMapper>();
+        options.ServiceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        options.ServiceCollection.AddHttpClient<ManagementClient>();
+        options.ServiceCollection.AddSingleton(configuration);
     }
 }

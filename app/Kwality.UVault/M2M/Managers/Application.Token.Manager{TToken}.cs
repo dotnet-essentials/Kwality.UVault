@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,67 +22,28 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.APIs.Mappers;
-
-using AutoFixture.Xunit2;
-
-using FluentAssertions;
+namespace Kwality.UVault.M2M.Managers;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.APIs.Operations.Mappers;
-using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
-using Kwality.UVault.Exceptions;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Stores.Abstractions;
 
-using Xunit;
-
-public sealed class ApiCreateOperationMapperTests
+[PublicAPI]
+#pragma warning disable CA1005
+public sealed class ApplicationTokenManager<TToken>
+#pragma warning restore CA1005
+    where TToken : TokenModel
 {
-    [ApiManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
-    internal void Map_InvalidDestination_RaisesException(ModelOne model)
+    private readonly IApplicationTokenStore<TToken> tokenStore;
+
+    public ApplicationTokenManager(IApplicationTokenStore<TToken> tokenStore)
     {
-        // ARRANGE.
-        var mapper = new CreateOperationMapper();
-
-        // ACT.
-        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
-
-        // ASSERT.
-        act.Should()
-           .Throw<CreateException>()
-           .WithMessage($"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
+        this.tokenStore = tokenStore;
     }
 
-    [ApiManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map succeeds.")]
-    internal void Map_Succeeds(ModelOne model)
+    public Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)
     {
-        // ARRANGE.
-        var mapper = new CreateOperationMapper();
-
-        // ACT.
-        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
-
-        // ASSERT.
-        result.Should()
-              .BeEquivalentTo(model);
-    }
-
-    [UsedImplicitly]
-    internal sealed class ModelOne
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
-    }
-
-    [UsedImplicitly]
-    internal sealed class ModelTwo
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        return this.tokenStore.GetAccessTokenAsync(clientId, clientSecret, audience, grantType);
     }
 }

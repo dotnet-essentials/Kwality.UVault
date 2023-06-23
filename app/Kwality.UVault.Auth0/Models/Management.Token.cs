@@ -22,77 +22,59 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Grants.Mappers;
+namespace Kwality.UVault.Auth0.Models;
 
-using AutoFixture.Xunit2;
-
-using FluentAssertions;
-
-using global::Auth0.ManagementApi.Models;
+using global::System.Text.Json.Serialization;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Auth0.Grants.Operations.Mappers;
-using Kwality.UVault.Exceptions;
-using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
+using Kwality.UVault.System.Abstractions;
 
-using Xunit;
-
-public sealed class Auth0GrantCreateOperationMapperTests
+public sealed class ApiManagementToken
 {
-    [GrantManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
-    internal void Map_InvalidDestination_RaisesException(ModelOne model)
+    private readonly DateTime issuedTimeStamp;
+
+    public ApiManagementToken()
     {
-        // ARRANGE.
-        var mapper = new OperationMapper();
-
-        // ACT.
-        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
-
-        // ASSERT.
-        act.Should()
-           .Throw<CreateException>()
-           .WithMessage($"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(ClientGrantCreateRequest)}`.");
+        this.issuedTimeStamp = DateTime.Now;
+        this.TokenType = string.Empty;
     }
 
-    [GrantManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map succeeds.")]
-    internal void Map_Succeeds(ModelOne model)
+    [JsonPropertyName("access_token")]
+    public string? AccessToken
     {
-        // ARRANGE.
-        var mapper = new OperationMapper();
+        get;
 
-        // ACT.
-        ClientGrantCreateRequest result = mapper.Create<ModelOne, ClientGrantCreateRequest>(model);
-
-        // ASSERT.
-        result.Should()
-              .BeEquivalentTo(new ClientGrantCreateRequest());
-    }
-
-    private sealed class OperationMapper : Auth0GrantCreateOperationMapper
-    {
-        protected override ClientGrantCreateRequest Map<TSource>(TSource source)
-        {
-            return new ClientGrantCreateRequest();
-        }
-    }
-
-    [UsedImplicitly]
-    internal sealed class ModelOne
-    {
         [UsedImplicitly]
-        public string? Name { get; set; }
+        set;
     }
 
-    [UsedImplicitly]
-    internal sealed class ModelTwo
+    [JsonPropertyName("expires_in")]
+    public int ExpiresIn
     {
+        get;
+
         [UsedImplicitly]
-        public string? Name { get; set; }
+        set;
+    }
+
+    // ReSharper disable once MemberCanBeInternal
+    [JsonPropertyName("token_type")]
+    public string TokenType
+    {
+        get;
+
+        [UsedImplicitly]
+        set;
+    }
+
+    // NOTE: A token is expired one the amount of seconds (see "Expired In") is passed.
+    //       To ensure that we don't use an expired token, a safety mechanism is built in.
+    //       The time at which the token is used isn't the same as the time at which the token is checked.
+    internal bool IsExpired(IDateTimeProvider dateTimeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(dateTimeProvider);
+
+        return dateTimeProvider.Now.AddMinutes(1) > this.issuedTimeStamp.AddSeconds(this.ExpiresIn);
     }
 }

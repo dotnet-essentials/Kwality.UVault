@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,67 +22,25 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.APIs.Mappers;
-
-using AutoFixture.Xunit2;
-
-using FluentAssertions;
+namespace Kwality.UVault.M2M.Models;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.APIs.Operations.Mappers;
-using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
-using Kwality.UVault.Exceptions;
-using Kwality.UVault.QA.Internal.Xunit.Traits;
-
-using Xunit;
-
-public sealed class ApiCreateOperationMapperTests
+[PublicAPI]
+public class TokenModel
 {
-    [ApiManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map to an invalid destination raises an exception.")]
-    internal void Map_InvalidDestination_RaisesException(ModelOne model)
+    public TokenModel()
     {
-        // ARRANGE.
-        var mapper = new CreateOperationMapper();
-
-        // ACT.
-        Action act = () => mapper.Create<ModelOne, ModelTwo>(model);
-
-        // ASSERT.
-        act.Should()
-           .Throw<CreateException>()
-           .WithMessage($"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ModelOne)}`.");
     }
 
-    [ApiManagement]
-    [AutoData]
-    [Theory(DisplayName = "Map succeeds.")]
-    internal void Map_Succeeds(ModelOne model)
+    public TokenModel(string token, int expiresIn, string tokenType)
     {
-        // ARRANGE.
-        var mapper = new CreateOperationMapper();
-
-        // ACT.
-        ModelOne result = mapper.Create<ModelOne, ModelOne>(model);
-
-        // ASSERT.
-        result.Should()
-              .BeEquivalentTo(model);
+        this.Token = token;
+        this.ExpiresIn = expiresIn;
+        this.TokenType = tokenType;
     }
 
-    [UsedImplicitly]
-    internal sealed class ModelOne
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
-    }
-
-    [UsedImplicitly]
-    internal sealed class ModelTwo
-    {
-        [UsedImplicitly]
-        public string? Name { get; set; }
-    }
+    public string? Token { get; init; }
+    public int ExpiresIn { get; init; }
+    public string? TokenType { get; init; }
 }

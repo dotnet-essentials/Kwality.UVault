@@ -55,8 +55,7 @@ public sealed class Auth0GrantUpdateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<UpdateException>()
-           .WithMessage(
-               $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(ClientGrantUpdateRequest)}`.");
+           .WithMessage($"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(ClientGrantUpdateRequest)}`.");
     }
 
     [GrantManagement]

@@ -31,11 +31,11 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Exceptions;
-using Kwality.UVault.Keys;
 using Kwality.UVault.Grants.Managers;
 using Kwality.UVault.Grants.Models;
 using Kwality.UVault.Grants.Operations.Filters.Abstractions;
 using Kwality.UVault.Grants.Operations.Mappers;
+using Kwality.UVault.Keys;
 using Kwality.UVault.Models;
 using Kwality.UVault.QA.Internal.Factories;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
@@ -176,9 +176,8 @@ public sealed class GrantManagementDefaultTests
         await manager.CreateAsync(modelTwo, new GrantCreateOperationMapper())
                      .ConfigureAwait(false);
 
-        PagedResultSet<Model> result = await manager
-                                             .GetAllAsync(0, 10, new OperationFilter(modelTwo.Scopes))
-                                             .ConfigureAwait(false);
+        PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Scopes))
+                                                    .ConfigureAwait(false);
 
         // ASSERT.
         result.ResultSet.Count()
@@ -306,8 +305,7 @@ public sealed class GrantManagementDefaultTests
         {
             if (typeof(TDestination) != typeof(Func<Model, bool>))
             {
-                throw new ReadException(
-                    $"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
+                throw new ReadException($"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.

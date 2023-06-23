@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,42 +22,29 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Internal.Factories;
+namespace Kwality.UVault.M2M.Internal.Stores;
 
-using Kwality.UVault.Extensions;
-using Kwality.UVault.Users.Extensions;
-using Kwality.UVault.Users.Managers;
-using Kwality.UVault.Users.Models;
-using Kwality.UVault.Users.Options;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Stores.Abstractions;
 
-using Microsoft.Extensions.DependencyInjection;
-
-internal sealed class UserManagerFactory
+internal sealed class StaticTokenStore<TToken> : IApplicationTokenStore<TToken>
+    where TToken : TokenModel, new()
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public UserManagerFactory()
+    public Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)
     {
-        this.serviceCollection = new ServiceCollection();
+        var token = new TToken
+        {
+            Token = GenerateToken(),
+            ExpiresIn = 86400,
+            TokenType = "Bearer",
+        };
+
+        return Task.FromResult(token);
     }
 
-    public UserManager<TModel, TKey> Create<TModel, TKey>()
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+    private static string GenerateToken()
     {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseUserManagement<TModel, TKey>());
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
-    }
-
-    public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? action)
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault((_, options) => options.UseUserManagement(action));
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
+        return Guid.NewGuid()
+                   .ToString();
     }
 }

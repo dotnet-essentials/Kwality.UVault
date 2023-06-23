@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -25,39 +25,45 @@
 namespace Kwality.UVault.QA.Internal.Factories;
 
 using Kwality.UVault.Extensions;
-using Kwality.UVault.Users.Extensions;
-using Kwality.UVault.Users.Managers;
-using Kwality.UVault.Users.Models;
-using Kwality.UVault.Users.Options;
+using Kwality.UVault.M2M.Extensions;
+using Kwality.UVault.M2M.Managers;
+using Kwality.UVault.M2M.Models;
+using Kwality.UVault.M2M.Options;
 
 using Microsoft.Extensions.DependencyInjection;
 
-internal sealed class UserManagerFactory
+internal sealed class ApplicationTokenManagerFactory
 {
     private readonly IServiceCollection serviceCollection;
 
-    public UserManagerFactory()
+    public ApplicationTokenManagerFactory()
     {
         this.serviceCollection = new ServiceCollection();
     }
 
-    public UserManager<TModel, TKey> Create<TModel, TKey>()
-        where TModel : UserModel<TKey>
+    public ApplicationTokenManager<TToken> Create<TToken, TModel, TKey>()
+        where TToken : TokenModel, new()
+        where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseUserManagement<TModel, TKey>());
+        this.serviceCollection.AddUVault(
+            static (_, options) => options.UseApplicationTokenManagement<TToken, TModel, TKey>(null));
 
         return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
+                   .GetRequiredService<ApplicationTokenManager<TToken>>();
     }
 
-    public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? action)
-        where TModel : UserModel<TKey>
+    public ApplicationTokenManager<TToken> Create<TToken, TModel, TKey>(
+        Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
+        where TToken : TokenModel, new()
+        where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault((_, options) => options.UseUserManagement(action));
+        this.serviceCollection.AddUVault(
+            (_, options)
+                => options.UseApplicationTokenManagement<TToken, TModel, TKey>(applicationTokenManagementOptions));
 
         return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
+                   .GetRequiredService<ApplicationTokenManager<TToken>>();
     }
 }

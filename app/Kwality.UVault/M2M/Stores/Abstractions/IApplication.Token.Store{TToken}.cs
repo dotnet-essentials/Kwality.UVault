@@ -1,4 +1,4 @@
-﻿// =====================================================================================================================
+// =====================================================================================================================
 // = LICENSE:       Copyright (c) 2023 Kevin De Coninck
 // =
 // =                Permission is hereby granted, free of charge, to any person
@@ -22,42 +22,14 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.QA.Internal.Factories;
+namespace Kwality.UVault.M2M.Stores.Abstractions;
 
-using Kwality.UVault.Extensions;
-using Kwality.UVault.Users.Extensions;
-using Kwality.UVault.Users.Managers;
-using Kwality.UVault.Users.Models;
-using Kwality.UVault.Users.Options;
+using Kwality.UVault.M2M.Models;
 
-using Microsoft.Extensions.DependencyInjection;
-
-internal sealed class UserManagerFactory
+#pragma warning disable CA1005
+public interface IApplicationTokenStore<TToken>
+#pragma warning restore CA1005
+    where TToken : TokenModel
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public UserManagerFactory()
-    {
-        this.serviceCollection = new ServiceCollection();
-    }
-
-    public UserManager<TModel, TKey> Create<TModel, TKey>()
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseUserManagement<TModel, TKey>());
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
-    }
-
-    public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? action)
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault((_, options) => options.UseUserManagement(action));
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
-    }
+    Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType);
 }
