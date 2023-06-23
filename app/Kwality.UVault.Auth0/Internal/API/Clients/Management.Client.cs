@@ -58,7 +58,7 @@ internal sealed class ManagementClient
                                                       .ConfigureAwait(false);
 
         return string.IsNullOrEmpty(this.lastRequestedManagementToken?.AccessToken)
-            ? throw new ManagementApiException("The `API Management Token / Access Token` token is `null`.")
+            ? throw new ManagementApiException("The `API Management Token / Access Token` is `null`.")
             : this.lastRequestedManagementToken.AccessToken;
     }
 
@@ -119,7 +119,7 @@ internal sealed class ManagementClient
         }
         catch (Exception ex)
         {
-            throw new ManagementApiException("Failed to retrieve an Auth0 `User Management` token.", ex);
+            throw new ManagementApiException("Failed to retrieve an Auth0 token.", ex);
         }
     }
 

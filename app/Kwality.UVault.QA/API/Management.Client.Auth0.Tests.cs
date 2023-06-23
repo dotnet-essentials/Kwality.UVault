@@ -71,7 +71,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("Failed to retrieve an Auth0 access token.")
+                 .WithMessage("Failed to retrieve an Auth0 token.")
                  .ConfigureAwait(false);
     }
 
@@ -125,7 +125,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("Failed to retrieve an Auth0 access token. HTTP 400.")
+                 .WithMessage("Failed to retrieve an Auth0 token. HTTP 400.")
                  .ConfigureAwait(false);
     }
 
@@ -150,7 +150,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage($"Failed to retrieve an Auth0 access token. HTTP 401: `{response}`.")
+                 .WithMessage($"Failed to retrieve an Auth0 token. HTTP 401: `{response}`.")
                  .ConfigureAwait(false);
     }
 
@@ -175,7 +175,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("Failed to retrieve an Auth0 access token. Reason: Invalid HTTP response.")
+                 .WithMessage("Failed to retrieve an Auth0 token. Reason: Invalid HTTP response.")
                  .ConfigureAwait(false);
     }
 
@@ -200,7 +200,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("The Auth0 access token is `null`.")
+                 .WithMessage("The `API Management Token / Access Token` is `null`.")
                  .ConfigureAwait(false);
     }
 
@@ -225,7 +225,7 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("The Auth0 access token is `null`.")
+                 .WithMessage("The `API Management Token / Access Token` is `null`.")
                  .ConfigureAwait(false);
     }
 

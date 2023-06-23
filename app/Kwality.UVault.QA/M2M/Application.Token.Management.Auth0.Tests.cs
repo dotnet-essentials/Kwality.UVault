@@ -47,6 +47,8 @@ using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Xunit;
 
+// ReSharper disable once MemberCanBeFileLocal
+[Collection("Auth0")]
 public sealed class ApplicationTokenManagementAuth0Tests
 {
     [M2MTokenManagement]
