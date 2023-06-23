@@ -64,7 +64,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
-        Model application = await applicationManager.GetByKeyAsync(new StringKey(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
+        Model application = await applicationManager.GetByKeyAsync(new StringKey(Environment.ReadString("AUTH0_CLIENT_ID")))
                                                     .ConfigureAwait(false);
 
         // ACT.
@@ -98,7 +98,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
-        Model application = await applicationManager.GetByKeyAsync(new StringKey(Environment.ReadString("AUTH0_TEST_APPLICATION_2_CLIENT_ID")))
+        Model application = await applicationManager.GetByKeyAsync(new StringKey(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
                                                     .ConfigureAwait(false);
 
         // ACT.
