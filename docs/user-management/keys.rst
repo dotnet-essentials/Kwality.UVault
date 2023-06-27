@@ -3,11 +3,12 @@
 Keys
 #####
 
-A user in UVault is identified by a unique key.
-For more information on this concept, please refer to the section on :ref:`keys <key-concept>`.
 
-To define a custom key for a user in UVault, you can implement the `IEquatable<T>`_ interface.
-The code snippet below demonstrates how the built-in integer-based key has been implemented.
+In UVault, a user is uniquely identified by a key that serves as a distinctive identifier. For detailed information
+regarding this concept, please consult the section dedicated to :ref:`keys <key-concept>` in the UVault documentation.
+
+To define a custom key for a user in UVault, the implementation of the `IEquatable<T>`_ interface is required.
+The subsequent code snippet illustrates the implementation of the default integer-based key:
 
 .. code-block:: csharp
 

@@ -3,8 +3,8 @@
 Introduction
 ############
 
-The User Management component of UVault provides a straightforward approach for managing users within a .NET application
-and supports the following operations:
+The User Management component of UVault offers a streamlined approach for efficiently managing users within a .NET
+application. It provides support for the following user-related operations:
 
 - Fetch a user using its unique identifier
 - Fetch user(s) using their email address

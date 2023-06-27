@@ -15,8 +15,9 @@ for more information.
 Configure ASP.NET
 *****************
 
-The Identity & Access Management component can be used by adding and configuring UVault's required services to use
-IAM. Here's an example of how to do this:
+To leverage the capabilities of the Identity & Access Management (IAM) component, UVault provides the option to
+incorporate and configure the necessary services within the application. The following example demonstrates the process
+of adding and configuring UVault's required services to utilize IAM:
 
 .. code-block:: csharp
 

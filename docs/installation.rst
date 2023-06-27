@@ -1,8 +1,8 @@
 Installation
 ############
 
-To use UVault, you must first include a reference to `Kwality.UVault.IAM.dll` in your project.
-The most straightforward approach to do this is through either the NuGet package manager or the dotnet CLI.
+To use UVault, you must first include a reference to `Kwality.UVault.dll` (or any of the dependent packages) in your
+project. The most straightforward approach to do this is through either the NuGet package manager or the dotnet CLI.
 
 To accomplish this through the NuGet package manager console within Visual Studio, execute the following command:
 
