@@ -43,7 +43,7 @@ internal sealed class ManagementClient
         this.dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<string> GetTokenAsync(ApiConfiguration configuration)
+    public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
         if (this.lastRequestedManagementToken is { AccessToken: not null, } &&
             !this.lastRequestedManagementToken.IsExpired(this.dateTimeProvider))
@@ -51,25 +51,37 @@ internal sealed class ManagementClient
             return this.lastRequestedManagementToken.AccessToken;
         }
 
-        this.lastRequestedManagementToken = await this.GetM2MTokenAsync(
-                                                          configuration.TokenEndpoint,
-                                                          configuration.ClientId,
-                                                          configuration.ClientSecret,
-                                                          configuration.Audience,
-                                                          "client_credentials")
+        this.lastRequestedManagementToken = await this.GetTokenAsync(
+                                                          apiConfiguration.TokenEndpoint, "client_credentials",
+                                                          apiConfiguration.ClientId, apiConfiguration.ClientSecret,
+                                                          apiConfiguration.Audience)
                                                       .ConfigureAwait(false);
 
         return string.IsNullOrEmpty(this.lastRequestedManagementToken?.AccessToken)
-            ? throw new ManagementApiException("The Auth0 access token is `null`.")
+            ? throw new ManagementApiException("The `API Management Token / Access Token` is `null`.")
             : this.lastRequestedManagementToken.AccessToken;
     }
 
     public async Task<ApiManagementToken> GetM2MTokenAsync(
-        Uri tokenEndpoint,
-        string clientId,
-        string clientSecret,
-        string audience,
-        string grantType)
+        Uri tokenEndpoint, string grantType, string clientId, string clientSecret,
+        string audience)
+    {
+        ApiManagementToken? token = await this.GetTokenAsync(
+                                                  tokenEndpoint, grantType, clientId, clientSecret,
+                                                  audience)
+                                              .ConfigureAwait(false);
+
+        if (token == null)
+        {
+            throw new ManagementApiException("The Auth0 access token is `null`.");
+        }
+
+        return token;
+    }
+
+    private async Task<ApiManagementToken?> GetTokenAsync(
+        Uri tokenEndpoint, string grantType, string clientId, string clientSecret,
+        string audience)
     {
         var data = new[]
         {
@@ -86,23 +98,15 @@ internal sealed class ManagementClient
 
         try
         {
-            await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 access token.")
+            await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 token.")
                 .ConfigureAwait(false);
 
-            ApiManagementToken? apiToken = await result.Content.ReadFromJsonAsync<ApiManagementToken>()
-                                                       .ConfigureAwait(false);
-
-            if (apiToken == null)
-            {
-                throw new ManagementApiException("The Auth0 access token is `null`.");
-            }
-
-            return apiToken;
+            return await result.Content.ReadFromJsonAsync<ApiManagementToken>()
+                               .ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is not ManagementApiException)
         {
-            throw new ManagementApiException(
-                "Failed to retrieve an Auth0 access token. Reason: Invalid HTTP response.", ex);
+            throw new ManagementApiException("Failed to retrieve an Auth0 token. Reason: Invalid HTTP response.", ex);
         }
     }
 
@@ -115,7 +119,7 @@ internal sealed class ManagementClient
         }
         catch (Exception ex)
         {
-            throw new ManagementApiException("Failed to retrieve an Auth0 access token.", ex);
+            throw new ManagementApiException("Failed to retrieve an Auth0 token.", ex);
         }
     }
 

@@ -1,8 +1,8 @@
 Operations
 ##########
 
-In order to carry out user creation or modification operations, an `IUserOperationMapper`_ must be specified.
-For further elaboration on this concept, please refer to the :ref:`operation mappers <operation-mapper-concept>`
+To perform operations related to user creation or modification, it is necessary to specify an IUserOperationMapper_.
+For more detailed information on this concept, please consult the :ref:`operation mappers <operation-mapper-concept>`
 section.
 
 Creating a user
@@ -11,8 +11,8 @@ Creating a user
 Using the static store
 ======================
 
-When using the static store, the model utilized to represent a user is identical to the model required for user
-creation. Thus, the built-in `UserCreateOperationMapper`_ may be specified when creating a user.
+When employing the static store, the model used to represent a user is the same as the model required for user creation.
+As a result, it is possible to specify the built-in `UserCreateOperationMapper`_ when creating a user.
 
 .. code-block:: csharp
 
@@ -27,9 +27,9 @@ creation. Thus, the built-in `UserCreateOperationMapper`_ may be specified when 
 Using the Auth0 store
 ======================
 
-The Auth0 store necessitates a specific model to execute its operations. As a result, you must develop a custom
-operation mapper to convert your model into a request that can be comprehended by Auth0. This requires the creation of
-a class that inherits from the `Auth0UserCreateOperationMapper`_ class.
+The Auth0 store requires a specific model for executing its operations. Consequently, it is essential to develop a
+custom operation mapper that can convert your model into a request format understandable by Auth0. This involves
+creating a class that inherits from the `Auth0UserCreateOperationMapper`_ class.
 
 .. code-block:: csharp
 
@@ -74,7 +74,7 @@ a class that inherits from the `Auth0UserCreateOperationMapper`_ class.
         }
     }
 
-You may now employ this mapper when creating a user.
+You can now utilize this mapper when creating a user.
 
 .. code-block:: csharp
 
@@ -92,8 +92,8 @@ Updating a user
 Using the static store
 ======================
 
-When using the static store, the model utilized to represent a user is identical to the model required for user
-updating. Thus, the built-in `UserUpdateOperationMapper`_ may be specified when updating a user.
+When employing the static store, the model used to represent a user is the same as the model required for user creation.
+As a result, it is possible to specify the built-in `UserUpdateOperationMapper`_ when updating a user.
 
 .. code-block:: csharp
 
@@ -108,9 +108,9 @@ updating. Thus, the built-in `UserUpdateOperationMapper`_ may be specified when 
 Using the Auth0 store
 ======================
 
-The Auth0 store necessitates a specific model to execute its operations. As a result, you must develop a custom
-operation mapper to convert your model into a request that can be comprehended by Auth0. This requires the creation of
-a class that inherits from the `Auth0UserUpdateOperationMapper`_ class.
+The Auth0 store requires a specific model for executing its operations. Consequently, it is essential to develop a
+custom operation mapper that can convert your model into a request format understandable by Auth0. This involves
+creating a class that inherits from the `Auth0UserUpdateOperationMapper`_ class.
 
 .. code-block:: csharp
 
@@ -134,7 +134,7 @@ a class that inherits from the `Auth0UserUpdateOperationMapper`_ class.
         public string LastName { get; set; }
     }
 
-    public sealed class UserCreateOperationMapper : Auth0UserCreateOperationMapper
+    public sealed class UserUpdateOperationMapper : Auth0UserUpdateOperationMapper
     {
         protected override UserUpdateRequest Map<TSource>(TSource source)
         {

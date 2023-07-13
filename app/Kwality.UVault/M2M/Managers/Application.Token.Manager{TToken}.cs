@@ -22,60 +22,28 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.M2M.Options;
+namespace Kwality.UVault.M2M.Managers;
 
 using JetBrains.Annotations;
 
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
-using Microsoft.Extensions.DependencyInjection;
-
 [PublicAPI]
 #pragma warning disable CA1005
-public sealed class ApplicationTokenManagementOptions<TToken, TModel, TKey>
+public sealed class ApplicationTokenManager<TToken>
 #pragma warning restore CA1005
     where TToken : TokenModel
-    where TModel : ApplicationModel<TKey>
-    where TKey : IEqualityComparer<TKey>
 {
-    internal ApplicationTokenManagementOptions(IServiceCollection serviceCollection)
+    private readonly IApplicationTokenStore<TToken> tokenStore;
+
+    public ApplicationTokenManager(IApplicationTokenStore<TToken> tokenStore)
     {
-        this.ServiceCollection = serviceCollection;
+        this.tokenStore = tokenStore;
     }
 
-    public IServiceCollection ServiceCollection { get; }
-
-    public void UseStore<TStore>()
-        where TStore : class, IApplicationTokenStore<TToken, TModel, TKey>
+    public Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)
     {
-        this.ServiceCollection.AddScoped<IApplicationTokenStore<TToken, TModel, TKey>, TStore>();
-    }
-
-    public void UseStore<TStore>(ServiceLifetime serviceLifetime)
-        where TStore : class, IApplicationTokenStore<TToken, TModel, TKey>
-    {
-        switch (serviceLifetime)
-        {
-            case ServiceLifetime.Singleton:
-                this.ServiceCollection
-                    .AddSingleton<IApplicationTokenStore<TToken, TModel, TKey>, TStore>();
-
-                break;
-
-            case ServiceLifetime.Scoped:
-                this.ServiceCollection.AddScoped<IApplicationTokenStore<TToken, TModel, TKey>, TStore>();
-
-                break;
-
-            case ServiceLifetime.Transient:
-                this.ServiceCollection
-                    .AddTransient<IApplicationTokenStore<TToken, TModel, TKey>, TStore>();
-
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(serviceLifetime), serviceLifetime, null);
-        }
+        return this.tokenStore.GetAccessTokenAsync(clientId, clientSecret, audience, grantType);
     }
 }

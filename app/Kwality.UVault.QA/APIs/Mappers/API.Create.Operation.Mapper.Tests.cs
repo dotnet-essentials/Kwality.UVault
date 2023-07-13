@@ -30,9 +30,9 @@ using FluentAssertions;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Exceptions;
 using Kwality.UVault.APIs.Operations.Mappers;
 using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
+using Kwality.UVault.Exceptions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Xunit;

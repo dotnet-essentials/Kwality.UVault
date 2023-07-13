@@ -94,10 +94,7 @@ public sealed class IAMTests
                 ConfigureRoutes = static routes =>
                 {
                     routes.MapGet(
-                        defaultRoute,
-                        [Authorize]
-                        [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")]
-                        static (context) =>
+                        defaultRoute, [Authorize] [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")] static (context) =>
                         {
                             context.Response.StatusCode = 200;
 
@@ -130,10 +127,7 @@ public sealed class IAMTests
                 ConfigureRoutes = static routes =>
                 {
                     routes.MapGet(
-                        defaultRoute,
-                        [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")]
-                        [Authorize]
-                        static (context) =>
+                        defaultRoute, [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")] [Authorize] static (context) =>
                         {
                             context.Response.StatusCode = 200;
 

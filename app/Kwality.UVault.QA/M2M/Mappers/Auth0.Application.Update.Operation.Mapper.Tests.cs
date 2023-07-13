@@ -55,8 +55,7 @@ public sealed class Auth0ApplicationUpdateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<UpdateException>()
-           .WithMessage(
-               $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(ClientUpdateRequest)}`.");
+           .WithMessage($"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(ClientUpdateRequest)}`.");
     }
 
     [M2MManagement]

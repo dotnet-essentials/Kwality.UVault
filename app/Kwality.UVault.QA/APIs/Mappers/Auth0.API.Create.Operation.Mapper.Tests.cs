@@ -32,9 +32,9 @@ using global::Auth0.ManagementApi.Models;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.Auth0.APIs.Operations.Mappers;
 using Kwality.UVault.Exceptions;
-using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.QA.Internal.Xunit.Traits;
 
 using Xunit;
@@ -55,8 +55,7 @@ public sealed class Auth0ApiCreateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<CreateException>()
-           .WithMessage(
-               $"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ResourceServerCreateRequest)}`.");
+           .WithMessage($"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ResourceServerCreateRequest)}`.");
     }
 
     [ApiManagement]

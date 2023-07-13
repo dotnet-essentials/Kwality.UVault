@@ -256,12 +256,10 @@ public sealed class GrantManagementAuth0Tests
                   .Should()
                   .Be(3);
 
-            result.ResultSet
-                  .Should()
+            result.ResultSet.Should()
                   .ContainEquivalentOf(modelOne);
 
-            result.ResultSet
-                  .Should()
+            result.ResultSet.Should()
                   .ContainEquivalentOf(modelTwo);
         }
         finally

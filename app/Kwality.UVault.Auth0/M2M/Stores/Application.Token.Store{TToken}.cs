@@ -27,19 +27,16 @@ namespace Kwality.UVault.Auth0.M2M.Stores;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Auth0.Internal.API.Clients;
-using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.M2M.Configuration;
 using Kwality.UVault.Auth0.M2M.Mapping.Abstractions;
-using Kwality.UVault.Auth0.M2M.Models;
 using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
 [UsedImplicitly]
-internal sealed class ApplicationTokenStore<TToken, TModel> : IApplicationTokenStore<TToken, TModel, StringKey>
+internal sealed class ApplicationTokenStore<TToken> : IApplicationTokenStore<TToken>
     where TToken : TokenModel
-    where TModel : ApplicationModel
 {
     private readonly M2MConfiguration m2MConfiguration;
     private readonly ManagementClient managementClient;
@@ -53,15 +50,19 @@ internal sealed class ApplicationTokenStore<TToken, TModel> : IApplicationTokenS
         this.modelMapper = modelMapper;
     }
 
-    public async Task<TToken> GetAccessTokenAsync(TModel application, string audience, string grantType)
+    public async Task<TToken> GetAccessTokenAsync(
+        string clientId, string clientSecret, string audience, string grantType)
     {
         try
         {
-            ArgumentNullException.ThrowIfNull(application.ClientSecret);
+            ArgumentNullException.ThrowIfNull(clientId);
+            ArgumentNullException.ThrowIfNull(clientSecret);
+            ArgumentNullException.ThrowIfNull(audience);
+            ArgumentNullException.ThrowIfNull(grantType);
 
             ApiManagementToken managementApiToken = await this.managementClient.GetM2MTokenAsync(
-                                                                  this.m2MConfiguration.TokenEndpoint, application.Key.ToString(),
-                                                                  application.ClientSecret, audience, grantType)
+                                                                  this.m2MConfiguration.TokenEndpoint, grantType,
+                                                                  clientId, clientSecret, audience)
                                                               .ConfigureAwait(false);
 
             return this.modelMapper.Map(managementApiToken);

@@ -73,9 +73,73 @@ jobs:
       - name: Build .NET Solution
         working-directory: ./app/
         run: dotnet build --no-incremental --no-restore /p:CIBuild=true
+        
+  inspect:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: GIT Clone
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Inspect using JetBrains ReSharper CLI
+        uses: muno92/resharper_inspectcode@1.6.13
+        with:
+          workingDirectory: ./app/
+          solutionPath: ./Kwality.UVault.sln
+          include: |
+            **.cs
+          failOnIssue: 0
+          solutionWideAnalysis: true
+  
+  analyze:
+    needs: [ build ]
+    runs-on: windows-latest
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'zulu'
+
+      - name: GIT Clone
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install SonarCloud scanner
+        run: dotnet tool install -g dotnet-sonarscanner
+
+      - name: Install Code Coverage tool
+        run: dotnet tool install -g dotnet-coverage
+
+      - name: Build and analyze
+        working-directory: ./app/
+        env:
+          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
+          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
+          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+          AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
+          AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
+        shell: powershell
+        run: |
+          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          dotnet clean
+          dotnet restore
+          dotnet build --no-incremental --no-restore /p:CIBuild=true
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   test:
-    needs: [ build ]
+    needs: [ analyze ]
     name: Test on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -132,70 +196,6 @@ jobs:
         with:
           name: Test results (.NET ${{ matrix.dotnet }})
           path: ./app/TestResults-${{ matrix.dotnet }}
-
-  inspect:
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: GIT Clone
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Inspect using JetBrains ReSharper CLI
-        uses: muno92/resharper_inspectcode@1.6.13
-        with:
-          workingDirectory: ./app/
-          solutionPath: ./Kwality.UVault.sln
-          include: |
-            **.cs
-          failOnIssue: 0
-          solutionWideAnalysis: true
-          
-  analyze:
-    needs: [ build ]
-    runs-on: windows-latest
-    steps:
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: 'zulu'
-
-      - name: GIT Clone
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Install SonarCloud scanner
-        run: dotnet tool install -g dotnet-sonarscanner
-
-      - name: Install Code Coverage tool
-        run: dotnet tool install -g dotnet-coverage
-
-      - name: Build and analyze
-        working-directory: ./app/
-        env:
-          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
-          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
-          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
-          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
-          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
-          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
-          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-          AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
-          AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
-        shell: powershell
-        run: |
-          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-          dotnet clean
-          dotnet restore
-          dotnet build --no-incremental --no-restore /p:CIBuild=true
-          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
-          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   mutate:
     needs: [ test ]

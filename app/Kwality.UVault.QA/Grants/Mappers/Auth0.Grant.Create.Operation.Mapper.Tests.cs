@@ -55,8 +55,7 @@ public sealed class Auth0GrantCreateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<CreateException>()
-           .WithMessage(
-               $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(ClientGrantCreateRequest)}`.");
+           .WithMessage($"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(ClientGrantCreateRequest)}`.");
     }
 
     [GrantManagement]

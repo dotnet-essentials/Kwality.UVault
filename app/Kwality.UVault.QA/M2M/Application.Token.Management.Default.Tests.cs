@@ -44,18 +44,23 @@ public sealed class ApplicationTokenManagementDefaultTests
     [AutoData]
     [M2MTokenManagement]
     [Theory(DisplayName = "Get access token succeeds.")]
-    internal async Task GetToken_Succeeds(ApplicationModel<IntKey> model, string audience, string grantType)
+    internal async Task GetToken_Succeeds(string clientId, string clientSecret, string audience, string grantType)
     {
         // ARRANGE.
-        ApplicationTokenManager<TokenModel, ApplicationModel<IntKey>, IntKey> manager
-            = new ApplicationTokenManagerFactory().Create<TokenModel, ApplicationModel<IntKey>, IntKey>();
+        ApplicationTokenManager<TokenModel> manager = new ApplicationTokenManagerFactory().Create<TokenModel, ApplicationModel<IntKey>, IntKey>();
 
         // ACT.
-        TokenModel result = await manager.GetAccessTokenAsync(model, audience, grantType)
+        TokenModel result = await manager.GetAccessTokenAsync(clientId, clientSecret, audience, grantType)
                                          .ConfigureAwait(false);
 
         // ASSERT.
         result.Token.Should()
               .NotBeNullOrWhiteSpace();
+
+        result.ExpiresIn.Should()
+              .Be(86400);
+
+        result.TokenType.Should()
+              .Be("Bearer");
     }
 }

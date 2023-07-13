@@ -27,30 +27,19 @@ namespace Kwality.UVault.M2M.Internal.Stores;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
-internal sealed class StaticTokenStore<TToken, TModel, TKey> : IApplicationTokenStore<TToken, TModel, TKey>
+internal sealed class StaticTokenStore<TToken> : IApplicationTokenStore<TToken>
     where TToken : TokenModel, new()
-    where TModel : ApplicationModel<TKey>
-    where TKey : IEqualityComparer<TKey>
 {
-    private readonly IDictionary<TKey, TToken> tokenStore = new Dictionary<TKey, TToken>();
-
-    public Task<TToken> GetAccessTokenAsync(TModel application, string audience, string grantType)
+    public Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)
     {
-        if (this.tokenStore.TryGetValue(application.Key, out TToken? value1))
-        {
-            return Task.FromResult(value1);
-        }
-
-        var value = new TToken
+        var token = new TToken
         {
             Token = GenerateToken(),
             ExpiresIn = 86400,
             TokenType = "Bearer",
         };
 
-        this.tokenStore.Add(application.Key, value);
-
-        return Task.FromResult(this.tokenStore[application.Key]);
+        return Task.FromResult(token);
     }
 
     private static string GenerateToken()
