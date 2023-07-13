@@ -130,12 +130,9 @@ internal sealed class ManagementClient
             string responseString = await result.Content.ReadAsStringAsync()
                                                 .ConfigureAwait(false);
 
-            if (string.IsNullOrEmpty(responseString))
-            {
-                throw new ManagementApiException($"{exceptionMessage} HTTP {(int)result.StatusCode}.");
-            }
+            var errorApiException = new TokenRequestException(result.StatusCode, responseString);
 
-            throw new ManagementApiException($"{exceptionMessage} HTTP {(int)result.StatusCode}: `{responseString}`.");
+            throw new ManagementApiException(exceptionMessage, errorApiException);
         }
     }
 }

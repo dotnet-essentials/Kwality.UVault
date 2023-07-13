@@ -110,10 +110,13 @@ public sealed class Auth0ManagementClientTests
     internal async Task RequestToken_ResponseNoOkWithoutContent_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
+        const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
+        var content = string.Empty;
+
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
         {
-            StatusCode = HttpStatusCode.BadRequest,
-            Content = new StringContent(string.Empty),
+            StatusCode = statusCode,
+            Content = new StringContent(content),
         };
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
@@ -125,7 +128,10 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage("Failed to retrieve an Auth0 token. HTTP 400.")
+                 .WithMessage("Failed to retrieve an Auth0 token.")
+                 .WithInnerException<ManagementApiException, TokenRequestException>()
+                 .WithMessage("BadRequest")
+                 .Where(ex => ex.StatusCode == statusCode && ex.ResponseMessage == content)
                  .ConfigureAwait(false);
     }
 
@@ -135,9 +141,11 @@ public sealed class Auth0ManagementClientTests
     internal async Task RequestToken_ResponseNoOk_RaisesException([Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string response)
     {
         // MOCK SETUP.
+        const HttpStatusCode statusCode = HttpStatusCode.Unauthorized;
+
         using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
         {
-            StatusCode = HttpStatusCode.Unauthorized,
+            StatusCode = statusCode,
             Content = new StringContent(response),
         };
 
@@ -150,7 +158,10 @@ public sealed class Auth0ManagementClientTests
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
-                 .WithMessage($"Failed to retrieve an Auth0 token. HTTP 401: `{response}`.")
+                 .WithMessage("Failed to retrieve an Auth0 token.")
+                 .WithInnerException<ManagementApiException, TokenRequestException>()
+                 .WithMessage($"Unauthorized: {response}")
+                 .Where(ex => ex.StatusCode == statusCode && ex.ResponseMessage == response)
                  .ConfigureAwait(false);
     }
 
