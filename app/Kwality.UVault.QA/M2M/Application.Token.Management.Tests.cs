@@ -102,6 +102,9 @@ public sealed class ApplicationTokenManagementTests
         result.Token.Should()
               .NotBeNullOrWhiteSpace();
 
+        result.Scope.Should()
+              .Be("read, write, update, delete");
+
         result.ExpiresIn.Should()
               .Be(86400);
 
@@ -118,8 +121,8 @@ public sealed class ApplicationTokenManagementTests
         {
         }
 
-        public Model(string token, int expiresIn, string tokenType)
-            : base(token, expiresIn, tokenType)
+        public Model(string token, int expiresIn, string tokenType, string scope)
+            : base(token, expiresIn, tokenType, scope)
         {
         }
     }
@@ -135,7 +138,7 @@ public sealed class ApplicationTokenManagementTests
             return Task.FromResult(
                 new Model(
                     Guid.NewGuid()
-                        .ToString(), 86400, "Bearer"));
+                        .ToString(), 86400, "Bearer", "read, write, update, delete"));
         }
     }
 }

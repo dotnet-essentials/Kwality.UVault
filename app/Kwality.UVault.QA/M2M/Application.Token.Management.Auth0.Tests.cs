@@ -78,6 +78,9 @@ public sealed class ApplicationTokenManagementAuth0Tests
         result.Token.Should()
               .NotBeNullOrWhiteSpace();
 
+        result.Scope.Should()
+              .NotBeNullOrWhiteSpace();
+
         result.TokenType.Should()
               .Be("Bearer");
 
@@ -180,11 +183,12 @@ public sealed class ApplicationTokenManagementAuth0Tests
         {
         }
 
-        public TokenModel(string? token, string tokenType, int expiresIn)
+        public TokenModel(string? token, string tokenType, int expiresIn, string scope)
         {
             this.Token = token;
             this.TokenType = tokenType;
             this.ExpiresIn = expiresIn;
+            this.Scope = scope;
         }
     }
 
@@ -193,7 +197,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
     {
         public TokenModel Map(ApiManagementToken token)
         {
-            return new TokenModel(token.AccessToken, token.TokenType, token.ExpiresIn);
+            return new TokenModel(token.AccessToken, token.TokenType, token.ExpiresIn, token.Scope);
         }
     }
 }

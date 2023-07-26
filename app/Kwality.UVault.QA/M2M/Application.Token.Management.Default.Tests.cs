@@ -57,6 +57,9 @@ public sealed class ApplicationTokenManagementDefaultTests
         result.Token.Should()
               .NotBeNullOrWhiteSpace();
 
+        result.Scope.Should()
+              .BeEmpty();
+
         result.ExpiresIn.Should()
               .Be(86400);
 
