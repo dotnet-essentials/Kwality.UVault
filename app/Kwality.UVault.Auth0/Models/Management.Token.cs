@@ -38,6 +38,7 @@ public sealed class ApiManagementToken
     {
         this.issuedTimeStamp = DateTime.Now;
         this.TokenType = string.Empty;
+        this.Scope = string.Empty;
     }
 
     [JsonPropertyName("access_token")]
@@ -61,6 +62,16 @@ public sealed class ApiManagementToken
     // ReSharper disable once MemberCanBeInternal
     [JsonPropertyName("token_type")]
     public string TokenType
+    {
+        get;
+
+        [UsedImplicitly]
+        set;
+    }
+
+    // ReSharper disable once MemberCanBeInternal
+    [JsonPropertyName("scope")]
+    public string Scope
     {
         get;
 

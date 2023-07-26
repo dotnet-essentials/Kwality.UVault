@@ -33,14 +33,16 @@ public class TokenModel
     {
     }
 
-    public TokenModel(string token, int expiresIn, string tokenType)
+    public TokenModel(string token, int expiresIn, string tokenType, string scope)
     {
         this.Token = token;
         this.ExpiresIn = expiresIn;
         this.TokenType = tokenType;
+        this.Scope = scope;
     }
 
     public string? Token { get; init; }
     public int ExpiresIn { get; init; }
     public string? TokenType { get; init; }
+    public string? Scope { get; init; }
 }
