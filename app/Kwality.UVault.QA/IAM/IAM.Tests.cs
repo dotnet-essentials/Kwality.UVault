@@ -193,7 +193,14 @@ public sealed class IAMTests
 #pragma warning restore CA5404
                     ValidateIssuerSigningKey = false,
                     RequireSignedTokens = false,
+
+                    // In .NET 8.0, you need to use "JsonWebToken" instead of a "JwtSecurityToken".
+#if NET6_0 || NET7_0
                     SignatureValidator = static (token, _) => new JwtSecurityToken(token),
+#endif
+#if NET8_0
+                    SignatureValidator = static (token, _) => new Microsoft.IdentityModel.JsonWebTokens.JsonWebToken(token),
+#endif
                 };
             };
     }
