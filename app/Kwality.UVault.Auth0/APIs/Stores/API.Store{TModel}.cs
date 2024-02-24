@@ -39,21 +39,12 @@ using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Exceptions;
 
 [UsedImplicitly]
-internal sealed class ApiStore<TModel> : IApiStore<TModel, StringKey>
+internal sealed class ApiStore<TModel>(
+    ManagementClient client,
+    ApiConfiguration configuration,
+    IModelMapper<TModel> modelMapper) : IApiStore<TModel, StringKey>
     where TModel : ApiModel
 {
-    private readonly ApiConfiguration apiConfiguration;
-    private readonly ManagementClient managementClient;
-    private readonly IModelMapper<TModel> modelMapper;
-
-    public ApiStore(
-        ManagementClient managementClient, ApiConfiguration apiConfiguration, IModelMapper<TModel> modelMapper)
-    {
-        this.managementClient = managementClient;
-        this.apiConfiguration = apiConfiguration;
-        this.modelMapper = modelMapper;
-    }
-
     // Stryker disable once all
     public async Task<TModel> GetByKeyAsync(StringKey key)
     {
@@ -65,7 +56,7 @@ internal sealed class ApiStore<TModel> : IApiStore<TModel, StringKey>
             ResourceServer? resourceServer = await apiClient.ResourceServers.GetAsync(key.Value)
                                                             .ConfigureAwait(false);
 
-            return this.modelMapper.Map(resourceServer);
+            return modelMapper.Map(resourceServer);
         }
         catch (Exception ex)
         {
@@ -113,9 +104,9 @@ internal sealed class ApiStore<TModel> : IApiStore<TModel, StringKey>
 
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
-        string managementApiToken = await this.managementClient.GetTokenAsync(this.apiConfiguration)
-                                              .ConfigureAwait(false);
+        string managementApiToken = await client.GetTokenAsync(configuration)
+                                                .ConfigureAwait(false);
 
-        return new ManagementApiClient(managementApiToken, this.apiConfiguration.TokenEndpoint.Authority);
+        return new ManagementApiClient(managementApiToken, configuration.TokenEndpoint.Authority);
     }
 }

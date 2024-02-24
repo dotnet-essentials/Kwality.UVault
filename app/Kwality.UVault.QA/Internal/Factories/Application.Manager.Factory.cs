@@ -34,12 +34,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 internal sealed class ApplicationManagerFactory
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public ApplicationManagerFactory()
-    {
-        this.serviceCollection = new ServiceCollection();
-    }
+    private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
     public ApplicationManager<TModel, TKey> Create<TModel, TKey>()
         where TModel : ApplicationModel<TKey>

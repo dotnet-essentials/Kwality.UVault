@@ -35,21 +35,12 @@ using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
 [UsedImplicitly]
-internal sealed class ApplicationTokenStore<TToken> : IApplicationTokenStore<TToken>
+internal sealed class ApplicationTokenStore<TToken>(
+    ManagementClient managementClient,
+    M2MConfiguration m2MConfiguration,
+    IModelTokenMapper<TToken> modelMapper) : IApplicationTokenStore<TToken>
     where TToken : TokenModel
 {
-    private readonly M2MConfiguration m2MConfiguration;
-    private readonly ManagementClient managementClient;
-    private readonly IModelTokenMapper<TToken> modelMapper;
-
-    public ApplicationTokenStore(
-        ManagementClient managementClient, M2MConfiguration m2MConfiguration, IModelTokenMapper<TToken> modelMapper)
-    {
-        this.managementClient = managementClient;
-        this.m2MConfiguration = m2MConfiguration;
-        this.modelMapper = modelMapper;
-    }
-
     public async Task<TToken> GetAccessTokenAsync(
         string clientId, string clientSecret, string audience, string grantType)
     {
@@ -60,12 +51,12 @@ internal sealed class ApplicationTokenStore<TToken> : IApplicationTokenStore<TTo
             ArgumentNullException.ThrowIfNull(audience);
             ArgumentNullException.ThrowIfNull(grantType);
 
-            ApiManagementToken managementApiToken = await this.managementClient.GetM2MTokenAsync(
-                                                                  this.m2MConfiguration.TokenEndpoint, grantType,
+            ApiManagementToken managementApiToken = await managementClient.GetM2MTokenAsync(
+                                                                  m2MConfiguration.TokenEndpoint, grantType,
                                                                   clientId, clientSecret, audience)
                                                               .ConfigureAwait(false);
 
-            return this.modelMapper.Map(managementApiToken);
+            return modelMapper.Map(managementApiToken);
         }
         catch (Exception ex)
         {

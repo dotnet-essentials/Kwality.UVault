@@ -31,14 +31,9 @@ using JetBrains.Annotations;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed class IntKey : IEqualityComparer<IntKey>
+public sealed class IntKey(int value) : IEqualityComparer<IntKey>
 {
-    private readonly int value;
-
-    public IntKey(int value)
-    {
-        this.value = value;
-    }
+    private readonly int value = value;
 
     public bool Equals(IntKey? x, IntKey? y)
     {

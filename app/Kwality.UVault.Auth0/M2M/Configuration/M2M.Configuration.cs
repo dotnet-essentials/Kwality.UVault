@@ -27,12 +27,7 @@ namespace Kwality.UVault.Auth0.M2M.Configuration;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public sealed class M2MConfiguration
+public sealed class M2MConfiguration(Uri tokenEndpoint)
 {
-    public M2MConfiguration(Uri tokenEndpoint)
-    {
-        this.TokenEndpoint = tokenEndpoint;
-    }
-
-    internal Uri TokenEndpoint { get; }
+    internal Uri TokenEndpoint { get; } = tokenEndpoint;
 }

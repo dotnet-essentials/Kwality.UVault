@@ -39,21 +39,12 @@ using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
 
 [UsedImplicitly]
-internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
+internal sealed class UserStore<TModel>(
+    ManagementClient managementClient,
+    ApiConfiguration apiConfiguration,
+    IModelMapper<TModel> modelMapper) : IUserStore<TModel, StringKey>
     where TModel : UserModel
 {
-    private readonly ApiConfiguration apiConfiguration;
-    private readonly ManagementClient managementClient;
-    private readonly IModelMapper<TModel> modelMapper;
-
-    public UserStore(
-        ManagementClient managementClient, ApiConfiguration apiConfiguration, IModelMapper<TModel> modelMapper)
-    {
-        this.managementClient = managementClient;
-        this.apiConfiguration = apiConfiguration;
-        this.modelMapper = modelMapper;
-    }
-
     // Stryker disable once all
     public async Task<TModel> GetByKeyAsync(StringKey key)
     {
@@ -65,7 +56,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
             User? user = await apiClient.Users.GetAsync(key.Value)
                                         .ConfigureAwait(false);
 
-            return this.modelMapper.Map(user);
+            return modelMapper.Map(user);
         }
         catch (Exception ex)
         {
@@ -82,7 +73,7 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
         IList<User>? users = await apiClient.Users.GetUsersByEmailAsync(email)
                                             .ConfigureAwait(false);
 
-        return users.Select(user => this.modelMapper.Map(user));
+        return users.Select(user => modelMapper.Map(user));
     }
 
     // Stryker disable once all
@@ -140,9 +131,9 @@ internal sealed class UserStore<TModel> : IUserStore<TModel, StringKey>
 
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
-        string managementApiToken = await this.managementClient.GetTokenAsync(this.apiConfiguration)
+        string managementApiToken = await managementClient.GetTokenAsync(apiConfiguration)
                                               .ConfigureAwait(false);
 
-        return new ManagementApiClient(managementApiToken, this.apiConfiguration.TokenEndpoint.Authority);
+        return new ManagementApiClient(managementApiToken, apiConfiguration.TokenEndpoint.Authority);
     }
 }

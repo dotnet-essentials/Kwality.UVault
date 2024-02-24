@@ -27,13 +27,8 @@ namespace Kwality.UVault.Grants.Models;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public class GrantModel<TKey>
+public class GrantModel<TKey>(TKey key)
     where TKey : IEqualityComparer<TKey>
 {
-    public GrantModel(TKey key)
-    {
-        this.Key = key;
-    }
-
-    public TKey Key { get; set; }
+    public TKey Key { get; set; } = key;
 }

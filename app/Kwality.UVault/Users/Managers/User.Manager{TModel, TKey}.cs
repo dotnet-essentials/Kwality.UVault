@@ -31,44 +31,37 @@ using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
 
 [PublicAPI]
-public sealed class UserManager<TModel, TKey>
+public sealed class UserManager<TModel, TKey>(IUserStore<TModel, TKey> store)
     where TModel : UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IUserStore<TModel, TKey> store;
-
-    public UserManager(IUserStore<TModel, TKey> store)
-    {
-        this.store = store;
-    }
-
     // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        return this.store.GetByKeyAsync(key);
+        return store.GetByKeyAsync(key);
     }
 
     // Stryker disable once all
     public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
     {
-        return this.store.GetByEmailAsync(email);
+        return store.GetByEmailAsync(email);
     }
 
     // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper)
     {
-        return this.store.CreateAsync(model, mapper);
+        return store.CreateAsync(model, mapper);
     }
 
     // Stryker disable once all
     public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
     {
-        return this.store.UpdateAsync(key, model, mapper);
+        return store.UpdateAsync(key, model, mapper);
     }
 
     // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
-        return this.store.DeleteByKeyAsync(key);
+        return store.DeleteByKeyAsync(key);
     }
 }

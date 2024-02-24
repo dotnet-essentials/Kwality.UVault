@@ -31,32 +31,25 @@ using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.APIs.Stores.Abstractions;
 
 [PublicAPI]
-public sealed class ApiManager<TModel, TKey>
+public sealed class ApiManager<TModel, TKey>(IApiStore<TModel, TKey> store)
     where TModel : ApiModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IApiStore<TModel, TKey> store;
-
-    public ApiManager(IApiStore<TModel, TKey> store)
-    {
-        this.store = store;
-    }
-
     // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        return this.store.GetByKeyAsync(key);
+        return store.GetByKeyAsync(key);
     }
 
     // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IApiOperationMapper mapper)
     {
-        return this.store.CreateAsync(model, mapper);
+        return store.CreateAsync(model, mapper);
     }
 
     // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
-        return this.store.DeleteByKeyAsync(key);
+        return store.DeleteByKeyAsync(key);
     }
 }

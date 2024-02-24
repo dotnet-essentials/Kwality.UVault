@@ -34,12 +34,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 internal sealed class GrantManagerFactory
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public GrantManagerFactory()
-    {
-        this.serviceCollection = new ServiceCollection();
-    }
+    private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
     public GrantManager<TModel, TKey> Create<TModel, TKey>()
         where TModel : GrantModel<TKey>

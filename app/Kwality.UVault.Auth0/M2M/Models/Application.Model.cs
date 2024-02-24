@@ -33,10 +33,4 @@ using Kwality.UVault.M2M.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class ApplicationModel : ApplicationModel<StringKey>
-{
-    public ApplicationModel(StringKey key)
-        : base(key)
-    {
-    }
-}
+public class ApplicationModel(StringKey key) : ApplicationModel<StringKey>(key);

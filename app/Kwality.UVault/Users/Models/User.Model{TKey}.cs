@@ -27,15 +27,9 @@ namespace Kwality.UVault.Users.Models;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public class UserModel<TKey>
+public class UserModel<TKey>(TKey key, string email)
     where TKey : IEqualityComparer<TKey>
 {
-    public UserModel(TKey key, string email)
-    {
-        this.Key = key;
-        this.Email = email;
-    }
-
-    public TKey Key { get; set; }
-    public string Email { get; set; }
+    public TKey Key { get; set; } = key;
+    public string Email { get; set; } = email;
 }

@@ -33,10 +33,4 @@ using Kwality.UVault.APIs.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class ApiModel : ApiModel<StringKey>
-{
-    public ApiModel(StringKey key)
-        : base(key)
-    {
-    }
-}
+public class ApiModel(StringKey key) : ApiModel<StringKey>(key);

@@ -42,21 +42,12 @@ using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
 
 [UsedImplicitly]
-internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, StringKey>
+internal sealed class ApplicationStore<TModel>(
+    ManagementClient managementClient,
+    ApiConfiguration apiConfiguration,
+    IModelMapper<TModel> modelMapper) : IApplicationStore<TModel, StringKey>
     where TModel : ApplicationModel
 {
-    private readonly ApiConfiguration apiConfiguration;
-    private readonly ManagementClient managementClient;
-    private readonly IModelMapper<TModel> modelMapper;
-
-    public ApplicationStore(
-        ManagementClient managementClient, ApiConfiguration apiConfiguration, IModelMapper<TModel> modelMapper)
-    {
-        this.managementClient = managementClient;
-        this.apiConfiguration = apiConfiguration;
-        this.modelMapper = modelMapper;
-    }
-
     public async Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -71,7 +62,7 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
                                                     request, new PaginationInfo(pageIndex, pageSize, true))
                                                 .ConfigureAwait(false);
 
-            IList<TModel> models = clients.Select(client => this.modelMapper.Map(client))
+            IList<TModel> models = clients.Select(client => modelMapper.Map(client))
                                           .ToList();
 
             return new PagedResultSet<TModel>(models, clients.Paging.Total > (pageIndex + 1) * pageSize);
@@ -93,7 +84,7 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
             Client? client = await apiClient.Clients.GetAsync(key.Value)
                                             .ConfigureAwait(false);
 
-            return this.modelMapper.Map(client);
+            return modelMapper.Map(client);
         }
         catch (Exception ex)
         {
@@ -164,7 +155,7 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
             Client? client = await apiClient.Clients.RotateClientSecret(key.Value)
                                             .ConfigureAwait(false);
 
-            return this.modelMapper.Map(client);
+            return modelMapper.Map(client);
         }
         catch (Exception ex)
         {
@@ -174,9 +165,9 @@ internal sealed class ApplicationStore<TModel> : IApplicationStore<TModel, Strin
 
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
-        string managementApiToken = await this.managementClient.GetTokenAsync(this.apiConfiguration)
+        string managementApiToken = await managementClient.GetTokenAsync(apiConfiguration)
                                               .ConfigureAwait(false);
 
-        return new ManagementApiClient(managementApiToken, this.apiConfiguration.TokenEndpoint.Authority);
+        return new ManagementApiClient(managementApiToken, apiConfiguration.TokenEndpoint.Authority);
     }
 }

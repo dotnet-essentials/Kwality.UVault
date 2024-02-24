@@ -27,15 +27,10 @@ namespace Kwality.UVault.M2M.Models;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public class ApplicationModel<TKey>
+public class ApplicationModel<TKey>(TKey key)
     where TKey : IEqualityComparer<TKey>
 {
-    public ApplicationModel(TKey key)
-    {
-        this.Key = key;
-    }
-
-    public TKey Key { get; set; }
+    public TKey Key { get; set; } = key;
     public string? Name { get; set; }
     public string? ClientSecret { get; set; }
 }

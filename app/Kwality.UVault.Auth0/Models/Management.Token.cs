@@ -32,14 +32,7 @@ using Kwality.UVault.System.Abstractions;
 
 public sealed class ApiManagementToken
 {
-    private readonly DateTime issuedTimeStamp;
-
-    public ApiManagementToken()
-    {
-        this.issuedTimeStamp = DateTime.Now;
-        this.TokenType = string.Empty;
-        this.Scope = string.Empty;
-    }
+    private readonly DateTime issuedTimeStamp = DateTime.Now;
 
     [JsonPropertyName("access_token")]
     public string? AccessToken
@@ -67,7 +60,7 @@ public sealed class ApiManagementToken
 
         [UsedImplicitly]
         set;
-    }
+    } = string.Empty;
 
     // ReSharper disable once MemberCanBeInternal
     [JsonPropertyName("scope")]
@@ -77,7 +70,7 @@ public sealed class ApiManagementToken
 
         [UsedImplicitly]
         set;
-    }
+    } = string.Empty;
 
     // NOTE: A token is expired one the amount of seconds (see "Expired In") is passed.
     //       To ensure that we don't use an expired token, a safety mechanism is built in.

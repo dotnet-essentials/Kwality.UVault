@@ -30,14 +30,9 @@ using JetBrains.Annotations;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public sealed class StringKey : IEqualityComparer<StringKey>
+public sealed class StringKey(string value) : IEqualityComparer<StringKey>
 {
-    public StringKey(string value)
-    {
-        this.Value = value;
-    }
-
-    internal string Value { get; }
+    internal string Value { get; } = value;
 
     public bool Equals(StringKey? x, StringKey? y)
     {

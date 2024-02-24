@@ -42,21 +42,12 @@ using Kwality.UVault.Grants.Stores.Abstractions;
 using Kwality.UVault.Models;
 
 [UsedImplicitly]
-internal sealed class GrantStore<TModel> : IGrantStore<TModel, StringKey>
+internal sealed class GrantStore<TModel>(
+    ManagementClient managementClient,
+    ApiConfiguration apiConfiguration,
+    IModelMapper<TModel> modelMapper) : IGrantStore<TModel, StringKey>
     where TModel : GrantModel
 {
-    private readonly ApiConfiguration apiConfiguration;
-    private readonly ManagementClient managementClient;
-    private readonly IModelMapper<TModel> modelMapper;
-
-    public GrantStore(
-        ManagementClient managementClient, ApiConfiguration apiConfiguration, IModelMapper<TModel> modelMapper)
-    {
-        this.managementClient = managementClient;
-        this.apiConfiguration = apiConfiguration;
-        this.modelMapper = modelMapper;
-    }
-
     public async Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IGrantFilter? filter)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -72,7 +63,7 @@ internal sealed class GrantStore<TModel> : IGrantStore<TModel, StringKey>
                                                               request, new PaginationInfo(pageIndex, pageSize, true))
                                                           .ConfigureAwait(false);
 
-            IList<TModel> models = clientGrants.Select(client => this.modelMapper.Map(client))
+            IList<TModel> models = clientGrants.Select(client => modelMapper.Map(client))
                                                .ToList();
 
             return new PagedResultSet<TModel>(models, clientGrants.Paging.Total > (pageIndex + 1) * pageSize);
@@ -140,9 +131,9 @@ internal sealed class GrantStore<TModel> : IGrantStore<TModel, StringKey>
 
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
-        string managementApiToken = await this.managementClient.GetTokenAsync(this.apiConfiguration)
+        string managementApiToken = await managementClient.GetTokenAsync(apiConfiguration)
                                               .ConfigureAwait(false);
 
-        return new ManagementApiClient(managementApiToken, this.apiConfiguration.TokenEndpoint.Authority);
+        return new ManagementApiClient(managementApiToken, apiConfiguration.TokenEndpoint.Authority);
     }
 }

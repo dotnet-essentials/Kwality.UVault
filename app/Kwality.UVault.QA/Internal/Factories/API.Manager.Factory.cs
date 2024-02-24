@@ -34,12 +34,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 internal sealed class ApiManagerFactory
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public ApiManagerFactory()
-    {
-        this.serviceCollection = new ServiceCollection();
-    }
+    private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
     public ApiManager<TModel, TKey> Create<TModel, TKey>()
         where TModel : ApiModel<TKey>

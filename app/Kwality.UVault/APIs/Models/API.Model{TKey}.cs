@@ -27,13 +27,8 @@ namespace Kwality.UVault.APIs.Models;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public class ApiModel<TKey>
+public class ApiModel<TKey>(TKey key)
     where TKey : IEqualityComparer<TKey>
 {
-    public ApiModel(TKey key)
-    {
-        this.Key = key;
-    }
-
-    public TKey Key { get; set; }
+    public TKey Key { get; set; } = key;
 }

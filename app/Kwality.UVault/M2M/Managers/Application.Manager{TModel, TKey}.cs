@@ -33,17 +33,10 @@ using Kwality.UVault.M2M.Stores.Abstractions;
 using Kwality.UVault.Models;
 
 [PublicAPI]
-public sealed class ApplicationManager<TModel, TKey>
+public sealed class ApplicationManager<TModel, TKey>(IApplicationStore<TModel, TKey> store)
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IApplicationStore<TModel, TKey> store;
-
-    public ApplicationManager(IApplicationStore<TModel, TKey> store)
-    {
-        this.store = store;
-    }
-
     public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
     {
         return this.GetAllAsync(pageIndex, pageSize, null);
@@ -51,36 +44,36 @@ public sealed class ApplicationManager<TModel, TKey>
 
     public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
     {
-        return this.store.GetAllAsync(pageIndex, pageSize, filter);
+        return store.GetAllAsync(pageIndex, pageSize, filter);
     }
 
     // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        return this.store.GetByKeyAsync(key);
+        return store.GetByKeyAsync(key);
     }
 
     // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
     {
-        return this.store.CreateAsync(model, mapper);
+        return store.CreateAsync(model, mapper);
     }
 
     // Stryker disable once all
     public Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
     {
-        return this.store.UpdateAsync(key, model, mapper);
+        return store.UpdateAsync(key, model, mapper);
     }
 
     // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
-        return this.store.DeleteByKeyAsync(key);
+        return store.DeleteByKeyAsync(key);
     }
 
     // Stryker disable once all
     public Task<TModel> RotateClientSecretAsync(TKey key)
     {
-        return this.store.RotateClientSecretAsync(key);
+        return store.RotateClientSecretAsync(key);
     }
 }

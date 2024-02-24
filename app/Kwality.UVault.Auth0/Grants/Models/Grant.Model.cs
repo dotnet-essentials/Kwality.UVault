@@ -32,10 +32,4 @@ using Kwality.UVault.Grants.Models;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]
-public class GrantModel : GrantModel<StringKey>
-{
-    public GrantModel(StringKey key)
-        : base(key)
-    {
-    }
-}
+public class GrantModel(StringKey key) : GrantModel<StringKey>(key);

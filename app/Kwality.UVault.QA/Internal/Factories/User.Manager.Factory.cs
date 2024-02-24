@@ -34,12 +34,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 internal sealed class UserManagerFactory
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public UserManagerFactory()
-    {
-        this.serviceCollection = new ServiceCollection();
-    }
+    private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
     public UserManager<TModel, TKey> Create<TModel, TKey>()
         where TModel : UserModel<TKey>

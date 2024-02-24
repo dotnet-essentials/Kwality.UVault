@@ -49,12 +49,7 @@ using Xunit;
 public sealed class Auth0ManagementClientTests
 {
     private const string testPrefix = "Request an API management token";
-    private readonly ApiConfiguration apiConfiguration;
-
-    public Auth0ManagementClientTests()
-    {
-        this.apiConfiguration = new ApiConfiguration(new Uri("http://localhost/"), string.Empty, string.Empty, string.Empty);
-    }
+    private readonly ApiConfiguration apiConfiguration = new(new Uri("http://localhost/"), string.Empty, string.Empty, string.Empty);
 
     [Auth0]
     [AutoDomainData]

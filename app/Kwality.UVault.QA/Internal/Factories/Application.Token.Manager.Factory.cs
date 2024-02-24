@@ -34,12 +34,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 internal sealed class ApplicationTokenManagerFactory
 {
-    private readonly IServiceCollection serviceCollection;
-
-    public ApplicationTokenManagerFactory()
-    {
-        this.serviceCollection = new ServiceCollection();
-    }
+    private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
     public ApplicationTokenManager<TToken> Create<TToken, TModel, TKey>()
         where TToken : TokenModel, new()

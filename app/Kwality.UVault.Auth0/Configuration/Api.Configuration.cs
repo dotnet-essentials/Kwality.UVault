@@ -27,18 +27,10 @@ namespace Kwality.UVault.Auth0.Configuration;
 using JetBrains.Annotations;
 
 [PublicAPI]
-public sealed class ApiConfiguration
+public sealed class ApiConfiguration(Uri tokenEndpoint, string clientId, string clientSecret, string audience)
 {
-    public ApiConfiguration(Uri tokenEndpoint, string clientId, string clientSecret, string audience)
-    {
-        this.TokenEndpoint = tokenEndpoint;
-        this.ClientId = clientId;
-        this.ClientSecret = clientSecret;
-        this.Audience = audience;
-    }
-
-    internal Uri TokenEndpoint { get; }
-    internal string ClientId { get; }
-    internal string ClientSecret { get; }
-    internal string Audience { get; }
+    internal Uri TokenEndpoint { get; } = tokenEndpoint;
+    internal string ClientId { get; } = clientId;
+    internal string ClientSecret { get; } = clientSecret;
+    internal string Audience { get; } = audience;
 }

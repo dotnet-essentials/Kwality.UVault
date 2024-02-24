@@ -33,17 +33,10 @@ using Kwality.UVault.Grants.Stores.Abstractions;
 using Kwality.UVault.Models;
 
 [PublicAPI]
-public sealed class GrantManager<TModel, TKey>
+public sealed class GrantManager<TModel, TKey>(IGrantStore<TModel, TKey> store)
     where TModel : GrantModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IGrantStore<TModel, TKey> store;
-
-    public GrantManager(IGrantStore<TModel, TKey> store)
-    {
-        this.store = store;
-    }
-
     public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
     {
         return this.GetAllAsync(pageIndex, pageSize, null);
@@ -51,24 +44,24 @@ public sealed class GrantManager<TModel, TKey>
 
     public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IGrantFilter? filter)
     {
-        return this.store.GetAllAsync(pageIndex, pageSize, filter);
+        return store.GetAllAsync(pageIndex, pageSize, filter);
     }
 
     // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IGrantOperationMapper mapper)
     {
-        return this.store.CreateAsync(model, mapper);
+        return store.CreateAsync(model, mapper);
     }
 
     // Stryker disable once all
     public Task UpdateAsync(TKey key, TModel model, IGrantOperationMapper mapper)
     {
-        return this.store.UpdateAsync(key, model, mapper);
+        return store.UpdateAsync(key, model, mapper);
     }
 
     // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
-        return this.store.DeleteByKeyAsync(key);
+        return store.DeleteByKeyAsync(key);
     }
 }

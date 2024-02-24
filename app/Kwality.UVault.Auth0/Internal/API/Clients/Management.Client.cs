@@ -31,22 +31,14 @@ using Kwality.UVault.Auth0.Exceptions;
 using Kwality.UVault.Auth0.Models;
 using Kwality.UVault.System.Abstractions;
 
-internal sealed class ManagementClient
+internal sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider dateTimeProvider)
 {
-    private readonly IDateTimeProvider dateTimeProvider;
-    private readonly HttpClient httpClient;
     private ApiManagementToken? lastRequestedManagementToken;
-
-    public ManagementClient(HttpClient httpClient, IDateTimeProvider dateTimeProvider)
-    {
-        this.httpClient = httpClient;
-        this.dateTimeProvider = dateTimeProvider;
-    }
 
     public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
         if (this.lastRequestedManagementToken is { AccessToken: not null, } &&
-            !this.lastRequestedManagementToken.IsExpired(this.dateTimeProvider))
+            !this.lastRequestedManagementToken.IsExpired(dateTimeProvider))
         {
             return this.lastRequestedManagementToken.AccessToken;
         }
@@ -114,7 +106,7 @@ internal sealed class ManagementClient
     {
         try
         {
-            return await this.httpClient.PostAsync(tokenEndpoint, postData)
+            return await httpClient.PostAsync(tokenEndpoint, postData)
                              .ConfigureAwait(false);
         }
         catch (Exception ex)
