@@ -60,7 +60,10 @@ public sealed class ApiManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApiManager<Model, StringKey> manager = new ApiManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApiManager<Model, StringKey> manager
+            = new ApiManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -82,7 +85,11 @@ public sealed class ApiManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApiManager<Model, StringKey> manager = new ApiManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApiManager<Model, StringKey> manager
+            = new ApiManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -124,7 +131,10 @@ public sealed class ApiManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApiManager<Model, StringKey> manager = new ApiManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApiManager<Model, StringKey> manager
+            = new ApiManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -152,7 +162,10 @@ public sealed class ApiManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApiManager<Model, StringKey> manager = new ApiManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApiManager<Model, StringKey> manager
+            = new ApiManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -180,7 +193,9 @@ public sealed class ApiManagementAuth0Tests
 
     private static ApiConfiguration GetApiConfiguration()
     {
-        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")), Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"), Environment.ReadString("AUTH0_AUDIENCE"));
+        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")),
+            Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"),
+            Environment.ReadString("AUTH0_AUDIENCE"));
     }
 
     internal sealed class Model : ApiModel
@@ -223,16 +238,15 @@ public sealed class ApiManagementAuth0Tests
     private sealed class AutoDomainDataAttribute : AutoDataAttribute
     {
         public AutoDomainDataAttribute()
-            : base(
-                static () =>
-                {
-                    var fixture = new Fixture();
+            : base(static () =>
+            {
+                var fixture = new Fixture();
 
-                    // Customize AutoFixture.
-                    fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
+                // Customize AutoFixture.
+                fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
 
-                    return fixture;
-                })
+                return fixture;
+            })
         {
         }
     }

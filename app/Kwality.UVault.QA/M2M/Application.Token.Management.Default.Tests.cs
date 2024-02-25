@@ -47,7 +47,8 @@ public sealed class ApplicationTokenManagementDefaultTests
     internal async Task GetToken_Succeeds(string clientId, string clientSecret, string audience, string grantType)
     {
         // ARRANGE.
-        ApplicationTokenManager<TokenModel> manager = new ApplicationTokenManagerFactory().Create<TokenModel, ApplicationModel<IntKey>, IntKey>();
+        ApplicationTokenManager<TokenModel> manager
+            = new ApplicationTokenManagerFactory().Create<TokenModel, ApplicationModel<IntKey>, IntKey>();
 
         // ACT.
         TokenModel result = await manager.GetAccessTokenAsync(clientId, clientSecret, audience, grantType)

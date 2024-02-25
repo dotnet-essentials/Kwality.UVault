@@ -219,7 +219,7 @@ public sealed class GrantManagementDefaultTests
                                   .ConfigureAwait(false);
 
         // ACT.
-        model.Scopes = new[] { "newScope", "newScope2", };
+        model.Scopes = new[] { "newScope", "newScope2" };
 
         await manager.UpdateAsync(key, model, new GrantUpdateOperationMapper())
                      .ConfigureAwait(false);
@@ -305,7 +305,8 @@ public sealed class GrantManagementDefaultTests
         {
             if (typeof(TDestination) != typeof(Func<Model, bool>))
             {
-                throw new ReadException($"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
+                throw new ReadException(
+                    $"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.

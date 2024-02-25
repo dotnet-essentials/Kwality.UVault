@@ -58,8 +58,8 @@ internal sealed class ApplicationStore<TModel>(
             GetClientsRequest request = filter == null ? new GetClientsRequest() : filter.Create<GetClientsRequest>();
 
             IPagedList<Client>? clients = await apiClient
-                                                .Clients.GetAllAsync(
-                                                    request, new PaginationInfo(pageIndex, pageSize, true))
+                                                .Clients.GetAllAsync(request,
+                                                    new PaginationInfo(pageIndex, pageSize, true))
                                                 .ConfigureAwait(false);
 
             IList<TModel> models = clients.Select(client => modelMapper.Map(client))
@@ -166,7 +166,7 @@ internal sealed class ApplicationStore<TModel>(
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
         string managementApiToken = await managementClient.GetTokenAsync(apiConfiguration)
-                                              .ConfigureAwait(false);
+                                                          .ConfigureAwait(false);
 
         return new ManagementApiClient(managementApiToken, apiConfiguration.TokenEndpoint.Authority);
     }

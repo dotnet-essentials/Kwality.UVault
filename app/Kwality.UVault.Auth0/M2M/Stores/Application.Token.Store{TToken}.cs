@@ -51,10 +51,10 @@ internal sealed class ApplicationTokenStore<TToken>(
             ArgumentNullException.ThrowIfNull(audience);
             ArgumentNullException.ThrowIfNull(grantType);
 
-            ApiManagementToken managementApiToken = await managementClient.GetM2MTokenAsync(
-                                                                  m2MConfiguration.TokenEndpoint, grantType,
-                                                                  clientId, clientSecret, audience)
-                                                              .ConfigureAwait(false);
+            ApiManagementToken managementApiToken = await managementClient
+                                                          .GetM2MTokenAsync(m2MConfiguration.TokenEndpoint, grantType,
+                                                              clientId, clientSecret, audience)
+                                                          .ConfigureAwait(false);
 
             return modelMapper.Map(managementApiToken);
         }

@@ -64,7 +64,10 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -86,7 +89,11 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -127,7 +134,11 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         var keys = new List<StringKey>();
 
         try
@@ -137,9 +148,8 @@ public sealed class UserManagementAuth0Tests
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
-                keys.Add(
-                    await manager.CreateAsync(model, new CreateOperationMapper())
-                                 .ConfigureAwait(false));
+                keys.Add(await manager.CreateAsync(model, new CreateOperationMapper())
+                                      .ConfigureAwait(false));
             }
 
             // ACT.
@@ -154,7 +164,8 @@ public sealed class UserManagementAuth0Tests
 
             // ASSERT.
             result.Should()
-                  .BeEquivalentTo(new[] { expected, }, static options => options.Excluding(static user => user.Password));
+                  .BeEquivalentTo(new[] { expected },
+                      static options => options.Excluding(static user => user.Password));
         }
         finally
         {
@@ -178,7 +189,11 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> userManager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> userManager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         var keys = new List<StringKey>();
 
         try
@@ -186,20 +201,17 @@ public sealed class UserManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            keys.Add(
-                await userManager.CreateAsync(model, new CreateOperationMapper())
-                                 .ConfigureAwait(false));
+            keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper())
+                                      .ConfigureAwait(false));
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            keys.Add(
-                await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-1"))
-                                 .ConfigureAwait(false));
+            keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-1"))
+                                      .ConfigureAwait(false));
 
-            keys.Add(
-                await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-2"))
-                                 .ConfigureAwait(false));
+            keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-2"))
+                                      .ConfigureAwait(false));
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -210,7 +222,8 @@ public sealed class UserManagementAuth0Tests
 
             // ASSERT.
             result.Should()
-                  .BeEquivalentTo(new[] { model, model, model, }, static options => options.Excluding(static user => user.Password));
+                  .BeEquivalentTo(new[] { model, model, model },
+                      static options => options.Excluding(static user => user.Password));
         }
         finally
         {
@@ -234,7 +247,11 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -252,7 +269,8 @@ public sealed class UserManagementAuth0Tests
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model, static options => options.Excluding(static user => user.Password));
+                                                 .BeEquivalentTo(model,
+                                                     static options => options.Excluding(static user => user.Password));
         }
         finally
         {
@@ -276,7 +294,11 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> userManager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> userManager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? userId = null;
 
         try
@@ -315,7 +337,11 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -356,7 +382,11 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -382,7 +412,8 @@ public sealed class UserManagementAuth0Tests
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model, static options => options.Excluding(static user => user.Password));
+                                                 .BeEquivalentTo(model,
+                                                     static options => options.Excluding(static user => user.Password));
         }
         finally
         {
@@ -406,7 +437,10 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -428,7 +462,10 @@ public sealed class UserManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        UserManager<Model, StringKey> manager
+            = new UserManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
@@ -454,7 +491,9 @@ public sealed class UserManagementAuth0Tests
 
     private static ApiConfiguration GetApiConfiguration()
     {
-        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")), Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"), Environment.ReadString("AUTH0_AUDIENCE"));
+        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")),
+            Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"),
+            Environment.ReadString("AUTH0_AUDIENCE"));
     }
 
     private static async Task<string> AuthenticateUserAsync(string email, string password)
@@ -488,8 +527,9 @@ public sealed class UserManagementAuth0Tests
             throw new AuthenticationFailureException($"Failed to authenticate user. HTTP Response: {response}");
         }
 
-        Auth0AuthenticationResponse? responseModel = await responseMessage.Content.ReadFromJsonAsync<Auth0AuthenticationResponse>()
-                                                                          .ConfigureAwait(false);
+        Auth0AuthenticationResponse? responseModel = await responseMessage
+                                                           .Content.ReadFromJsonAsync<Auth0AuthenticationResponse>()
+                                                           .ConfigureAwait(false);
 
         return responseModel?.AccessToken ?? string.Empty;
     }
@@ -574,20 +614,21 @@ public sealed class UserManagementAuth0Tests
     private sealed class AutoDomainDataAttribute : AutoDataAttribute
     {
         public AutoDomainDataAttribute()
-            : base(
-                static () =>
-                {
-                    var fixture = new Fixture();
+            : base(static () =>
+            {
+                var fixture = new Fixture();
 
-                    // Customize AutoFixture.
-                    fixture.Customize<StringKey>(composer => composer.FromFactory(() => new StringKey($"{fixture.Create<string>()}@acme.com")));
+                // Customize AutoFixture.
+                fixture.Customize<StringKey>(composer =>
+                    composer.FromFactory(() => new StringKey($"{fixture.Create<string>()}@acme.com")));
 
-                    fixture.Customize<Model>(
-                        composer => composer.FromFactory(() => new Model(fixture.Create<StringKey>(), fixture.Create<string>()))
-                                            .OmitAutoProperties());
+                fixture.Customize<Model>(composer => composer
+                                                     .FromFactory(() => new Model(fixture.Create<StringKey>(),
+                                                         fixture.Create<string>()))
+                                                     .OmitAutoProperties());
 
-                    return fixture;
-                })
+                return fixture;
+            })
         {
         }
     }
@@ -596,23 +637,23 @@ public sealed class UserManagementAuth0Tests
     private sealed class FixedEmailAttribute : AutoDataAttribute
     {
         public FixedEmailAttribute()
-            : base(
-                static () =>
-                {
-                    var fixture = new Fixture();
+            : base(static () =>
+            {
+                var fixture = new Fixture();
 
-                    // Build the configuration value(s) for AutoFixture.
-                    var email = $"{fixture.Create<string>()}@acme.com";
+                // Build the configuration value(s) for AutoFixture.
+                var email = $"{fixture.Create<string>()}@acme.com";
 
-                    // Customize AutoFixture.
-                    fixture.Customize<StringKey>(composer => composer.FromFactory(() => new StringKey(email)));
+                // Customize AutoFixture.
+                fixture.Customize<StringKey>(composer => composer.FromFactory(() => new StringKey(email)));
 
-                    fixture.Customize<Model>(
-                        composer => composer.FromFactory(() => new Model(fixture.Create<StringKey>(), fixture.Create<string>()))
-                                            .OmitAutoProperties());
+                fixture.Customize<Model>(composer => composer
+                                                     .FromFactory(() => new Model(fixture.Create<StringKey>(),
+                                                         fixture.Create<string>()))
+                                                     .OmitAutoProperties());
 
-                    return fixture;
-                })
+                return fixture;
+            })
         {
         }
     }

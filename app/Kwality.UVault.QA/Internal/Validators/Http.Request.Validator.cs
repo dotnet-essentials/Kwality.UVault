@@ -45,29 +45,27 @@ internal sealed class HttpRequestValidator
 
     public async Task SendHttpRequestAsync(string endpoint)
     {
-        using var testServer = new TestServer(
-            new WebHostBuilder().UseStartup<Program>()
-                                .ConfigureServices(
-                                    services =>
-                                    {
-                                        // Required services.
-                                        services.AddRouting();
+        using var testServer = new TestServer(new WebHostBuilder().UseStartup<Program>()
+                                                                  .ConfigureServices(services =>
+                                                                  {
+                                                                      // Required services.
+                                                                      services.AddRouting();
 
-                                        // Optional services.
-                                        this.ConfigureServices?.Invoke(services);
-                                    })
-                                .Configure(
-                                    app =>
-                                    {
-                                        // Required middleware.
-                                        app.UseRouting();
+                                                                      // Optional services.
+                                                                      this.ConfigureServices?.Invoke(services);
+                                                                  })
+                                                                  .Configure(app =>
+                                                                  {
+                                                                      // Required middleware.
+                                                                      app.UseRouting();
 
-                                        // Optional middleware.
-                                        this.ConfigureApp?.Invoke(app);
+                                                                      // Optional middleware.
+                                                                      this.ConfigureApp?.Invoke(app);
 
-                                        // Map HTTP routes.
-                                        app.UseEndpoints(endpoints => this.ConfigureRoutes?.Invoke(endpoints));
-                                    }));
+                                                                      // Map HTTP routes.
+                                                                      app.UseEndpoints(endpoints =>
+                                                                          this.ConfigureRoutes?.Invoke(endpoints));
+                                                                  }));
 
         HttpClient httpClient = testServer.CreateClient();
 

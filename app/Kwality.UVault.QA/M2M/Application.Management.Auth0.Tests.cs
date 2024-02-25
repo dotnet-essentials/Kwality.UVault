@@ -62,7 +62,11 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -92,7 +96,8 @@ public sealed class ApplicationManagementAuth0Tests
                   .Take(1)
                   .First()
                   .Should()
-                  .BeEquivalentTo(model, static options => options.Excluding(static application => application.ClientSecret));
+                  .BeEquivalentTo(model,
+                      static options => options.Excluding(static application => application.ClientSecret));
         }
         finally
         {
@@ -116,7 +121,11 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -164,7 +173,11 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -193,7 +206,8 @@ public sealed class ApplicationManagementAuth0Tests
             result.ResultSet.Take(1)
                   .First()
                   .Should()
-                  .BeEquivalentTo(model, static options => options.Excluding(static application => application.ClientSecret));
+                  .BeEquivalentTo(model,
+                      static options => options.Excluding(static application => application.ClientSecret));
         }
         finally
         {
@@ -217,7 +231,11 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? keyOne = null;
         StringKey? keyTwo = null;
 
@@ -229,15 +247,18 @@ public sealed class ApplicationManagementAuth0Tests
             keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(ClientApplicationType.Native))
                                   .ConfigureAwait(false);
 
-            keyTwo = await manager.CreateAsync(modelTwo, new CreateOperationMapper(ClientApplicationType.NonInteractive))
-                                  .ConfigureAwait(false);
+            keyTwo = await manager
+                           .CreateAsync(modelTwo, new CreateOperationMapper(ClientApplicationType.NonInteractive))
+                           .ConfigureAwait(false);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(ClientApplicationType.NonInteractive))
-                                                        .ConfigureAwait(false);
+            PagedResultSet<Model> result = await manager
+                                                 .GetAllAsync(0, 10,
+                                                     new OperationFilter(ClientApplicationType.NonInteractive))
+                                                 .ConfigureAwait(false);
 
             // ASSERT.
             result.ResultSet.Count()
@@ -246,7 +267,8 @@ public sealed class ApplicationManagementAuth0Tests
 
             result.ResultSet.First()
                   .Should()
-                  .BeEquivalentTo(modelTwo, static options => options.Excluding(static application => application.ClientSecret));
+                  .BeEquivalentTo(modelTwo,
+                      static options => options.Excluding(static application => application.ClientSecret));
         }
         finally
         {
@@ -279,7 +301,10 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -301,7 +326,11 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -319,7 +348,9 @@ public sealed class ApplicationManagementAuth0Tests
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model, static options => options.Excluding(static application => application.ClientSecret));
+                                                 .BeEquivalentTo(model,
+                                                     static options => options.Excluding(static application =>
+                                                         application.ClientSecret));
         }
         finally
         {
@@ -343,7 +374,11 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -368,7 +403,9 @@ public sealed class ApplicationManagementAuth0Tests
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model, static options => options.Excluding(static application => application.ClientSecret));
+                                                 .BeEquivalentTo(model,
+                                                     static options => options.Excluding(static application =>
+                                                         application.ClientSecret));
         }
         finally
         {
@@ -392,7 +429,10 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -414,13 +454,17 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
-        StringKey key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
-                                     .ConfigureAwait(false);
+        StringKey key = await manager
+                              .CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
+                              .ConfigureAwait(false);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -448,7 +492,10 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -470,7 +517,11 @@ public sealed class ApplicationManagementAuth0Tests
     {
         // ARRANGE.
         ApiConfiguration apiConfiguration = GetApiConfiguration();
-        ApplicationManager<Model, StringKey> manager = new ApplicationManagerFactory().Create<Model, StringKey>(options => options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
+        ApplicationManager<Model, StringKey> manager
+            = new ApplicationManagerFactory().Create<Model, StringKey>(options =>
+                options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
+
         StringKey? key = null;
 
         try
@@ -520,7 +571,9 @@ public sealed class ApplicationManagementAuth0Tests
 
     private static ApiConfiguration GetApiConfiguration()
     {
-        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")), Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"), Environment.ReadString("AUTH0_AUDIENCE"));
+        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")),
+            Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"),
+            Environment.ReadString("AUTH0_AUDIENCE"));
     }
 
     internal sealed class Model : ApplicationModel
@@ -560,7 +613,7 @@ public sealed class ApplicationManagementAuth0Tests
         {
             return new GetClientsRequest
             {
-                AppType = new[] { this.applicationType, },
+                AppType = new[] { this.applicationType },
             };
         }
     }
@@ -586,7 +639,8 @@ public sealed class ApplicationManagementAuth0Tests
                 };
             }
 
-            throw new CreateException($"Invalid {nameof(IApplicationOperationMapper)}: Source is NOT `{nameof(Model)}`.");
+            throw new CreateException(
+                $"Invalid {nameof(IApplicationOperationMapper)}: Source is NOT `{nameof(Model)}`.");
         }
     }
 
@@ -603,7 +657,8 @@ public sealed class ApplicationManagementAuth0Tests
                 };
             }
 
-            throw new UpdateException($"Invalid {nameof(IApplicationOperationMapper)}: Source is NOT `{nameof(Model)}`.");
+            throw new UpdateException(
+                $"Invalid {nameof(IApplicationOperationMapper)}: Source is NOT `{nameof(Model)}`.");
         }
     }
 
@@ -611,16 +666,15 @@ public sealed class ApplicationManagementAuth0Tests
     private sealed class AutoDomainDataAttribute : AutoDataAttribute
     {
         public AutoDomainDataAttribute()
-            : base(
-                static () =>
-                {
-                    var fixture = new Fixture();
+            : base(static () =>
+            {
+                var fixture = new Fixture();
 
-                    // Customize AutoFixture.
-                    fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
+                // Customize AutoFixture.
+                fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
 
-                    return fixture;
-                })
+                return fixture;
+            })
         {
         }
     }

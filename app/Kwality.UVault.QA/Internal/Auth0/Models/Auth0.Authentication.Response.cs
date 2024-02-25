@@ -32,12 +32,5 @@ using JetBrains.Annotations;
 internal sealed class Auth0AuthenticationResponse
 #pragma warning restore CA1812
 {
-    [JsonPropertyName("access_token")]
-    public string? AccessToken
-    {
-        get;
-
-        [UsedImplicitly]
-        set;
-    }
+    [JsonPropertyName("access_token")] public string? AccessToken { get; [UsedImplicitly] set; }
 }

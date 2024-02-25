@@ -31,10 +31,10 @@ using global::Auth0.ManagementApi.Paging;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Auth0.Configuration;
-using Kwality.UVault.Auth0.Internal.API.Clients;
-using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Auth0.Grants.Mapping.Abstractions;
 using Kwality.UVault.Auth0.Grants.Models;
+using Kwality.UVault.Auth0.Internal.API.Clients;
+using Kwality.UVault.Auth0.Keys;
 using Kwality.UVault.Exceptions;
 using Kwality.UVault.Grants.Operations.Filters.Abstractions;
 using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
@@ -59,8 +59,8 @@ internal sealed class GrantStore<TModel>(
                 = filter == null ? new GetClientGrantsRequest() : filter.Create<GetClientGrantsRequest>();
 
             IPagedList<ClientGrant>? clientGrants = await apiClient
-                                                          .ClientGrants.GetAllAsync(
-                                                              request, new PaginationInfo(pageIndex, pageSize, true))
+                                                          .ClientGrants.GetAllAsync(request,
+                                                              new PaginationInfo(pageIndex, pageSize, true))
                                                           .ConfigureAwait(false);
 
             IList<TModel> models = clientGrants.Select(client => modelMapper.Map(client))
@@ -132,7 +132,7 @@ internal sealed class GrantStore<TModel>(
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
         string managementApiToken = await managementClient.GetTokenAsync(apiConfiguration)
-                                              .ConfigureAwait(false);
+                                                          .ConfigureAwait(false);
 
         return new ManagementApiClient(managementApiToken, apiConfiguration.TokenEndpoint.Authority);
     }

@@ -32,16 +32,16 @@ internal static class MoqExtensions
     public static void SetupSendAsyncResponse(this Mock<HttpMessageHandler> mock, HttpResponseMessage response)
     {
         mock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(response);
     }
 
     public static void SetupSendAsyncException(this Mock<HttpMessageHandler> mock)
     {
         mock.Protected()
-            .Setup<Task<HttpResponseMessage>>(
-                "SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
             .Throws<Exception>();
     }
 }

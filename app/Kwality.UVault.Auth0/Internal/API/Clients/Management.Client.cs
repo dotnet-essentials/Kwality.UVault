@@ -37,16 +37,15 @@ internal sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider 
 
     public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
-        if (this.lastRequestedManagementToken is { AccessToken: not null, } &&
+        if (this.lastRequestedManagementToken is { AccessToken: not null } &&
             !this.lastRequestedManagementToken.IsExpired(dateTimeProvider))
         {
             return this.lastRequestedManagementToken.AccessToken;
         }
 
-        this.lastRequestedManagementToken = await this.GetTokenAsync(
-                                                          apiConfiguration.TokenEndpoint, "client_credentials",
-                                                          apiConfiguration.ClientId, apiConfiguration.ClientSecret,
-                                                          apiConfiguration.Audience)
+        this.lastRequestedManagementToken = await this.GetTokenAsync(apiConfiguration.TokenEndpoint,
+                                                          "client_credentials", apiConfiguration.ClientId,
+                                                          apiConfiguration.ClientSecret, apiConfiguration.Audience)
                                                       .ConfigureAwait(false);
 
         return string.IsNullOrEmpty(this.lastRequestedManagementToken?.AccessToken)
@@ -55,12 +54,9 @@ internal sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider 
     }
 
     public async Task<ApiManagementToken> GetM2MTokenAsync(
-        Uri tokenEndpoint, string grantType, string clientId, string clientSecret,
-        string audience)
+        Uri tokenEndpoint, string grantType, string clientId, string clientSecret, string audience)
     {
-        ApiManagementToken? token = await this.GetTokenAsync(
-                                                  tokenEndpoint, grantType, clientId, clientSecret,
-                                                  audience)
+        ApiManagementToken? token = await this.GetTokenAsync(tokenEndpoint, grantType, clientId, clientSecret, audience)
                                               .ConfigureAwait(false);
 
         if (token == null)
@@ -72,8 +68,7 @@ internal sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider 
     }
 
     private async Task<ApiManagementToken?> GetTokenAsync(
-        Uri tokenEndpoint, string grantType, string clientId, string clientSecret,
-        string audience)
+        Uri tokenEndpoint, string grantType, string clientId, string clientSecret, string audience)
     {
         var data = new[]
         {
@@ -107,7 +102,7 @@ internal sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider 
         try
         {
             return await httpClient.PostAsync(tokenEndpoint, postData)
-                             .ConfigureAwait(false);
+                                   .ConfigureAwait(false);
         }
         catch (Exception ex)
         {

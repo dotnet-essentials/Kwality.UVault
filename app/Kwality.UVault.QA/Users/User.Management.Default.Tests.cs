@@ -92,10 +92,8 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         foreach (Model model in models)
-        {
             await manager.CreateAsync(model, new UserCreateOperationMapper())
                          .ConfigureAwait(false);
-        }
 
         // ACT.
         Model expected = models.Skip(1)
@@ -106,7 +104,7 @@ public sealed class UserManagementDefaultTests
 
         // ASSERT.
         result.Should()
-              .BeEquivalentTo(new[] { expected, });
+              .BeEquivalentTo(new[] { expected });
     }
 
     [FixedEmail]
@@ -118,10 +116,8 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         foreach (Model model in models)
-        {
             await manager.CreateAsync(model, new UserCreateOperationMapper())
                          .ConfigureAwait(false);
-        }
 
         // ACT.
         Model expected = models.Skip(1)
@@ -271,19 +267,18 @@ public sealed class UserManagementDefaultTests
     private sealed class FixedEmailAttribute : AutoDataAttribute
     {
         public FixedEmailAttribute()
-            : base(
-                static () =>
-                {
-                    var fixture = new Fixture();
+            : base(static () =>
+            {
+                var fixture = new Fixture();
 
-                    // Build the configuration value(s) for AutoFixture.
-                    var email = $"{fixture.Create<string>()}@acme.com";
+                // Build the configuration value(s) for AutoFixture.
+                var email = $"{fixture.Create<string>()}@acme.com";
 
-                    // Customize AutoFixture.
-                    fixture.Customizations.Add(new FixedEmailSpecimenBuilder(email));
+                // Customize AutoFixture.
+                fixture.Customizations.Add(new FixedEmailSpecimenBuilder(email));
 
-                    return fixture;
-                })
+                return fixture;
+            })
         {
         }
 

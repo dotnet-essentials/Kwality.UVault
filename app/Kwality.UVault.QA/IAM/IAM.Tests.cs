@@ -58,13 +58,12 @@ public sealed class IAMTests
                 ConfigureApp = static app => app.UseUVault(null),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, static context =>
-                        {
-                            context.Response.StatusCode = 200;
+                    routes.MapGet(defaultRoute, static context =>
+                    {
+                        context.Response.StatusCode = 200;
 
-                            return Task.CompletedTask;
-                        });
+                        return Task.CompletedTask;
+                    });
                 },
 
                 // EXPECTATIONS.
@@ -83,18 +82,19 @@ public sealed class IAMTests
                 ConfigureServices = static services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(
-                        static (_, options) =>
-                        {
-                            // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
-                        });
+                    services.AddUVault(static (_, options) =>
+                    {
+                        // Use `UVault's` Identity & Access Management.
+                        options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
+                    });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, [Authorize] [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")] static (context) =>
+                    routes.MapGet(defaultRoute,
+                        [Authorize]
+                        [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")]
+                        static (context) =>
                         {
                             context.Response.StatusCode = 200;
 
@@ -116,18 +116,19 @@ public sealed class IAMTests
                 ConfigureServices = static services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(
-                        static (_, options) =>
-                        {
-                            // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
-                        });
+                    services.AddUVault(static (_, options) =>
+                    {
+                        // Use `UVault's` Identity & Access Management.
+                        options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
+                    });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")] [Authorize] static (context) =>
+                    routes.MapGet(defaultRoute,
+                        [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")]
+                        [Authorize]
+                        static (context) =>
                         {
                             context.Response.StatusCode = 200;
 
@@ -150,23 +151,21 @@ public sealed class IAMTests
                 ConfigureServices = static services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(
-                        static (_, options) =>
-                        {
-                            // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
-                        });
+                    services.AddUVault(static (_, options) =>
+                    {
+                        // Use `UVault's` Identity & Access Management.
+                        options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
+                    });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, [Authorize] static (context) =>
-                        {
-                            context.Response.StatusCode = 200;
+                    routes.MapGet(defaultRoute, [Authorize] static (context) =>
+                    {
+                        context.Response.StatusCode = 200;
 
-                            return Task.CompletedTask;
-                        });
+                        return Task.CompletedTask;
+                    });
                 },
                 Jwt = JwtValidator.ValidJwt,
                 ExpectedHttpStatusCode = HttpStatusCode.OK,
@@ -181,27 +180,26 @@ public sealed class IAMTests
         private const string jwtSignature = "T7sFpO0XoaJ9JWsu2J1ormK99zs4zIr2s25jjl8RVSw";
         public const string ValidJwt = $"{jwtHeader}.{jwtPayload}.{jwtSignature}";
 
-        public Action<JwtBearerOptions> Options
-            => static options =>
+        public Action<JwtBearerOptions> Options => static options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
 #pragma warning disable CA5404 // "Do not disable token validation checks".
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = false,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
 #pragma warning restore CA5404
-                    ValidateIssuerSigningKey = false,
-                    RequireSignedTokens = false,
+                ValidateIssuerSigningKey = false,
+                RequireSignedTokens = false,
 
-                    // In .NET 8.0, you need to use "JsonWebToken" instead of a "JwtSecurityToken".
+                // In .NET 8.0, you need to use "JsonWebToken" instead of a "JwtSecurityToken".
 #if NET6_0 || NET7_0
-                    SignatureValidator = static (token, _) => new JwtSecurityToken(token),
+                SignatureValidator = static (token, _) => new JwtSecurityToken(token),
 #endif
 #if NET8_0
-                    SignatureValidator = static (token, _) => new Microsoft.IdentityModel.JsonWebTokens.JsonWebToken(token),
+                SignatureValidator = static (token, _) => new Microsoft.IdentityModel.JsonWebTokens.JsonWebToken(token),
 #endif
-                };
             };
+        };
     }
 }

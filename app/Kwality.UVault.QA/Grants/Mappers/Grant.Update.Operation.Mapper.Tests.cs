@@ -75,14 +75,12 @@ public sealed class GrantUpdateOperationMapperTests
     [UsedImplicitly]
     internal sealed class ModelOne
     {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        [UsedImplicitly] public string? Name { get; set; }
     }
 
     [UsedImplicitly]
     internal sealed class ModelTwo
     {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        [UsedImplicitly] public string? Name { get; set; }
     }
 }

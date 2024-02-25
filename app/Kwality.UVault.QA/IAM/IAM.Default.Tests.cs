@@ -80,23 +80,22 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(
-                        (_, options) =>
-                        {
-                            // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(iamOptions => iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
-                        });
+                    services.AddUVault((_, options) =>
+                    {
+                        // Use `UVault's` Identity & Access Management.
+                        options.UseIAM(iamOptions =>
+                            iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
+                    });
                 },
                 ConfigureApp = static app => app.UseUVault(null),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, static context =>
-                        {
-                            context.Response.StatusCode = 200;
+                    routes.MapGet(defaultRoute, static context =>
+                    {
+                        context.Response.StatusCode = 200;
 
-                            return Task.CompletedTask;
-                        });
+                        return Task.CompletedTask;
+                    });
                 },
 
                 // EXPECTATIONS.
@@ -118,18 +117,20 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(
-                        (_, options) =>
-                        {
-                            // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(iamOptions => iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
-                        });
+                    services.AddUVault((_, options) =>
+                    {
+                        // Use `UVault's` Identity & Access Management.
+                        options.UseIAM(iamOptions =>
+                            iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
+                    });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, [Authorize] [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")] static (context) =>
+                    routes.MapGet(defaultRoute,
+                        [Authorize]
+                        [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")]
+                        static (context) =>
                         {
                             context.Response.StatusCode = 200;
 
@@ -154,18 +155,20 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(
-                        (_, options) =>
-                        {
-                            // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(iamOptions => iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
-                        });
+                    services.AddUVault((_, options) =>
+                    {
+                        // Use `UVault's` Identity & Access Management.
+                        options.UseIAM(iamOptions =>
+                            iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
+                    });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")] [Authorize] static (context) =>
+                    routes.MapGet(defaultRoute,
+                        [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")]
+                        [Authorize]
+                        static (context) =>
                         {
                             context.Response.StatusCode = 200;
 
@@ -195,23 +198,22 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(
-                        (_, options) =>
-                        {
-                            // Use `UVault's` Identity & Access Management.
-                            options.UseIAM(iamOptions => iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
-                        });
+                    services.AddUVault((_, options) =>
+                    {
+                        // Use `UVault's` Identity & Access Management.
+                        options.UseIAM(iamOptions =>
+                            iamOptions.UseDefault(jwtSettings.validIssuer, jwtSettings.validAudience));
+                    });
                 },
                 ConfigureApp = static app => app.UseUVault(static options => options.UseIAM()),
                 ConfigureRoutes = static routes =>
                 {
-                    routes.MapGet(
-                        defaultRoute, [Authorize] static (context) =>
-                        {
-                            context.Response.StatusCode = 200;
+                    routes.MapGet(defaultRoute, [Authorize] static (context) =>
+                    {
+                        context.Response.StatusCode = 200;
 
-                            return Task.CompletedTask;
-                        });
+                        return Task.CompletedTask;
+                    });
                 },
                 Jwt = jwtToken,
                 ExpectedHttpStatusCode = HttpStatusCode.OK,

@@ -132,7 +132,7 @@ internal sealed class UserStore<TModel>(
     private async Task<ManagementApiClient> CreateManagementApiClientAsync()
     {
         string managementApiToken = await managementClient.GetTokenAsync(apiConfiguration)
-                                              .ConfigureAwait(false);
+                                                          .ConfigureAwait(false);
 
         return new ManagementApiClient(managementApiToken, apiConfiguration.TokenEndpoint.Authority);
     }

@@ -56,11 +56,15 @@ public sealed class GrantManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) => options.UseGrantManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
+        services.AddUVault(static (_, options) =>
+            options.UseGrantManagement<Model, IntKey>(static options =>
+                options.UseStore<Store>(ServiceLifetime.Singleton)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Singleton && descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Singleton &&
+                                                    descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -69,11 +73,15 @@ public sealed class GrantManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) => options.UseGrantManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
+        services.AddUVault(static (_, options) =>
+            options.UseGrantManagement<Model, IntKey>(static options =>
+                options.UseStore<Store>(ServiceLifetime.Scoped)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Scoped && descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped &&
+                                                    descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -82,11 +90,15 @@ public sealed class GrantManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) => options.UseGrantManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Transient)));
+        services.AddUVault(static (_, options) =>
+            options.UseGrantManagement<Model, IntKey>(static options =>
+                options.UseStore<Store>(ServiceLifetime.Transient)));
 
         // ASSERT.
         services.Should()
-                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) && descriptor.Lifetime == ServiceLifetime.Transient && descriptor.ImplementationType == typeof(Store));
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Transient &&
+                                                    descriptor.ImplementationType == typeof(Store));
     }
 
     [AutoData]
@@ -95,7 +107,8 @@ public sealed class GrantManagementTests
     internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -124,7 +137,8 @@ public sealed class GrantManagementTests
     internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -148,7 +162,8 @@ public sealed class GrantManagementTests
     internal async Task GetAll_FirstPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -180,7 +195,8 @@ public sealed class GrantManagementTests
     internal async Task GetAll_SecondPageWithLessElementsThanTotal_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -212,7 +228,8 @@ public sealed class GrantManagementTests
     internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
                      .ConfigureAwait(false);
@@ -239,7 +256,8 @@ public sealed class GrantManagementTests
     internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         await manager.CreateAsync(model, new CreateOperationMapper())
@@ -257,13 +275,14 @@ public sealed class GrantManagementTests
     internal async Task Update_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
 
         // ACT.
-        model.Scopes = new[] { "newScope", "newScope2", };
+        model.Scopes = new[] { "newScope", "newScope2" };
 
         await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                      .ConfigureAwait(false);
@@ -280,7 +299,8 @@ public sealed class GrantManagementTests
     internal async Task Update_UnknownKey_RaisesException(IntKey key, Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
@@ -298,7 +318,8 @@ public sealed class GrantManagementTests
     internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                   .ConfigureAwait(false);
@@ -319,7 +340,8 @@ public sealed class GrantManagementTests
     internal async Task Delete_UnknownKey_Succeeds(IntKey key)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
+        GrantManager<Model, IntKey> manager
+            = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         // ACT.
         Func<Task> act = () => manager.DeleteByKeyAsync(key);
@@ -358,7 +380,8 @@ public sealed class GrantManagementTests
         {
             if (typeof(TDestination) != typeof(Func<KeyValuePair<IntKey, Model>, bool>))
             {
-                throw new ReadException($"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
+                throw new ReadException(
+                    $"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -379,7 +402,8 @@ public sealed class GrantManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new CreateException($"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new CreateException(
+                    $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
@@ -394,7 +418,8 @@ public sealed class GrantManagementTests
         {
             if (typeof(TDestination) != typeof(TSource))
             {
-                throw new UpdateException($"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
+                throw new UpdateException(
+                    $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
             // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.

@@ -41,8 +41,8 @@ internal sealed class ApplicationTokenManagerFactory
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault(
-            static (_, options) => options.UseApplicationTokenManagement<TToken, TModel, TKey>(null));
+        this.serviceCollection.AddUVault(static (_, options) =>
+            options.UseApplicationTokenManagement<TToken, TModel, TKey>(null));
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<ApplicationTokenManager<TToken>>();
@@ -54,9 +54,8 @@ internal sealed class ApplicationTokenManagerFactory
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault(
-            (_, options)
-                => options.UseApplicationTokenManagement<TToken, TModel, TKey>(applicationTokenManagementOptions));
+        this.serviceCollection.AddUVault((_, options) =>
+            options.UseApplicationTokenManagement<TToken, TModel, TKey>(applicationTokenManagementOptions));
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<ApplicationTokenManager<TToken>>();

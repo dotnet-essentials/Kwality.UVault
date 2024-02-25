@@ -55,7 +55,8 @@ public sealed class Auth0ClientCreateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<CreateException>()
-           .WithMessage($"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(ClientCreateRequest)}`.");
+           .WithMessage(
+               $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(ClientCreateRequest)}`.");
     }
 
     [M2MManagement]
@@ -85,14 +86,12 @@ public sealed class Auth0ClientCreateOperationMapperTests
     [UsedImplicitly]
     internal sealed class ModelOne
     {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        [UsedImplicitly] public string? Name { get; set; }
     }
 
     [UsedImplicitly]
     internal sealed class ModelTwo
     {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        [UsedImplicitly] public string? Name { get; set; }
     }
 }

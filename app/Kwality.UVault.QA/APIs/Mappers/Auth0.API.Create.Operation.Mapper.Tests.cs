@@ -55,7 +55,8 @@ public sealed class Auth0ApiCreateOperationMapperTests
         // ASSERT.
         act.Should()
            .Throw<CreateException>()
-           .WithMessage($"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ResourceServerCreateRequest)}`.");
+           .WithMessage(
+               $"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ResourceServerCreateRequest)}`.");
     }
 
     [ApiManagement]
@@ -85,14 +86,12 @@ public sealed class Auth0ApiCreateOperationMapperTests
     [UsedImplicitly]
     internal sealed class ModelOne
     {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        [UsedImplicitly] public string? Name { get; set; }
     }
 
     [UsedImplicitly]
     internal sealed class ModelTwo
     {
-        [UsedImplicitly]
-        public string? Name { get; set; }
+        [UsedImplicitly] public string? Name { get; set; }
     }
 }
