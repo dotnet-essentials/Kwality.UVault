@@ -1,0 +1,58 @@
+﻿// =====================================================================================================================
+// = LICENSE:       Copyright (c) 2023 Kevin De Coninck
+// =
+// =                Permission is hereby granted, free of charge, to any person
+// =                obtaining a copy of this software and associated documentation
+// =                files (the "Software"), to deal in the Software without
+// =                restriction, including without limitation the rights to use,
+// =                copy, modify, merge, publish, distribute, sublicense, and/or sell
+// =                copies of the Software, and to permit persons to whom the
+// =                Software is furnished to do so, subject to the following
+// =                conditions:
+// =
+// =                The above copyright notice and this permission notice shall be
+// =                included in all copies or substantial portions of the Software.
+// =
+// =                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// =                EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+// =                OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// =                NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+// =                HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// =                WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// =                OTHER DEALINGS IN THE SOFTWARE.
+// =====================================================================================================================
+namespace Kwality.UVault.Users.Auth0.QA.Internal.Factories;
+
+using Kwality.UVault.Core.Extensions;
+using Kwality.UVault.Users.Extensions;
+using Kwality.UVault.Users.Managers;
+using Kwality.UVault.Users.Models;
+using Kwality.UVault.Users.Options;
+
+using Microsoft.Extensions.DependencyInjection;
+
+internal sealed class UserManagerFactory
+{
+    private readonly IServiceCollection serviceCollection = new ServiceCollection();
+
+    public UserManager<TModel, TKey> Create<TModel, TKey>()
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        this.serviceCollection.AddUVault(static (_, options) => options.UseUserManagement<TModel, TKey>());
+
+        return this.serviceCollection.BuildServiceProvider()
+                   .GetRequiredService<UserManager<TModel, TKey>>();
+    }
+
+    public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? action)
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        this.serviceCollection.AddUVault((_, options) => options.UseUserManagement(action));
+
+        return this.serviceCollection.BuildServiceProvider()
+                   .GetRequiredService<UserManager<TModel, TKey>>();
+    }
+}

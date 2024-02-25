@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.18.1" />
+    <PackageReference Include="AutoFixture.AutoMoq" Version="4.18.1" />
+    <PackageReference Include="AutoFixture.Xunit2" Version="4.18.1" />
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.2" Condition="'$(TargetFramework)' == 'net8.0'" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.16" Condition="'$(TargetFramework)' == 'net7.0'" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.27" Condition="'$(TargetFramework)' == 'net6.0'" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+    <PackageReference Include="xunit" Version="2.7.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kwality.UVault.APIs.Auth0\Kwality.UVault.APIs.Auth0.csproj" />
+    <ProjectReference Include="..\Kwality.UVault.Core.Auth0\Kwality.UVault.Core.Auth0.csproj" />
+    <ProjectReference Include="..\Kwality.UVault.Core\Kwality.UVault.Core.csproj" />
+    <ProjectReference Include="..\Kwality.UVault.Grants.Auth0\Kwality.UVault.Grants.Auth0.csproj" />
+    <ProjectReference Include="..\Kwality.UVault.IAM\Kwality.UVault.IAM.csproj" />
+    <ProjectReference Include="..\Kwality.UVault.M2M.Auth0\Kwality.UVault.M2M.Auth0.csproj" />
+    <ProjectReference Include="..\Kwality.UVault.QA.Common\Kwality.UVault.QA.Common.csproj" />
+    <ProjectReference Include="..\Kwality.UVault.Users.Auth0\Kwality.UVault.Users.Auth0.csproj" />
+  </ItemGroup>
+
+</Project>

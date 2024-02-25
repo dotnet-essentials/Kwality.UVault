@@ -28,12 +28,8 @@
 /app/.idea/
 
 # Output folder(s).
-/app/Kwality.UVault/bin/
-/app/Kwality.UVault/obj/
-/app/Kwality.UVault.Auth0/bin/
-/app/Kwality.UVault.Auth0/obj/
-/app/Kwality.UVault.QA/bin/
-/app/Kwality.UVault.QA/obj/
+/app/**/bin/
+/app/**/obj/
 
 # Output folder (documentation).
 /docs/_build/
