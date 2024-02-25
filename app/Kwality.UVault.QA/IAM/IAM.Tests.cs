@@ -24,8 +24,23 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.IAM;
 
-using global::System.Diagnostics.CodeAnalysis;
+#region "Imports when using .NET 6.0 / 7.0"
+
+#if NET6_0 || NET7_0
 using global::System.IdentityModel.Tokens.Jwt;
+#endif
+
+#endregion
+
+#region "Imports when using .NET 8.0"
+
+#if NET8_0
+using Microsoft.IdentityModel.JsonWebTokens;
+#endif
+
+#endregion
+
+using global::System.Diagnostics.CodeAnalysis;
 using global::System.Net;
 
 using Kwality.UVault.Extensions;
@@ -69,7 +84,7 @@ public sealed class IAMTests
                 // EXPECTATIONS.
                 ExpectedHttpStatusCode = HttpStatusCode.OK,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     [IAM]
@@ -103,7 +118,7 @@ public sealed class IAMTests
                 },
                 ExpectedHttpStatusCode = HttpStatusCode.Unauthorized,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     [IAM]
@@ -138,7 +153,7 @@ public sealed class IAMTests
                 Jwt = string.Empty,
                 ExpectedHttpStatusCode = HttpStatusCode.Unauthorized,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     [IAM]
@@ -170,7 +185,7 @@ public sealed class IAMTests
                 Jwt = JwtValidator.ValidJwt,
                 ExpectedHttpStatusCode = HttpStatusCode.OK,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     private sealed class JwtValidator : IJwtValidator
@@ -180,26 +195,28 @@ public sealed class IAMTests
         private const string jwtSignature = "T7sFpO0XoaJ9JWsu2J1ormK99zs4zIr2s25jjl8RVSw";
         public const string ValidJwt = $"{jwtHeader}.{jwtPayload}.{jwtSignature}";
 
-        public Action<JwtBearerOptions> Options => static options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
+        public Action<JwtBearerOptions> Options =>
+            static options =>
             {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
 #pragma warning disable CA5404 // "Do not disable token validation checks".
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = false,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
 #pragma warning restore CA5404
-                ValidateIssuerSigningKey = false,
-                RequireSignedTokens = false,
+                    ValidateIssuerSigningKey = false,
+                    RequireSignedTokens = false,
 
-                // In .NET 8.0, you need to use "JsonWebToken" instead of a "JwtSecurityToken".
+                    // In .NET 8.0, you need to use "JsonWebToken" instead of a "JwtSecurityToken".
 #if NET6_0 || NET7_0
-                SignatureValidator = static (token, _) => new JwtSecurityToken(token),
+                    SignatureValidator = static (token, _) => new JwtSecurityToken(token),
 #endif
 #if NET8_0
-                SignatureValidator = static (token, _) => new Microsoft.IdentityModel.JsonWebTokens.JsonWebToken(token),
+                    // ReSharper disable Cleanup
+                    SignatureValidator = static (token, _) => new JsonWebToken(token),
 #endif
+                };
             };
-        };
     }
 }

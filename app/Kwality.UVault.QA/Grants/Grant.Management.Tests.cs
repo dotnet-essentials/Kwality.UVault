@@ -111,11 +111,11 @@ public sealed class GrantManagementTests
             = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(0, 10)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -141,11 +141,11 @@ public sealed class GrantManagementTests
             = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -166,14 +166,14 @@ public sealed class GrantManagementTests
             = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(0, 1)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -199,14 +199,14 @@ public sealed class GrantManagementTests
             = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -232,13 +232,13 @@ public sealed class GrantManagementTests
             = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Scopes))
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.ResultSet.Count()
@@ -246,8 +246,8 @@ public sealed class GrantManagementTests
               .Be(1);
 
         (await manager.GetAllAsync(0, 100)
-                      .ConfigureAwait(false)).ResultSet.Should()
-                                             .ContainEquivalentOf(modelTwo);
+                      .ConfigureAwait(true)).ResultSet.Should()
+                                            .ContainEquivalentOf(modelTwo);
     }
 
     [AutoData]
@@ -261,12 +261,12 @@ public sealed class GrantManagementTests
 
         // ACT.
         await manager.CreateAsync(model, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetAllAsync(0, 100)
-                      .ConfigureAwait(false)).ResultSet.Should()
-                                             .ContainEquivalentOf(model);
+                      .ConfigureAwait(true)).ResultSet.Should()
+                                            .ContainEquivalentOf(model);
     }
 
     [AutoData]
@@ -279,18 +279,18 @@ public sealed class GrantManagementTests
             = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         model.Scopes = new[] { "newScope", "newScope2" };
 
         await manager.UpdateAsync(key, model, new UpdateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetAllAsync(0, 100)
-                      .ConfigureAwait(false)).ResultSet.Should()
-                                             .ContainEquivalentOf(model);
+                      .ConfigureAwait(true)).ResultSet.Should()
+                                            .ContainEquivalentOf(model);
     }
 
     [AutoData]
@@ -309,7 +309,7 @@ public sealed class GrantManagementTests
         await act.Should()
                  .ThrowAsync<UpdateException>()
                  .WithMessage($"Custom: Failed to update client grant: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -322,16 +322,16 @@ public sealed class GrantManagementTests
             = new GrantManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetAllAsync(0, 100)
-                      .ConfigureAwait(false)).ResultSet.Should()
-                                             .BeEmpty();
+                      .ConfigureAwait(true)).ResultSet.Should()
+                                            .BeEmpty();
     }
 
     [AutoData]
@@ -349,32 +349,19 @@ public sealed class GrantManagementTests
         // ASSERT.
         await act.Should()
                  .NotThrowAsync()
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Model : GrantModel<IntKey>
+    internal sealed class Model(IntKey key, IEnumerable<string> scopes) : GrantModel<IntKey>(key)
 #pragma warning restore CA1812
     {
-        public Model(IntKey key, IEnumerable<string> scopes)
-            : base(key)
-        {
-            this.Scopes = scopes;
-        }
-
-        public IEnumerable<string> Scopes { get; set; }
+        public IEnumerable<string> Scopes { get; set; } = scopes;
     }
 
-    private sealed class OperationFilter : IGrantFilter
+    private sealed class OperationFilter(IEnumerable<string> scopes) : IGrantFilter
     {
-        private readonly IEnumerable<string> scopes;
-
-        public OperationFilter(IEnumerable<string> scopes)
-        {
-            this.scopes = scopes;
-        }
-
         public TDestination Create<TDestination>()
             where TDestination : class
         {
@@ -390,7 +377,7 @@ public sealed class GrantManagementTests
             // The filter which is filters out data in the store.
             bool Filter(KeyValuePair<IntKey, Model> kvp)
             {
-                return Equals(kvp.Value.Scopes, this.scopes);
+                return Equals(kvp.Value.Scopes, scopes);
             }
         }
     }
@@ -471,7 +458,7 @@ public sealed class GrantManagementTests
             this.collection.Remove(key);
 
             await this.CreateAsync(model, mapper)
-                      .ConfigureAwait(false);
+                      .ConfigureAwait(true);
         }
 
         public Task DeleteByKeyAsync(IntKey key)

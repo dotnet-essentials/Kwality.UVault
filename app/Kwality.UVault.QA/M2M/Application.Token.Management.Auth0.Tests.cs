@@ -72,7 +72,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
 
         Model application = await applicationManager
                                   .GetByKeyAsync(new StringKey(Environment.ReadString("AUTH0_CLIENT_ID")))
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -82,7 +82,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
                                                              application.ClientSecret ?? string.Empty,
                                                              Environment.ReadString("AUTH0_AUDIENCE"),
                                                              "client_credentials")
-                                                         .ConfigureAwait(false);
+                                                         .ConfigureAwait(true);
 
         // ASSERT.
         result.Token.Should()
@@ -120,7 +120,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
         Model application = await applicationManager
                                   .GetByKeyAsync(
                                       new StringKey(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -133,7 +133,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage("Failed to retrieve an access token.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [M2MTokenManagement]
@@ -142,6 +142,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
     [InlineData("clientId", null, "audience", "grantType")]
     [InlineData("clientId", "clientSecret", null, "grantType")]
     [InlineData("clientId", "clientSecret", "audience", null)]
+    [SuppressMessage("Usage", "xUnit1012:Null should only be used for nullable parameters")]
     internal async Task GetToken_InvalidArguments_Fails(
         string clientId, string clientSecret, string audience, string grantType)
     {
@@ -153,16 +154,15 @@ public sealed class ApplicationTokenManagementAuth0Tests
                 options.UseAuth0Store<TokenModel, TokenModelMapper>(configuration));
 
         // ACT.
-        Func<Task<TokenModel>> act = async () => await applicationTokenManager
-                                                       .GetAccessTokenAsync(clientId, clientSecret, audience, grantType)
-                                                       .ConfigureAwait(false);
+        Func<Task<TokenModel>> act = () =>
+            applicationTokenManager.GetAccessTokenAsync(clientId, clientSecret, audience, grantType);
 
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage("Failed to retrieve an access token.")
                  .WithInnerException(typeof(ArgumentNullException))
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     private static ApiConfiguration GetApiConfiguration()
@@ -195,8 +195,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
         {
             return new Model(new StringKey(client.ClientId))
             {
-                Name = client.Name,
-                ClientSecret = client.ClientSecret,
+                Name = client.Name, ClientSecret = client.ClientSecret,
             };
         }
     }

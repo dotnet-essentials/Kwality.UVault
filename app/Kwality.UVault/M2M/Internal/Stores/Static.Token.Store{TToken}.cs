@@ -34,10 +34,7 @@ internal sealed class StaticTokenStore<TToken> : IApplicationTokenStore<TToken>
     {
         var token = new TToken
         {
-            Token = GenerateToken(),
-            ExpiresIn = 86400,
-            TokenType = "Bearer",
-            Scope = string.Empty,
+            Token = GenerateToken(), ExpiresIn = 86400, TokenType = "Bearer", Scope = string.Empty,
         };
 
         return Task.FromResult(token);

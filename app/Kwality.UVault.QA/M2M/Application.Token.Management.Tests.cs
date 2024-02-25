@@ -110,7 +110,7 @@ public sealed class ApplicationTokenManagementTests
 
         // ACT.
         Model result = await manager.GetAccessTokenAsync(clientId, clientSecret, audience, grantType)
-                                    .ConfigureAwait(false);
+                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.Token.Should()

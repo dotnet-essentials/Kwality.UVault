@@ -111,11 +111,11 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(0, 10)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -142,11 +142,11 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(model, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -167,14 +167,14 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(0, 1)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -201,14 +201,14 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
-                                                    .ConfigureAwait(false);
+                                                    .ConfigureAwait(true);
 
         // ASSERT.
         result.HasNextPage.Should()
@@ -235,14 +235,14 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         await manager.CreateAsync(modelOne, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         await manager.CreateAsync(modelTwo, new CreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         PagedResultSet<Model> result = await manager
                                              .GetAllAsync(0, 10, new OperationFilter(modelTwo.Name ?? string.Empty))
-                                             .ConfigureAwait(false);
+                                             .ConfigureAwait(true);
 
         // ASSERT.
         result.ResultSet.Count()
@@ -271,7 +271,7 @@ public sealed class ApplicationManagementTests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Custom: Failed to read application: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -285,12 +285,12 @@ public sealed class ApplicationManagementTests
 
         // ACT.
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetByKeyAsync(key)
-                      .ConfigureAwait(false)).Should()
-                                             .BeEquivalentTo(model);
+                      .ConfigureAwait(true)).Should()
+                                            .BeEquivalentTo(model);
     }
 
     [AutoData]
@@ -303,18 +303,18 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         model.Name = "UVault (Sample application)";
 
         await manager.UpdateAsync(key, model, new UpdateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetByKeyAsync(key)
-                      .ConfigureAwait(false)).Should()
-                                             .BeEquivalentTo(model);
+                      .ConfigureAwait(true)).Should()
+                                            .BeEquivalentTo(model);
     }
 
     [AutoData]
@@ -333,7 +333,7 @@ public sealed class ApplicationManagementTests
         await act.Should()
                  .ThrowAsync<UpdateException>()
                  .WithMessage($"Custom: Failed to update application: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -346,11 +346,11 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -358,7 +358,7 @@ public sealed class ApplicationManagementTests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Custom: Failed to read application: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -376,7 +376,7 @@ public sealed class ApplicationManagementTests
         // ASSERT.
         await act.Should()
                  .NotThrowAsync()
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -395,7 +395,7 @@ public sealed class ApplicationManagementTests
         await act.Should()
                  .ThrowAsync<UpdateException>()
                  .WithMessage($"Custom: Failed to update application: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -408,17 +408,17 @@ public sealed class ApplicationManagementTests
             = new ApplicationManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         string? initialClientSecret = model.ClientSecret;
 
         // ACT.
         await manager.RotateClientSecretAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         Model application = await manager.GetByKeyAsync(key)
-                                         .ConfigureAwait(false);
+                                         .ConfigureAwait(true);
 
         initialClientSecret.Should()
                            .NotMatch(application.ClientSecret);
@@ -436,15 +436,8 @@ public sealed class ApplicationManagementTests
         }
     }
 
-    private sealed class OperationFilter : IApplicationFilter
+    private sealed class OperationFilter(string name) : IApplicationFilter
     {
-        private readonly string name;
-
-        public OperationFilter(string name)
-        {
-            this.name = name;
-        }
-
         public TDestination Create<TDestination>()
             where TDestination : class
         {
@@ -460,7 +453,7 @@ public sealed class ApplicationManagementTests
             // The filter which is filters out data in the store.
             bool Filter(KeyValuePair<IntKey, Model> kvp)
             {
-                return kvp.Value.Name == this.name;
+                return kvp.Value.Name == name;
             }
         }
     }

@@ -63,7 +63,7 @@ internal sealed class GrantStore<TModel>(
                                                               new PaginationInfo(pageIndex, pageSize, true))
                                                           .ConfigureAwait(false);
 
-            IList<TModel> models = clientGrants.Select(client => modelMapper.Map(client))
+            IList<TModel> models = clientGrants.Select(modelMapper.Map)
                                                .ToList();
 
             return new PagedResultSet<TModel>(models, clientGrants.Paging.Total > (pageIndex + 1) * pageSize);

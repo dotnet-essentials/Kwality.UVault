@@ -25,7 +25,6 @@
 namespace Kwality.UVault.Exceptions;
 
 using global::System.Diagnostics.CodeAnalysis;
-using global::System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
@@ -42,11 +41,6 @@ public sealed class CreateException : Exception
 
     public CreateException(string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    private CreateException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
     {
     }
 }

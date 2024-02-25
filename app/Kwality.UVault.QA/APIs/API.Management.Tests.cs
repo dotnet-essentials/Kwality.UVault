@@ -114,7 +114,7 @@ public sealed class ApiManagementTests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Custom: Failed to read API: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -127,12 +127,12 @@ public sealed class ApiManagementTests
             = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetByKeyAsync(key)
-                      .ConfigureAwait(false)).Should()
-                                             .BeEquivalentTo(model);
+                      .ConfigureAwait(true)).Should()
+                                            .BeEquivalentTo(model);
     }
 
     [AutoData]
@@ -145,11 +145,11 @@ public sealed class ApiManagementTests
             = new ApiManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         IntKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -157,7 +157,7 @@ public sealed class ApiManagementTests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Custom: Failed to read API: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -175,18 +175,14 @@ public sealed class ApiManagementTests
         // ASSERT.
         await act.Should()
                  .NotThrowAsync()
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Model : ApiModel<IntKey>
+    internal sealed class Model(IntKey name) : ApiModel<IntKey>(name)
 #pragma warning restore CA1812
     {
-        public Model(IntKey name)
-            : base(name)
-        {
-        }
     }
 
     private sealed class CreateOperationMapper : IApiOperationMapper

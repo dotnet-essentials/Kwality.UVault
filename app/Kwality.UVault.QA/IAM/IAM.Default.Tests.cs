@@ -101,7 +101,7 @@ public sealed class IAMDefaultTests
                 // EXPECTATIONS.
                 ExpectedHttpStatusCode = HttpStatusCode.OK,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     [IAM]
@@ -139,7 +139,7 @@ public sealed class IAMDefaultTests
                 },
                 ExpectedHttpStatusCode = HttpStatusCode.Unauthorized,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     [IAM]
@@ -178,7 +178,7 @@ public sealed class IAMDefaultTests
                 Jwt = string.Empty,
                 ExpectedHttpStatusCode = HttpStatusCode.Unauthorized,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     [IAM]
@@ -190,7 +190,7 @@ public sealed class IAMDefaultTests
         (string validIssuer, string validAudience) jwtSettings = GetJwtSettings();
 
         string jwtToken = await Auth0AuthenticationFactory.RequestAsync()
-                                                          .ConfigureAwait(false);
+                                                          .ConfigureAwait(true);
 
         // ACT / ASSERT.
         await new HttpRequestValidator
@@ -218,7 +218,7 @@ public sealed class IAMDefaultTests
                 Jwt = jwtToken,
                 ExpectedHttpStatusCode = HttpStatusCode.OK,
             }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(false);
+             .ConfigureAwait(true);
     }
 
     [IAM]

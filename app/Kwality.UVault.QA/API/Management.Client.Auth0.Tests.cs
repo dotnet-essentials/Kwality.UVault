@@ -64,13 +64,13 @@ public sealed class Auth0ManagementClientTests
 
         // ACT.
         Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                           .ConfigureAwait(false);
+                                                           .ConfigureAwait(true);
 
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
                  .WithMessage("Failed to retrieve an Auth0 token.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [Auth0]
@@ -80,27 +80,24 @@ public sealed class Auth0ManagementClientTests
         [Frozen] Mock<HttpMessageHandler> messageHandler, HttpClient httpClient, string apiToken)
     {
         // MOCK SETUP.
-        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"" + apiToken + "\"}"),
-        };
-
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessage.StatusCode = HttpStatusCode.OK;
+        managementApiTokenHttpResponseMessage.Content = new StringContent("{\"access_token\":\"" + apiToken + "\"}");
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
 #pragma warning disable CS8625
         var managementClient = new ManagementClient(httpClient, null);
 #pragma warning restore CS8625
 
         await managementClient.GetTokenAsync(this.apiConfiguration)
-                              .ConfigureAwait(false);
+                              .ConfigureAwait(true);
 
         Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                           .ConfigureAwait(false);
+                                                           .ConfigureAwait(true);
 
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ArgumentNullException>()
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [Auth0]
@@ -112,18 +109,14 @@ public sealed class Auth0ManagementClientTests
         // MOCK SETUP.
         const HttpStatusCode statusCode = HttpStatusCode.BadRequest;
         var content = string.Empty;
-
-        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
-        {
-            StatusCode = statusCode,
-            Content = new StringContent(content),
-        };
-
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessage.StatusCode = statusCode;
+        managementApiTokenHttpResponseMessage.Content = new StringContent(content);
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
 
         // ACT.
         Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                           .ConfigureAwait(false);
+                                                           .ConfigureAwait(true);
 
         // ASSERT.
         await act.Should()
@@ -132,7 +125,7 @@ public sealed class Auth0ManagementClientTests
                  .WithInnerException<ManagementApiException, TokenRequestException>()
                  .WithMessage("BadRequest")
                  .Where(ex => ex.StatusCode == statusCode && ex.ResponseMessage == content)
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [Auth0]
@@ -143,18 +136,14 @@ public sealed class Auth0ManagementClientTests
     {
         // MOCK SETUP.
         const HttpStatusCode statusCode = HttpStatusCode.Unauthorized;
-
-        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
-        {
-            StatusCode = statusCode,
-            Content = new StringContent(response),
-        };
-
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessage.StatusCode = statusCode;
+        managementApiTokenHttpResponseMessage.Content = new StringContent(response);
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
 
         // ACT.
         Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                           .ConfigureAwait(false);
+                                                           .ConfigureAwait(true);
 
         // ASSERT.
         await act.Should()
@@ -163,7 +152,7 @@ public sealed class Auth0ManagementClientTests
                  .WithInnerException<ManagementApiException, TokenRequestException>()
                  .WithMessage($"Unauthorized: {response}")
                  .Where(ex => ex.StatusCode == statusCode && ex.ResponseMessage == response)
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [Auth0]
@@ -173,23 +162,20 @@ public sealed class Auth0ManagementClientTests
         [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
-        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("Invalid data."),
-        };
-
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessage.StatusCode = HttpStatusCode.OK;
+        managementApiTokenHttpResponseMessage.Content = new StringContent("Invalid data.");
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
 
         // ACT.
         Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                           .ConfigureAwait(false);
+                                                           .ConfigureAwait(true);
 
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
                  .WithMessage("Failed to retrieve an Auth0 token. Reason: Invalid HTTP response.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [Auth0]
@@ -199,23 +185,20 @@ public sealed class Auth0ManagementClientTests
         [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
-        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{}"),
-        };
-
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessage.StatusCode = HttpStatusCode.OK;
+        managementApiTokenHttpResponseMessage.Content = new StringContent("{}");
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
 
         // ACT.
         Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                           .ConfigureAwait(false);
+                                                           .ConfigureAwait(true);
 
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
                  .WithMessage("The `API Management Token / Access Token` is `null`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [Auth0]
@@ -225,23 +208,20 @@ public sealed class Auth0ManagementClientTests
         [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient)
     {
         // MOCK SETUP.
-        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"\"}"),
-        };
-
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessage.StatusCode = HttpStatusCode.OK;
+        managementApiTokenHttpResponseMessage.Content = new StringContent("{\"access_token\":\"\"}");
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
 
         // ACT.
         Func<Task> act = async () => await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                           .ConfigureAwait(false);
+                                                           .ConfigureAwait(true);
 
         // ASSERT.
         await act.Should()
                  .ThrowAsync<ManagementApiException>()
                  .WithMessage("The `API Management Token / Access Token` is `null`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [Auth0]
@@ -251,17 +231,14 @@ public sealed class Auth0ManagementClientTests
         [Frozen] Mock<HttpMessageHandler> messageHandler, ManagementClient managementClient, string apiToken)
     {
         // MOCK SETUP.
-        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"" + apiToken + "\"}"),
-        };
-
+        using var managementApiTokenHttpResponseMessage = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessage.StatusCode = HttpStatusCode.OK;
+        managementApiTokenHttpResponseMessage.Content = new StringContent("{\"access_token\":\"" + apiToken + "\"}");
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessage);
 
         // ACT.
         string result = await managementClient.GetTokenAsync(this.apiConfiguration)
-                                              .ConfigureAwait(false);
+                                              .ConfigureAwait(true);
 
         // ASSERT.
         result.Should()
@@ -279,30 +256,30 @@ public sealed class Auth0ManagementClientTests
         dateTimeProvider.Setup(static x => x.Now)
                         .Returns(DateTime.Now);
 
-        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}"),
-        };
+        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;
+
+        managementApiTokenHttpResponseMessageOne.Content
+            = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}");
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageOne);
 
         // ACT.
         string resultOne = await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                 .ConfigureAwait(false);
+                                                 .ConfigureAwait(true);
 
         // MOCK SETUP.
-        using var managementApiTokenHttpResponseMessageTwo = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"Token 2\",\"expires_in\": 86400}"),
-        };
+        using var managementApiTokenHttpResponseMessageTwo = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessageTwo.StatusCode = HttpStatusCode.OK;
+
+        managementApiTokenHttpResponseMessageTwo.Content
+            = new StringContent("{\"access_token\":\"Token 2\",\"expires_in\": 86400}");
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageTwo);
 
         // ACT.
         string resultTwo = await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                 .ConfigureAwait(false);
+                                                 .ConfigureAwait(true);
 
         // ASSERT.
         resultOne.Should()
@@ -320,30 +297,30 @@ public sealed class Auth0ManagementClientTests
         dateTimeProvider.Setup(static x => x.Now)
                         .Returns(DateTime.Now.AddHours(24));
 
-        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}"),
-        };
+        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;
+
+        managementApiTokenHttpResponseMessageOne.Content
+            = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}");
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageOne);
 
         // ACT.
         string resultOne = await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                 .ConfigureAwait(false);
+                                                 .ConfigureAwait(true);
 
         // MOCK SETUP.
-        using var managementApiTokenHttpResponseMessageTwo = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"Token 2\",\"expires_in\": 86400}"),
-        };
+        using var managementApiTokenHttpResponseMessageTwo = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessageTwo.StatusCode = HttpStatusCode.OK;
+
+        managementApiTokenHttpResponseMessageTwo.Content
+            = new StringContent("{\"access_token\":\"Token 2\",\"expires_in\": 86400}");
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageTwo);
 
         // ACT.
         string resultTwo = await managementClient.GetTokenAsync(this.apiConfiguration)
-                                                 .ConfigureAwait(false);
+                                                 .ConfigureAwait(true);
 
         // ASSERT.
         resultOne.Should()
@@ -361,11 +338,11 @@ public sealed class Auth0ManagementClientTests
         dateTimeProvider.Setup(static x => x.Now)
                         .Returns(DateTime.Now);
 
-        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage
-        {
-            StatusCode = HttpStatusCode.OK,
-            Content = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}"),
-        };
+        using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
+        managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;
+
+        managementApiTokenHttpResponseMessageOne.Content
+            = new StringContent("{\"access_token\":\"Token 1\",\"expires_in\": 86400}");
 
         messageHandler.SetupSendAsyncResponse(managementApiTokenHttpResponseMessageOne);
 
@@ -374,7 +351,7 @@ public sealed class Auth0ManagementClientTests
                                                               this.apiConfiguration.ClientId,
                                                               this.apiConfiguration.ClientSecret,
                                                               this.apiConfiguration.Audience, "client_credentials")
-                                                          .ConfigureAwait(false);
+                                                          .ConfigureAwait(true);
 
         // ASSERT.
         result.AccessToken.Should()
@@ -392,22 +369,16 @@ public sealed class Auth0ManagementClientTests
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    private sealed class AutoDomainDataAttribute : AutoDataAttribute
+    private sealed class AutoDomainDataAttribute() : AutoDataAttribute(static () =>
     {
-        public AutoDomainDataAttribute()
-            : base(static () =>
-            {
-                var fixture = new Fixture();
-                fixture.Customize(new AutoMoqCustomization());
+        var fixture = new Fixture();
+        fixture.Customize(new AutoMoqCustomization());
 
-                fixture.Customize<HttpClient>(static composer => composer
-                                                                 .FromFactory(static (HttpMessageHandler handler) =>
-                                                                     new HttpClient(handler))
-                                                                 .OmitAutoProperties());
+        fixture.Customize<HttpClient>(static composer => composer
+                                                         .FromFactory(static (HttpMessageHandler handler) =>
+                                                             new HttpClient(handler))
+                                                         .OmitAutoProperties());
 
-                return fixture;
-            })
-        {
-        }
-    }
+        return fixture;
+    });
 }

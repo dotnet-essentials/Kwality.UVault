@@ -25,7 +25,6 @@
 namespace Kwality.UVault.Auth0.Exceptions;
 
 using global::System.Diagnostics.CodeAnalysis;
-using global::System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
@@ -42,11 +41,6 @@ public sealed class ManagementApiException : Exception
 
     public ManagementApiException(string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    private ManagementApiException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
     {
     }
 }

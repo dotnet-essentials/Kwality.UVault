@@ -26,7 +26,6 @@ namespace Kwality.UVault.Auth0.Exceptions;
 
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Net;
-using global::System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
@@ -51,11 +50,6 @@ public sealed class TokenRequestException : Exception
     {
         this.StatusCode = statusCode;
         this.ResponseMessage = responseMessage;
-    }
-
-    private TokenRequestException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
-    {
     }
 
     public HttpStatusCode StatusCode { get; }

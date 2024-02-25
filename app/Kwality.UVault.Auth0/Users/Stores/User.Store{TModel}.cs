@@ -73,7 +73,7 @@ internal sealed class UserStore<TModel>(
         IList<User>? users = await apiClient.Users.GetUsersByEmailAsync(email)
                                             .ConfigureAwait(false);
 
-        return users.Select(user => modelMapper.Map(user));
+        return users.Select(modelMapper.Map);
     }
 
     // Stryker disable once all

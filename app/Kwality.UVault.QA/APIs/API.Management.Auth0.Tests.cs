@@ -74,7 +74,7 @@ public sealed class ApiManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Failed to read API: `{key}`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoDomainData]
@@ -99,15 +99,15 @@ public sealed class ApiManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             (await manager.GetByKeyAsync(key)
-                          .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model);
+                          .ConfigureAwait(true)).Should()
+                                                .BeEquivalentTo(model);
         }
         finally
         {
@@ -118,7 +118,7 @@ public sealed class ApiManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -141,7 +141,7 @@ public sealed class ApiManagementAuth0Tests
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -151,7 +151,7 @@ public sealed class ApiManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Failed to read API: `{key}`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoDomainData]
@@ -171,14 +171,14 @@ public sealed class ApiManagementAuth0Tests
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
         StringKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                     .ConfigureAwait(false);
+                                     .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -188,7 +188,7 @@ public sealed class ApiManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Failed to read API: `{key}`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     private static ApiConfiguration GetApiConfiguration()
@@ -198,13 +198,7 @@ public sealed class ApiManagementAuth0Tests
             Environment.ReadString("AUTH0_AUDIENCE"));
     }
 
-    internal sealed class Model : ApiModel
-    {
-        public Model(StringKey name)
-            : base(name)
-        {
-        }
-    }
+    internal sealed class Model(StringKey name) : ApiModel(name);
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
@@ -224,10 +218,7 @@ public sealed class ApiManagementAuth0Tests
             if (source is Model model)
             {
                 // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-                return new ResourceServerCreateRequest
-                {
-                    Identifier = model.Key.Value,
-                };
+                return new ResourceServerCreateRequest { Identifier = model.Key.Value };
             }
 
             throw new CreateException($"Invalid {nameof(IApiOperationMapper)}: Source is NOT `{nameof(Model)}`.");
@@ -235,19 +226,14 @@ public sealed class ApiManagementAuth0Tests
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    private sealed class AutoDomainDataAttribute : AutoDataAttribute
+    private sealed class AutoDomainDataAttribute() : AutoDataAttribute(static () =>
     {
-        public AutoDomainDataAttribute()
-            : base(static () =>
-            {
-                var fixture = new Fixture();
+        var fixture = new Fixture();
+        fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
 
-                // Customize AutoFixture.
-                fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
-
-                return fixture;
-            })
-        {
-        }
+        return fixture;
+    })
+    {
+        // Customize AutoFixture.
     }
 }

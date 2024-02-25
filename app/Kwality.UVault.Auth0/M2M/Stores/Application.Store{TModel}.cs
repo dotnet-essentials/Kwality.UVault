@@ -62,7 +62,7 @@ internal sealed class ApplicationStore<TModel>(
                                                     new PaginationInfo(pageIndex, pageSize, true))
                                                 .ConfigureAwait(false);
 
-            IList<TModel> models = clients.Select(client => modelMapper.Map(client))
+            IList<TModel> models = clients.Select(modelMapper.Map)
                                           .ToList();
 
             return new PagedResultSet<TModel>(models, clients.Paging.Total > (pageIndex + 1) * pageSize);

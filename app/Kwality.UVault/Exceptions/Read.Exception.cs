@@ -25,7 +25,6 @@
 namespace Kwality.UVault.Exceptions;
 
 using global::System.Diagnostics.CodeAnalysis;
-using global::System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
@@ -42,11 +41,6 @@ public sealed class ReadException : Exception
 
     public ReadException(string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    private ReadException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
     {
     }
 }

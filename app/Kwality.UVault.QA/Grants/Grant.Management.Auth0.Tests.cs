@@ -76,14 +76,14 @@ public sealed class GrantManagementAuth0Tests
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
                                        Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 3)
-                                                        .ConfigureAwait(false);
+                                                        .ConfigureAwait(true);
 
             // ASSERT.
             result.HasNextPage.Should()
@@ -108,7 +108,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -136,14 +136,14 @@ public sealed class GrantManagementAuth0Tests
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
                                        Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
-                                                        .ConfigureAwait(false);
+                                                        .ConfigureAwait(true);
 
             // ASSERT.
             result.HasNextPage.Should()
@@ -162,7 +162,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -191,19 +191,19 @@ public sealed class GrantManagementAuth0Tests
             keyOne = await manager.CreateAsync(modelOne,
                                       new CreateOperationMapper(
                                           Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
             keyTwo = await manager.CreateAsync(modelTwo,
                                       new CreateOperationMapper(
                                           Environment.ReadString("AUTH0_TEST_APPLICATION_2_CLIENT_ID")))
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
-                                                        .ConfigureAwait(false);
+                                                        .ConfigureAwait(true);
 
             // ASSERT.
             result.HasNextPage.Should()
@@ -227,7 +227,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(keyOne)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
 
             if (keyTwo != null)
@@ -236,7 +236,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(keyTwo)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -265,19 +265,19 @@ public sealed class GrantManagementAuth0Tests
             keyOne = await manager.CreateAsync(modelOne,
                                       new CreateOperationMapper(
                                           Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
             keyTwo = await manager.CreateAsync(modelTwo,
                                       new CreateOperationMapper(
                                           Environment.ReadString("AUTH0_TEST_APPLICATION_2_CLIENT_ID")))
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Audience))
-                                                        .ConfigureAwait(false);
+                                                        .ConfigureAwait(true);
 
             // ASSERT.
             result.ResultSet.Count()
@@ -299,7 +299,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(keyOne)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
 
             if (keyTwo != null)
@@ -308,7 +308,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(keyTwo)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -337,15 +337,15 @@ public sealed class GrantManagementAuth0Tests
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
                                        Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             (await manager.GetAllAsync(0, 100)
-                          .ConfigureAwait(false)).ResultSet.Should()
-                                                 .ContainEquivalentOf(model);
+                          .ConfigureAwait(true)).ResultSet.Should()
+                                                .ContainEquivalentOf(model);
         }
         finally
         {
@@ -356,7 +356,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -384,7 +384,7 @@ public sealed class GrantManagementAuth0Tests
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
                                        Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ACT.
             model.Scopes = new[] { "read:authentication_methods" };
@@ -393,14 +393,14 @@ public sealed class GrantManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
-                         .ConfigureAwait(false);
+                         .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             (await manager.GetAllAsync(0, 100)
-                          .ConfigureAwait(false)).ResultSet.Should()
-                                                 .ContainEquivalentOf(model);
+                          .ConfigureAwait(true)).ResultSet.Should()
+                                                .ContainEquivalentOf(model);
         }
         finally
         {
@@ -411,7 +411,7 @@ public sealed class GrantManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -438,7 +438,7 @@ public sealed class GrantManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<UpdateException>()
                  .WithMessage($"Failed to update client grant: `{key}`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -460,22 +460,22 @@ public sealed class GrantManagementAuth0Tests
         StringKey key = await manager.CreateAsync(model,
                                          new CreateOperationMapper(
                                              Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
-                                     .ConfigureAwait(false);
+                                     .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
         (await manager.GetAllAsync(0, 100)
-                      .ConfigureAwait(false)).ResultSet.Should()
-                                             .NotContainEquivalentOf(model);
+                      .ConfigureAwait(true)).ResultSet.Should()
+                                            .NotContainEquivalentOf(model);
     }
 
     private static ApiConfiguration GetApiConfiguration()
@@ -485,15 +485,9 @@ public sealed class GrantManagementAuth0Tests
             Environment.ReadString("AUTH0_AUDIENCE"));
     }
 
-    internal sealed class Model : GrantModel
+    internal sealed class Model(StringKey key, IEnumerable<string> scopes) : GrantModel(key)
     {
-        public Model(StringKey key, IEnumerable<string> scopes)
-            : base(key)
-        {
-            this.Scopes = scopes;
-        }
-
-        public IEnumerable<string> Scopes { get; set; }
+        public IEnumerable<string> Scopes { get; set; } = scopes;
         public string Audience { get; } = Environment.ReadString("AUTH0_AUDIENCE");
     }
 
@@ -508,42 +502,23 @@ public sealed class GrantManagementAuth0Tests
         }
     }
 
-    private sealed class OperationFilter : Auth0GrantFilter
+    private sealed class OperationFilter(string audience) : Auth0GrantFilter
     {
-        private readonly string audience;
-
-        public OperationFilter(string audience)
-        {
-            this.audience = audience;
-        }
-
         protected override GetClientGrantsRequest Map()
         {
-            return new GetClientGrantsRequest
-            {
-                Audience = this.audience,
-            };
+            return new GetClientGrantsRequest { Audience = audience };
         }
     }
 
-    private sealed class CreateOperationMapper : Auth0GrantCreateOperationMapper
+    private sealed class CreateOperationMapper(string clientId) : Auth0GrantCreateOperationMapper
     {
-        private readonly string clientId;
-
-        public CreateOperationMapper(string clientId)
-        {
-            this.clientId = clientId;
-        }
-
         protected override ClientGrantCreateRequest Map<TSource>(TSource source)
         {
             if (source is Model model)
             {
                 return new ClientGrantCreateRequest
                 {
-                    Scope = model.Scopes.ToList(),
-                    Audience = model.Audience,
-                    ClientId = this.clientId,
+                    Scope = model.Scopes.ToList(), Audience = model.Audience, ClientId = clientId,
                 };
             }
 
@@ -557,10 +532,7 @@ public sealed class GrantManagementAuth0Tests
         {
             if (source is Model model)
             {
-                return new ClientGrantUpdateRequest
-                {
-                    Scope = model.Scopes.ToList(),
-                };
+                return new ClientGrantUpdateRequest { Scope = model.Scopes.ToList() };
             }
 
             throw new UpdateException($"Invalid {nameof(IGrantOperationMapper)}: Source is NOT `{nameof(Model)}`.");

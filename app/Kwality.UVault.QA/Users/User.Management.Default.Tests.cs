@@ -60,7 +60,7 @@ public sealed class UserManagementDefaultTests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Failed to read user: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -72,11 +72,11 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         await manager.CreateAsync(model, new UserCreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         IEnumerable<Model> result = await manager.GetByEmailAsync("email")
-                                                 .ConfigureAwait(false);
+                                                 .ConfigureAwait(true);
 
         // ASSERT.
         result.Should()
@@ -93,14 +93,14 @@ public sealed class UserManagementDefaultTests
 
         foreach (Model model in models)
             await manager.CreateAsync(model, new UserCreateOperationMapper())
-                         .ConfigureAwait(false);
+                         .ConfigureAwait(true);
 
         // ACT.
         Model expected = models.Skip(1)
                                .First();
 
         IEnumerable<Model> result = await manager.GetByEmailAsync(expected.Email)
-                                                 .ConfigureAwait(false);
+                                                 .ConfigureAwait(true);
 
         // ASSERT.
         result.Should()
@@ -117,14 +117,14 @@ public sealed class UserManagementDefaultTests
 
         foreach (Model model in models)
             await manager.CreateAsync(model, new UserCreateOperationMapper())
-                         .ConfigureAwait(false);
+                         .ConfigureAwait(true);
 
         // ACT.
         Model expected = models.Skip(1)
                                .First();
 
         IEnumerable<Model> result = await manager.GetByEmailAsync(expected.Email)
-                                                 .ConfigureAwait(false);
+                                                 .ConfigureAwait(true);
 
         // ASSERT.
         result.Should()
@@ -141,12 +141,12 @@ public sealed class UserManagementDefaultTests
 
         // ACT.
         IntKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetByKeyAsync(key)
-                      .ConfigureAwait(false)).Should()
-                                             .BeEquivalentTo(model);
+                      .ConfigureAwait(true)).Should()
+                                            .BeEquivalentTo(model);
     }
 
     [AutoData]
@@ -158,7 +158,7 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         await manager.CreateAsync(model, new UserCreateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ACT.
         Func<Task<IntKey>> act = () => manager.CreateAsync(model, new UserCreateOperationMapper());
@@ -167,7 +167,7 @@ public sealed class UserManagementDefaultTests
         await act.Should()
                  .ThrowAsync<CreateException>()
                  .WithMessage($"Failed to create user: `{model.Key}`. Duplicate key.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -179,18 +179,18 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         IntKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         model.Email = "kwality.uvault@github.com";
 
         await manager.UpdateAsync(key, model, new UserUpdateOperationMapper())
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetByKeyAsync(key)
-                      .ConfigureAwait(false)).Should()
-                                             .BeEquivalentTo(model);
+                      .ConfigureAwait(true)).Should()
+                                            .BeEquivalentTo(model);
     }
 
     [AutoData]
@@ -208,7 +208,7 @@ public sealed class UserManagementDefaultTests
         await act.Should()
                  .ThrowAsync<UpdateException>()
                  .WithMessage($"Failed to update user: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -220,11 +220,11 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         IntKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
-                                  .ConfigureAwait(false);
+                                  .ConfigureAwait(true);
 
         // ACT.
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -232,7 +232,7 @@ public sealed class UserManagementDefaultTests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Failed to read user: `{key}`. Not found.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoData]
@@ -249,53 +249,33 @@ public sealed class UserManagementDefaultTests
         // ASSERT.
         await act.Should()
                  .NotThrowAsync()
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
 #pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Model : UserModel<IntKey>
+    internal sealed class Model(IntKey key, string email) : UserModel<IntKey>(key, email)
 #pragma warning restore CA1812
     {
-        public Model(IntKey key, string email)
-            : base(key, email)
-        {
-        }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    private sealed class FixedEmailAttribute : AutoDataAttribute
+    private sealed class FixedEmailAttribute() : AutoDataAttribute(static () =>
     {
-        public FixedEmailAttribute()
-            : base(static () =>
-            {
-                var fixture = new Fixture();
+        var fixture = new Fixture();
+        var email = $"{fixture.Create<string>()}@acme.com";
+        fixture.Customizations.Add(new FixedEmailSpecimenBuilder(email));
 
-                // Build the configuration value(s) for AutoFixture.
-                var email = $"{fixture.Create<string>()}@acme.com";
-
-                // Customize AutoFixture.
-                fixture.Customizations.Add(new FixedEmailSpecimenBuilder(email));
-
-                return fixture;
-            })
+        return fixture;
+    })
+    {
+        private sealed class FixedEmailSpecimenBuilder(string email) : ISpecimenBuilder
         {
-        }
-
-        private sealed class FixedEmailSpecimenBuilder : ISpecimenBuilder
-        {
-            private readonly string email;
-
-            public FixedEmailSpecimenBuilder(string email)
-            {
-                this.email = email;
-            }
-
             public object Create(object request, ISpecimenContext context)
             {
                 if (request is Type type && type == typeof(Model))
                 {
-                    return new Model(context.Create<IntKey>(), this.email);
+                    return new Model(context.Create<IntKey>(), email);
                 }
 
                 return new NoSpecimen();

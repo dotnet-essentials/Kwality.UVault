@@ -78,7 +78,7 @@ public sealed class UserManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Failed to read user: `{key}`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoDomainData]
@@ -102,14 +102,14 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             IEnumerable<Model> result = await manager.GetByEmailAsync("email@acme.com")
-                                                     .ConfigureAwait(false);
+                                                     .ConfigureAwait(true);
 
             // ASSERT.
             result.Should()
@@ -121,7 +121,7 @@ public sealed class UserManagementAuth0Tests
             if (key != null)
             {
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -149,7 +149,7 @@ public sealed class UserManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 keys.Add(await manager.CreateAsync(model, new CreateOperationMapper())
-                                      .ConfigureAwait(false));
+                                      .ConfigureAwait(true));
             }
 
             // ACT.
@@ -160,7 +160,7 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             IEnumerable<Model> result = await manager.GetByEmailAsync(expected.Email)
-                                                     .ConfigureAwait(false);
+                                                     .ConfigureAwait(true);
 
             // ASSERT.
             result.Should()
@@ -176,7 +176,7 @@ public sealed class UserManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -202,23 +202,23 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper())
-                                      .ConfigureAwait(false));
+                                      .ConfigureAwait(true));
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-1"))
-                                      .ConfigureAwait(false));
+                                      .ConfigureAwait(true));
 
             keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-2"))
-                                      .ConfigureAwait(false));
+                                      .ConfigureAwait(true));
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             IEnumerable<Model> result = await userManager.GetByEmailAsync(model.Email)
-                                                         .ConfigureAwait(false);
+                                                         .ConfigureAwait(true);
 
             // ASSERT.
             result.Should()
@@ -234,7 +234,7 @@ public sealed class UserManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await userManager.DeleteByKeyAsync(key)
-                                 .ConfigureAwait(false);
+                                 .ConfigureAwait(true);
             }
         }
     }
@@ -261,16 +261,16 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             (await manager.GetByKeyAsync(key)
-                          .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model,
-                                                     static options => options.Excluding(static user => user.Password));
+                          .ConfigureAwait(true)).Should()
+                                                .BeEquivalentTo(model,
+                                                    static options => options.Excluding(static user => user.Password));
         }
         finally
         {
@@ -281,7 +281,7 @@ public sealed class UserManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -308,12 +308,12 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             userId = await userManager.CreateAsync(model, new CreateOperationMapper())
-                                      .ConfigureAwait(false);
+                                      .ConfigureAwait(true);
 
             // ASSERT.
             (await AuthenticateUserAsync(model.Key.Value, model.Password ?? string.Empty)
-                    .ConfigureAwait(false)).Should()
-                                           .NotBeNullOrEmpty();
+                    .ConfigureAwait(true)).Should()
+                                          .NotBeNullOrEmpty();
         }
         finally
         {
@@ -324,7 +324,7 @@ public sealed class UserManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await userManager.DeleteByKeyAsync(userId)
-                                 .ConfigureAwait(false);
+                                 .ConfigureAwait(true);
             }
         }
     }
@@ -350,7 +350,7 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
@@ -361,7 +361,7 @@ public sealed class UserManagementAuth0Tests
             await act.Should()
                      .ThrowAsync<CreateException>()
                      .WithMessage("Failed to create user.")
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
         }
         finally
         {
@@ -369,7 +369,7 @@ public sealed class UserManagementAuth0Tests
             if (key != null)
             {
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -395,7 +395,7 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
-                               .ConfigureAwait(false);
+                               .ConfigureAwait(true);
 
             // ACT.
             model.FirstName = "Updated: FirstName.";
@@ -405,15 +405,15 @@ public sealed class UserManagementAuth0Tests
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
-                         .ConfigureAwait(false);
+                         .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             (await manager.GetByKeyAsync(key)
-                          .ConfigureAwait(false)).Should()
-                                                 .BeEquivalentTo(model,
-                                                     static options => options.Excluding(static user => user.Password));
+                          .ConfigureAwait(true)).Should()
+                                                .BeEquivalentTo(model,
+                                                    static options => options.Excluding(static user => user.Password));
         }
         finally
         {
@@ -424,7 +424,7 @@ public sealed class UserManagementAuth0Tests
                 Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 await manager.DeleteByKeyAsync(key)
-                             .ConfigureAwait(false);
+                             .ConfigureAwait(true);
             }
         }
     }
@@ -451,7 +451,7 @@ public sealed class UserManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<UpdateException>()
                  .WithMessage($"Failed to update user: `{key}`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     [AutoDomainData]
@@ -471,14 +471,14 @@ public sealed class UserManagementAuth0Tests
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
         StringKey key = await manager.CreateAsync(model, new CreateOperationMapper())
-                                     .ConfigureAwait(false);
+                                     .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
         Thread.Sleep(TimeSpan.FromSeconds(2));
 
         await manager.DeleteByKeyAsync(key)
-                     .ConfigureAwait(false);
+                     .ConfigureAwait(true);
 
         // ASSERT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -486,7 +486,7 @@ public sealed class UserManagementAuth0Tests
         await act.Should()
                  .ThrowAsync<ReadException>()
                  .WithMessage($"Failed to read user: `{key}`.")
-                 .ConfigureAwait(false);
+                 .ConfigureAwait(true);
     }
 
     private static ApiConfiguration GetApiConfiguration()
@@ -557,23 +557,13 @@ public sealed class UserManagementAuth0Tests
     {
         public Model Map(User user)
         {
-            return new Model(new StringKey(user.Email))
-            {
-                FirstName = user.FirstName,
-                Name = user.LastName,
-            };
+            return new Model(new StringKey(user.Email)) { FirstName = user.FirstName, Name = user.LastName };
         }
     }
 
-    private sealed class CreateOperationMapper : Auth0UserCreateOperationMapper
+    private sealed class CreateOperationMapper(string connection = "Username-Password-Authentication")
+        : Auth0UserCreateOperationMapper
     {
-        private readonly string connection;
-
-        public CreateOperationMapper(string connection = "Username-Password-Authentication")
-        {
-            this.connection = connection;
-        }
-
         protected override UserCreateRequest Map<TSource>(TSource source)
         {
             if (source is Model model)
@@ -581,9 +571,7 @@ public sealed class UserManagementAuth0Tests
                 // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
                 return new UserCreateRequest
                 {
-                    Email = model.Key.Value,
-                    Connection = this.connection,
-                    Password = model.Password,
+                    Email = model.Key.Value, Connection = connection, Password = model.Password,
                 };
             }
 
@@ -600,9 +588,7 @@ public sealed class UserManagementAuth0Tests
                 // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
                 return new UserUpdateRequest
                 {
-                    Email = model.Key.Value,
-                    FirstName = model.FirstName,
-                    LastName = model.Name,
+                    Email = model.Key.Value, FirstName = model.FirstName, LastName = model.Name,
                 };
             }
 
@@ -611,50 +597,39 @@ public sealed class UserManagementAuth0Tests
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    private sealed class AutoDomainDataAttribute : AutoDataAttribute
+    private sealed class AutoDomainDataAttribute() : AutoDataAttribute(SetupFixture)
     {
-        public AutoDomainDataAttribute()
-            : base(static () =>
-            {
-                var fixture = new Fixture();
-
-                // Customize AutoFixture.
-                fixture.Customize<StringKey>(composer =>
-                    composer.FromFactory(() => new StringKey($"{fixture.Create<string>()}@acme.com")));
-
-                fixture.Customize<Model>(composer => composer
-                                                     .FromFactory(() => new Model(fixture.Create<StringKey>(),
-                                                         fixture.Create<string>()))
-                                                     .OmitAutoProperties());
-
-                return fixture;
-            })
+        private static IFixture SetupFixture()
         {
+            var fixture = new Fixture();
+
+            fixture.Customize<StringKey>(composer =>
+                composer.FromFactory(() => new StringKey($"{fixture.Create<string>()}@acme.com")));
+
+            fixture.Customize<Model>(composer => composer
+                                                 .FromFactory(() => new Model(fixture.Create<StringKey>(),
+                                                     fixture.Create<string>()))
+                                                 .OmitAutoProperties());
+
+            return fixture;
         }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    private sealed class FixedEmailAttribute : AutoDataAttribute
+    private sealed class FixedEmailAttribute() : AutoDataAttribute(SetupFixture)
     {
-        public FixedEmailAttribute()
-            : base(static () =>
-            {
-                var fixture = new Fixture();
-
-                // Build the configuration value(s) for AutoFixture.
-                var email = $"{fixture.Create<string>()}@acme.com";
-
-                // Customize AutoFixture.
-                fixture.Customize<StringKey>(composer => composer.FromFactory(() => new StringKey(email)));
-
-                fixture.Customize<Model>(composer => composer
-                                                     .FromFactory(() => new Model(fixture.Create<StringKey>(),
-                                                         fixture.Create<string>()))
-                                                     .OmitAutoProperties());
-
-                return fixture;
-            })
+        private static IFixture SetupFixture()
         {
+            var fixture = new Fixture();
+            var email = $"{fixture.Create<string>()}@acme.com";
+            fixture.Customize<StringKey>(composer => composer.FromFactory(() => new StringKey(email)));
+
+            fixture.Customize<Model>(composer => composer
+                                                 .FromFactory(() => new Model(fixture.Create<StringKey>(),
+                                                     fixture.Create<string>()))
+                                                 .OmitAutoProperties());
+
+            return fixture;
         }
     }
 }

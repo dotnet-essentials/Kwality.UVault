@@ -25,7 +25,6 @@
 namespace Kwality.UVault.QA.Internal.Auth0.Exceptions;
 
 using global::System.Diagnostics.CodeAnalysis;
-using global::System.Runtime.Serialization;
 
 [Serializable]
 [ExcludeFromCodeCoverage]
@@ -42,11 +41,6 @@ public sealed class AuthenticationFailureException : Exception
 
     public AuthenticationFailureException(string message, Exception innerException)
         : base(message, innerException)
-    {
-    }
-
-    private AuthenticationFailureException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        : base(serializationInfo, streamingContext)
     {
     }
 }
