@@ -10,7 +10,7 @@
   <!-- NuGet (Package) information. -->
   <PropertyGroup>
     <PackageId>Kwality.UVault.M2M</PackageId>
-    <Version>2.8.0</Version>
+    <Version>3.0.0-preview.1</Version>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/dotnet-essentials/Kwality.UVault</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
