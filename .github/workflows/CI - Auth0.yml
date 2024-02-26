@@ -45,7 +45,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        dotnet: [ '7.0.202' ]
+        dotnet: [ '6.0.27', '7.0.16', '8.0.2' ]
     steps:
       - name: GIT Clone
         uses: actions/checkout@v3
