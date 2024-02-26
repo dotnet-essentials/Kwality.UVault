@@ -135,7 +135,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        dotnet: [ '7.0.202' ]
+        dotnet: [ '6.0.27', '7.0.16', '8.0.2' ]
     steps:
       - name: GIT Clone
         uses: actions/checkout@v3
@@ -200,10 +200,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET 7.0.202
+      - name: Setup .NET 8.0.2
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.202
+          dotnet-version: 8.0.2
 
       - name: Restore NuGet packages
         working-directory: ./app/
