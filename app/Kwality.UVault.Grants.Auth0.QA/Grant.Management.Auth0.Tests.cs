@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Grants.Auth0.QA;
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -49,8 +51,8 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 [Collection("Auth0")]
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class GrantManagementAuth0Tests
 {
     [AutoData]
@@ -491,10 +493,8 @@ public sealed class GrantManagementAuth0Tests
         public string Audience { get; } = Environment.ReadString("AUTH0_AUDIENCE");
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     private sealed class ModelMapper : IModelMapper<Model>
-#pragma warning restore CA1812
     {
         public Model Map(ClientGrant clientGrant)
         {

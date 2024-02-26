@@ -24,28 +24,24 @@
 // =====================================================================================================================
 namespace Kwality.UVault.QA.Common.Xunit.Traits;
 
+using global::System.Diagnostics.CodeAnalysis;
+
 using global::Xunit.Abstractions;
 using global::Xunit.Sdk;
 
 using JetBrains.Annotations;
 
-// ReSharper disable once InconsistentNaming
-#pragma warning disable S101 // "Types should be named in PascalCase".
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-[TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.M2MManagementFeatureDiscoverer", "Kwality.UVault.QA")]
+[TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.M2MManagementFeatureDiscoverer", "Kwality.UVault.QA.Common")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class M2MManagementAttribute : Attribute, ITraitAttribute
-#pragma warning restore S101
 {
     // NOTE: Intentionally left blank.
 }
 
-// ReSharper disable once InconsistentNaming
-#pragma warning disable S101 // "Types should be named in PascalCase".
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
 [UsedImplicitly]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 internal sealed class M2MManagementFeatureDiscoverer : ITraitDiscoverer
-#pragma warning restore CA1812
-#pragma warning restore S101
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

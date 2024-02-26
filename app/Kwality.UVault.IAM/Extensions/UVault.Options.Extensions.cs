@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.IAM.Extensions;
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Options;
@@ -36,7 +38,7 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class UVaultOptionsExtensions
 {
-    // ReSharper disable once InconsistentNaming
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static void UseIAM(this UVaultOptions options, Action<IAMOptions>? action)
     {
         ArgumentNullException.ThrowIfNull(action);

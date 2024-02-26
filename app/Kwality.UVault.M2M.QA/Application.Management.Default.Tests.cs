@@ -31,6 +31,7 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Core.Keys;
 using Kwality.UVault.Core.Models;
 using Kwality.UVault.M2M.Managers;
@@ -42,7 +43,6 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 public sealed class ApplicationManagementDefaultTests
 {
     [AutoData]
@@ -371,8 +371,7 @@ public sealed class ApplicationManagementDefaultTests
                     $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return ((Func<Model, bool>)Filter as TDestination)!;
+            return ((Func<Model, bool>)Filter).UnsafeAs<Func<Model, bool>, TDestination>();
 
             // The filter which is filters out data in the store.
             bool Filter(Model model)
@@ -382,10 +381,8 @@ public sealed class ApplicationManagementDefaultTests
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model : ApplicationModel<IntKey>
-#pragma warning restore CA1812
     {
         public Model(IntKey key, string name)
             : base(key)

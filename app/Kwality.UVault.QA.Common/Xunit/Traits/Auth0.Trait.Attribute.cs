@@ -30,17 +30,14 @@ using global::Xunit.Sdk;
 using JetBrains.Annotations;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-[TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.Auth0TargetDiscoverer", "Kwality.UVault.QA")]
+[TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.Auth0TargetDiscoverer", "Kwality.UVault.QA.Common")]
 public sealed class Auth0Attribute : Attribute, ITraitAttribute
 {
     // NOTE: Intentionally left blank.
 }
 
-// ReSharper disable once InconsistentNaming
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
 [UsedImplicitly]
 internal sealed class Auth0TargetDiscoverer : ITraitDiscoverer
-#pragma warning restore CA1812
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

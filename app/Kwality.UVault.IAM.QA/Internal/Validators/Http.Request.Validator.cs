@@ -75,11 +75,8 @@ internal sealed class HttpRequestValidator
         }
 
         // ACT.
-#pragma warning disable CA2234 // "Pass System.Uri objects instead of strings".
         HttpResponseMessage result = await httpClient.GetAsync(endpoint)
                                                      .ConfigureAwait(false);
-
-#pragma warning restore CA2234
 
         // ASSERT.
         result.Should()

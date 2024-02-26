@@ -42,7 +42,6 @@ using Kwality.UVault.Users.QA.Factories;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 public sealed class UserManagementDefaultTests
 {
     [AutoData]
@@ -252,12 +251,8 @@ public sealed class UserManagementDefaultTests
                  .ConfigureAwait(true);
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Model(IntKey key, string email) : UserModel<IntKey>(key, email)
-#pragma warning restore CA1812
-    {
-    }
+    internal sealed class Model(IntKey key, string email) : UserModel<IntKey>(key, email);
 
     [AttributeUsage(AttributeTargets.Method)]
     private sealed class FixedEmailAttribute() : AutoDataAttribute(static () =>

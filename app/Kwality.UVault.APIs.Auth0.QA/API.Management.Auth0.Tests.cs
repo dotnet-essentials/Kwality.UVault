@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.APIs.Auth0.QA;
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoFixture;
 using AutoFixture.Xunit2;
 
@@ -48,8 +50,8 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 [Collection("Auth0")]
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class ApiManagementAuth0Tests
 {
     [AutoData]
@@ -200,10 +202,8 @@ public sealed class ApiManagementAuth0Tests
 
     internal sealed class Model(StringKey name) : ApiModel(name);
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     private sealed class ModelMapper : IModelMapper<Model>
-#pragma warning restore CA1812
     {
         public Model Map(ResourceServer resourceServer)
         {
@@ -217,7 +217,6 @@ public sealed class ApiManagementAuth0Tests
         {
             if (source is Model model)
             {
-                // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
                 return new ResourceServerCreateRequest { Identifier = model.Key.Value };
             }
 
@@ -232,8 +231,5 @@ public sealed class ApiManagementAuth0Tests
         fixture.Customize<Model>(static composer => composer.OmitAutoProperties());
 
         return fixture;
-    })
-    {
-        // Customize AutoFixture.
-    }
+    });
 }

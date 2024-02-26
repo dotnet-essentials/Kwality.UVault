@@ -47,7 +47,6 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 [Collection("Auth0")]
 public sealed class ApplicationTokenManagementAuth0Tests
 {
@@ -186,10 +185,8 @@ public sealed class ApplicationTokenManagementAuth0Tests
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     private sealed class ModelMapper : IModelMapper<Model>
-#pragma warning restore CA1812
     {
         public Model Map(Client client)
         {
@@ -200,10 +197,8 @@ public sealed class ApplicationTokenManagementAuth0Tests
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class TokenModel : M2M.Models.TokenModel
-#pragma warning restore CA1812
     {
         public TokenModel()
         {

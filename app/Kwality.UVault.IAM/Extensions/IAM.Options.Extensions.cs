@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.IAM.Extensions;
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.IAM.Internal.Validators;
@@ -31,11 +33,9 @@ using Kwality.UVault.IAM.Options;
 
 using Microsoft.Extensions.DependencyInjection;
 
-// ReSharper disable once InconsistentNaming
-#pragma warning disable S101 // "Types should be named in PascalCase".
 [PublicAPI]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class IAMOptionsExtensions
-#pragma warning restore S101
 {
     public static void UseDefault(this IAMOptions options, string validIssuer, string validAudience)
     {

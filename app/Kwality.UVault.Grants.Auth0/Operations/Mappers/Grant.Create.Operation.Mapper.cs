@@ -29,6 +29,7 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 
 [PublicAPI]
@@ -43,8 +44,8 @@ public abstract class Auth0GrantCreateOperationMapper : IGrantOperationMapper
                 $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(ClientGrantCreateRequest)}`.");
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (this.Map(source) as TDestination)!;
+        return this.Map(source)
+                   .UnsafeAs<ClientGrantCreateRequest, TDestination>();
     }
 
     protected abstract ClientGrantCreateRequest Map<TSource>(TSource source);

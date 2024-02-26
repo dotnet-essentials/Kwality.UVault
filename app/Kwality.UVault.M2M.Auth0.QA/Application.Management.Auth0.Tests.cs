@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.M2M.Auth0.QA;
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoFixture;
 using AutoFixture.Xunit2;
 
@@ -50,8 +52,8 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 [Collection("Auth0")]
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class ApplicationManagementAuth0Tests
 {
     [AutoDomainData]
@@ -585,10 +587,8 @@ public sealed class ApplicationManagementAuth0Tests
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     private sealed class ModelMapper : IModelMapper<Model>
-#pragma warning restore CA1812
     {
         public Model Map(Client client)
         {
@@ -611,7 +611,6 @@ public sealed class ApplicationManagementAuth0Tests
         {
             if (source is Model model)
             {
-                // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
                 return new ClientCreateRequest { Name = model.Key.Value, ApplicationType = applicationType };
             }
 
@@ -626,7 +625,6 @@ public sealed class ApplicationManagementAuth0Tests
         {
             if (source is Model model)
             {
-                // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
                 return new ClientUpdateRequest { Name = model.Name };
             }
 

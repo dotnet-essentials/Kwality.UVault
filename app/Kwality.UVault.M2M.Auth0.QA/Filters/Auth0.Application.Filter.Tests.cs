@@ -24,6 +24,7 @@
 // =====================================================================================================================
 namespace Kwality.UVault.M2M.Auth0.QA.Filters;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 using FluentAssertions;
@@ -37,7 +38,7 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class Auth0ApplicationFilterTests
 {
     [M2MManagement]

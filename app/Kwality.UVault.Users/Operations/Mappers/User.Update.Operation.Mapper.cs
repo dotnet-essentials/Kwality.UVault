@@ -27,6 +27,7 @@ namespace Kwality.UVault.Users.Operations.Mappers;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 [PublicAPI]
@@ -41,7 +42,6 @@ public sealed class UserUpdateOperationMapper : IUserOperationMapper
                 $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (source as TDestination)!;
+        return source.UnsafeAs<TSource, TDestination>();
     }
 }

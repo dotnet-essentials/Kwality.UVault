@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.IAM.Options;
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.IAM.Validators.Abstractions;
@@ -31,11 +33,9 @@ using Kwality.UVault.IAM.Validators.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
-// ReSharper disable once InconsistentNaming
-#pragma warning disable S101 // "Types should be named in PascalCase".
 [PublicAPI]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class IAMOptions
-#pragma warning restore S101
 {
     internal IAMOptions(AuthenticationBuilder authenticationBuilder)
     {

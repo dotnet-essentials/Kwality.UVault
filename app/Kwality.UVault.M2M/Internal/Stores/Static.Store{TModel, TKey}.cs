@@ -35,7 +35,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IList<TModel> collection = new List<TModel>();
+    private readonly List<TModel> collection = [];
 
     public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
     {

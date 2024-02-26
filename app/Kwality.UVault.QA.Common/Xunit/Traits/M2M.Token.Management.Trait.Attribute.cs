@@ -29,23 +29,16 @@ using global::Xunit.Sdk;
 
 using JetBrains.Annotations;
 
-// ReSharper disable once InconsistentNaming
-#pragma warning disable S101 // "Types should be named in PascalCase".
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-[TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.M2MTokenManagementFeatureDiscoverer", "Kwality.UVault.QA")]
+[TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.M2MTokenManagementFeatureDiscoverer",
+    "Kwality.UVault.QA.Common")]
 public sealed class M2MTokenManagementAttribute : Attribute, ITraitAttribute
-#pragma warning restore S101
 {
     // NOTE: Intentionally left blank.
 }
 
-// ReSharper disable once InconsistentNaming
-#pragma warning disable S101 // "Types should be named in PascalCase".
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
 [UsedImplicitly]
 internal sealed class M2MTokenManagementFeatureDiscoverer : ITraitDiscoverer
-#pragma warning restore CA1812
-#pragma warning restore S101
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

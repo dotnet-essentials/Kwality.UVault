@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Grants.QA;
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -31,6 +33,7 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Core.Keys;
 using Kwality.UVault.Core.Models;
 using Kwality.UVault.Grants.Managers;
@@ -42,7 +45,7 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class GrantManagementDefaultTests
 {
     [AutoData]
@@ -302,8 +305,7 @@ public sealed class GrantManagementDefaultTests
                     $"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<Model, bool>).Name}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return ((Func<Model, bool>)Filter as TDestination)!;
+            return ((Func<Model, bool>)Filter).UnsafeAs<Func<Model, bool>, TDestination>();
 
             // The filter which is filters out data in the store.
             bool Filter(Model model)
@@ -313,10 +315,8 @@ public sealed class GrantManagementDefaultTests
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model(IntKey key) : GrantModel<IntKey>(key)
-#pragma warning restore CA1812
     {
         public IEnumerable<string> Scopes { get; set; } = Array.Empty<string>();
     }

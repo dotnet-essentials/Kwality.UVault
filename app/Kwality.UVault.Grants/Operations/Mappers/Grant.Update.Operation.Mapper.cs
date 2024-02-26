@@ -27,6 +27,7 @@ namespace Kwality.UVault.Grants.Operations.Mappers;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 
 [PublicAPI]
@@ -41,7 +42,6 @@ public sealed class GrantUpdateOperationMapper : IGrantOperationMapper
                 $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (source as TDestination)!;
+        return source.UnsafeAs<TSource, TDestination>();
     }
 }

@@ -32,9 +32,7 @@ using Kwality.UVault.M2M.Stores.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 [PublicAPI]
-#pragma warning disable CA1005
 public sealed class ApplicationTokenManagementOptions<TToken>
-#pragma warning restore CA1005
     where TToken : TokenModel
 {
     internal ApplicationTokenManagementOptions(IServiceCollection serviceCollection)

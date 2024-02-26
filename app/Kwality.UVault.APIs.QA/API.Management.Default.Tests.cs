@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.APIs.QA;
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -40,7 +42,7 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class ApiManagementDefaultTests
 {
     [AutoData]
@@ -123,10 +125,6 @@ public sealed class ApiManagementDefaultTests
                  .ConfigureAwait(true);
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Model(IntKey name) : ApiModel<IntKey>(name)
-#pragma warning restore CA1812
-    {
-    }
+    internal sealed class Model(IntKey name) : ApiModel<IntKey>(name);
 }

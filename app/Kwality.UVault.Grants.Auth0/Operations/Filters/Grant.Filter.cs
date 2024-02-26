@@ -29,6 +29,7 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Grants.Operations.Filters.Abstractions;
 
 [PublicAPI]
@@ -43,8 +44,8 @@ public abstract class Auth0GrantFilter : IGrantFilter
                 $"Invalid {nameof(IGrantFilter)}: Destination is NOT `{nameof(GetClientGrantsRequest)}`.");
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (this.Map() as TDestination)!;
+        return this.Map()
+                   .UnsafeAs<GetClientGrantsRequest, TDestination>();
     }
 
     protected abstract GetClientGrantsRequest Map();

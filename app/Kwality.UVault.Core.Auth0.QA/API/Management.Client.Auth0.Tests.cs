@@ -30,6 +30,7 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
+using global::System.Diagnostics.CodeAnalysis;
 using global::System.Net;
 
 using Kwality.UVault.Core.Auth0.API.Clients;
@@ -44,8 +45,8 @@ using Moq;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 [Collection("Auth0")]
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class Auth0ManagementClientTests
 {
     private const string testPrefix = "Request an API management token";

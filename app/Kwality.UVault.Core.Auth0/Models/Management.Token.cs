@@ -35,11 +35,7 @@ public sealed class ApiManagementToken
     private readonly DateTime issuedTimeStamp = DateTime.Now;
     [JsonPropertyName("access_token")] public string? AccessToken { get; [UsedImplicitly] set; }
     [JsonPropertyName("expires_in")] public int ExpiresIn { get; [UsedImplicitly] set; }
-
-    // ReSharper disable once MemberCanBeInternal
     [JsonPropertyName("token_type")] public string TokenType { get; [UsedImplicitly] set; } = string.Empty;
-
-    // ReSharper disable once MemberCanBeInternal
     [JsonPropertyName("scope")] public string Scope { get; [UsedImplicitly] set; } = string.Empty;
 
     // NOTE: A token is expired one the amount of seconds (see "Expired In") is passed.

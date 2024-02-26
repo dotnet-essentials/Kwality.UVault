@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Grants.QA;
 
+using System.Diagnostics.CodeAnalysis;
+
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -32,6 +34,7 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
 using Kwality.UVault.Core.Extensions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Core.Keys;
 using Kwality.UVault.Core.Models;
 using Kwality.UVault.Grants.Extensions;
@@ -47,7 +50,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class GrantManagementTests
 {
     [AutoData]
@@ -352,10 +355,8 @@ public sealed class GrantManagementTests
                  .ConfigureAwait(true);
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model(IntKey key, IEnumerable<string> scopes) : GrantModel<IntKey>(key)
-#pragma warning restore CA1812
     {
         public IEnumerable<string> Scopes { get; set; } = scopes;
     }
@@ -371,8 +372,8 @@ public sealed class GrantManagementTests
                     $"Invalid {nameof(IGrantFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return ((Func<KeyValuePair<IntKey, Model>, bool>)Filter as TDestination)!;
+            return ((Func<KeyValuePair<IntKey, Model>, bool>)Filter)
+                .UnsafeAs<Func<KeyValuePair<IntKey, Model>, bool>, TDestination>();
 
             // The filter which is filters out data in the store.
             bool Filter(KeyValuePair<IntKey, Model> kvp)
@@ -393,8 +394,7 @@ public sealed class GrantManagementTests
                     $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
+            return source.UnsafeAs<TSource, TDestination>();
         }
     }
 
@@ -409,17 +409,14 @@ public sealed class GrantManagementTests
                     $"Invalid {nameof(IGrantOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
+            return source.UnsafeAs<TSource, TDestination>();
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Store : IGrantStore<Model, IntKey>
-#pragma warning restore CA1812
     {
-        private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
+        private readonly Dictionary<IntKey, Model> collection = new();
 
         public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IGrantFilter? filter)
         {
@@ -463,10 +460,7 @@ public sealed class GrantManagementTests
 
         public Task DeleteByKeyAsync(IntKey key)
         {
-            if (this.collection.ContainsKey(key))
-            {
-                this.collection.Remove(key);
-            }
+            this.collection.Remove(key);
 
             return Task.CompletedTask;
         }

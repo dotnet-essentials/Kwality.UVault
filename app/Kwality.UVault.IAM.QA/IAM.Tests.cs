@@ -56,8 +56,8 @@ using Microsoft.IdentityModel.Tokens;
 
 using Xunit;
 
-// ReSharper disable once InconsistentNaming
-// ReSharper disable once MemberCanBeFileLocal
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class IAMTests
 {
     private const string defaultRoute = "/";
@@ -200,11 +200,9 @@ public sealed class IAMTests
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-#pragma warning disable CA5404 // "Do not disable token validation checks".
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = false,
-#pragma warning restore CA5404
                     ValidateIssuerSigningKey = false,
                     RequireSignedTokens = false,
 
@@ -213,7 +211,6 @@ public sealed class IAMTests
                     SignatureValidator = static (token, _) => new JwtSecurityToken(token),
 #endif
 #if NET8_0
-                    // ReSharper disable Cleanup
                     SignatureValidator = static (token, _) => new JsonWebToken(token),
 #endif
                 };

@@ -30,10 +30,7 @@ using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
 [PublicAPI]
-#pragma warning disable CA1005
-public sealed class ApplicationTokenManager<TToken>
-#pragma warning restore CA1005
-    (IApplicationTokenStore<TToken> tokenStore)
+public sealed class ApplicationTokenManager<TToken>(IApplicationTokenStore<TToken> tokenStore)
     where TToken : TokenModel
 {
     public Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)

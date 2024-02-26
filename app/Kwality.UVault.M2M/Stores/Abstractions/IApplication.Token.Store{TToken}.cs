@@ -26,9 +26,7 @@ namespace Kwality.UVault.M2M.Stores.Abstractions;
 
 using Kwality.UVault.M2M.Models;
 
-#pragma warning disable CA1005
 public interface IApplicationTokenStore<TToken>
-#pragma warning restore CA1005
     where TToken : TokenModel
 {
     Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType);

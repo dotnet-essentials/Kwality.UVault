@@ -28,6 +28,7 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 
 [PublicAPI]
 public sealed class CreateOperationMapper : IApiOperationMapper
@@ -41,7 +42,6 @@ public sealed class CreateOperationMapper : IApiOperationMapper
                 $"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{typeof(TSource).Name}`.");
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (source as TDestination)!;
+        return source.UnsafeAs<TSource, TDestination>();
     }
 }

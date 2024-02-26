@@ -34,6 +34,7 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
 using Kwality.UVault.Core.Extensions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Core.Keys;
 using Kwality.UVault.QA.Common.Xunit.Traits;
 using Kwality.UVault.Users.Extensions;
@@ -47,7 +48,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 public sealed class UserManagementTests
 {
     [AutoData]
@@ -318,12 +318,8 @@ public sealed class UserManagementTests
                  .ConfigureAwait(true);
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
-    internal sealed class Model(IntKey key, string email) : UserModel<IntKey>(key, email)
-#pragma warning restore CA1812
-    {
-    }
+    internal sealed class Model(IntKey key, string email) : UserModel<IntKey>(key, email);
 
     private sealed class CreateOperationMapper : IUserOperationMapper
     {
@@ -336,8 +332,7 @@ public sealed class UserManagementTests
                     $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
+            return source.UnsafeAs<TSource, TDestination>();
         }
     }
 
@@ -352,26 +347,23 @@ public sealed class UserManagementTests
                     $"Invalid {nameof(IUserOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
+            return source.UnsafeAs<TSource, TDestination>();
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Store : IUserStore<Model, IntKey>
-#pragma warning restore CA1812
     {
-        private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
+        private readonly Dictionary<IntKey, Model> collection = new();
 
         public Task<Model> GetByKeyAsync(IntKey key)
         {
-            if (!this.collection.ContainsKey(key))
+            if (!this.collection.TryGetValue(key, out Model? value))
             {
                 throw new ReadException($"Custom: Failed to read user: `{key}`. Not found.");
             }
 
-            return Task.FromResult(this.collection[key]);
+            return Task.FromResult(value);
         }
 
         public Task<IEnumerable<Model>> GetByEmailAsync(string email)
@@ -408,10 +400,7 @@ public sealed class UserManagementTests
 
         public Task DeleteByKeyAsync(IntKey key)
         {
-            if (this.collection.ContainsKey(key))
-            {
-                this.collection.Remove(key);
-            }
+            this.collection.Remove(key);
 
             return Task.CompletedTask;
         }

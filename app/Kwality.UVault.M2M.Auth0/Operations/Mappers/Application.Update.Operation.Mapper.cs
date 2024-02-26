@@ -29,6 +29,7 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
 [PublicAPI]
@@ -43,8 +44,8 @@ public abstract class Auth0ApplicationUpdateOperationMapper : IApplicationOperat
                 $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(ClientUpdateRequest)}`.");
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (this.Map(source) as TDestination)!;
+        return this.Map(source)
+                   .UnsafeAs<ClientUpdateRequest, TDestination>();
     }
 
     protected abstract ClientUpdateRequest Map<TSource>(TSource source);

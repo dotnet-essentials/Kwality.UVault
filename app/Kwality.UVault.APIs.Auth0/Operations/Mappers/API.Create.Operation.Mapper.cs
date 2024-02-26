@@ -30,6 +30,7 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Helpers;
 
 [PublicAPI]
 public abstract class Auth0ApiCreateOperationMapper : IApiOperationMapper
@@ -43,8 +44,8 @@ public abstract class Auth0ApiCreateOperationMapper : IApiOperationMapper
                 $"Invalid {nameof(IApiOperationMapper)}: Destination is NOT `{nameof(ResourceServerCreateRequest)}`.");
         }
 
-        // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-        return (this.Map(source) as TDestination)!;
+        return this.Map(source)
+                   .UnsafeAs<ResourceServerCreateRequest, TDestination>();
     }
 
     protected abstract ResourceServerCreateRequest Map<TSource>(TSource source);

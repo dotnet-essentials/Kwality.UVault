@@ -46,8 +46,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
-// ReSharper disable once InconsistentNaming
-// ReSharper disable once MemberCanBeFileLocal
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+[SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class IAMDefaultTests
 {
     private const string defaultRoute = "/";

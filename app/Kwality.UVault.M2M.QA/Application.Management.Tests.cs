@@ -32,6 +32,7 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Exceptions;
 using Kwality.UVault.Core.Extensions;
+using Kwality.UVault.Core.Helpers;
 using Kwality.UVault.Core.Keys;
 using Kwality.UVault.Core.Models;
 using Kwality.UVault.M2M.Extensions;
@@ -47,7 +48,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
-// ReSharper disable once MemberCanBeFileLocal
 public sealed class ApplicationManagementTests
 {
     [AutoData]
@@ -424,10 +424,8 @@ public sealed class ApplicationManagementTests
                            .NotMatch(application.ClientSecret);
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model : ApplicationModel<IntKey>
-#pragma warning restore CA1812
     {
         public Model(IntKey key, string name)
             : base(key)
@@ -447,8 +445,8 @@ public sealed class ApplicationManagementTests
                     $"Invalid {nameof(IApplicationFilter)}: Destination is NOT `{typeof(Func<KeyValuePair<IntKey, Model>, bool>).Name}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return ((Func<KeyValuePair<IntKey, Model>, bool>)Filter as TDestination)!;
+            return ((Func<KeyValuePair<IntKey, Model>, bool>)Filter)
+                .UnsafeAs<Func<KeyValuePair<IntKey, Model>, bool>, TDestination>();
 
             // The filter which is filters out data in the store.
             bool Filter(KeyValuePair<IntKey, Model> kvp)
@@ -469,8 +467,7 @@ public sealed class ApplicationManagementTests
                     $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
+            return source.UnsafeAs<TSource, TDestination>();
         }
     }
 
@@ -485,17 +482,14 @@ public sealed class ApplicationManagementTests
                     $"Invalid {nameof(IApplicationOperationMapper)}: Destination is NOT `{nameof(TSource)}`.");
             }
 
-            // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
-            return (source as TDestination)!;
+            return source.UnsafeAs<TSource, TDestination>();
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Store : IApplicationStore<Model, IntKey>
-#pragma warning restore CA1812
     {
-        private readonly IDictionary<IntKey, Model> collection = new Dictionary<IntKey, Model>();
+        private readonly Dictionary<IntKey, Model> collection = new();
 
         public Task<PagedResultSet<Model>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
         {
@@ -519,12 +513,12 @@ public sealed class ApplicationManagementTests
 
         public Task<Model> GetByKeyAsync(IntKey key)
         {
-            if (!this.collection.ContainsKey(key))
+            if (!this.collection.TryGetValue(key, out Model? value))
             {
                 throw new ReadException($"Custom: Failed to read application: `{key}`. Not found.");
             }
 
-            return Task.FromResult(this.collection[key]);
+            return Task.FromResult(value);
         }
 
         public Task<IntKey> CreateAsync(Model model, IApplicationOperationMapper mapper)
@@ -549,10 +543,7 @@ public sealed class ApplicationManagementTests
 
         public Task DeleteByKeyAsync(IntKey key)
         {
-            if (this.collection.ContainsKey(key))
-            {
-                this.collection.Remove(key);
-            }
+            this.collection.Remove(key);
 
             return Task.CompletedTask;
         }

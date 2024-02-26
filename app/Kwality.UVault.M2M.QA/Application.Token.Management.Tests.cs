@@ -24,8 +24,6 @@
 // =====================================================================================================================
 namespace Kwality.UVault.M2M.QA;
 
-using System.Diagnostics.CodeAnalysis;
-
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -126,10 +124,8 @@ public sealed class ApplicationTokenManagementTests
               .Be("Bearer");
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Model : TokenModel
-#pragma warning restore CA1812
     {
         public Model()
         {
@@ -141,12 +137,9 @@ public sealed class ApplicationTokenManagementTests
         }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     internal sealed class Store : IApplicationTokenStore<Model>
-#pragma warning restore CA1812
     {
-        [SuppressMessage("Performance", "CA1822:Mark members as static")]
         public Task<Model> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)
         {
             return Task.FromResult(new Model(Guid.NewGuid()

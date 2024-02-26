@@ -53,7 +53,6 @@ using Xunit;
 
 using AuthenticationFailureException = Kwality.UVault.Users.Auth0.QA.Internal.Exceptions.AuthenticationFailureException;
 
-// ReSharper disable once MemberCanBeFileLocal
 [Collection("Auth0")]
 public sealed class UserManagementAuth0Tests
 {
@@ -551,10 +550,8 @@ public sealed class UserManagementAuth0Tests
         public string? FirstName { get; set; }
     }
 
-#pragma warning disable CA1812 // "Avoid uninstantiated internal classes".
     [UsedImplicitly]
     private sealed class ModelMapper : IModelMapper<Model>
-#pragma warning restore CA1812
     {
         public Model Map(User user)
         {
@@ -569,7 +566,6 @@ public sealed class UserManagementAuth0Tests
         {
             if (source is Model model)
             {
-                // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
                 return new UserCreateRequest
                 {
                     Email = model.Key.Value, Connection = connection, Password = model.Password,
@@ -586,7 +582,6 @@ public sealed class UserManagementAuth0Tests
         {
             if (source is Model model)
             {
-                // ReSharper disable once NullableWarningSuppressionIsUsed - Known to be safe. See previous statement.
                 return new UserUpdateRequest
                 {
                     Email = model.Key.Value, FirstName = model.FirstName, LastName = model.Name,

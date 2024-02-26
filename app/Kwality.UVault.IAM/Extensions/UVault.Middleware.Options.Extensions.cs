@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.IAM.Extensions;
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Options;
@@ -31,9 +33,9 @@ using Kwality.UVault.Core.Options;
 using Microsoft.AspNetCore.Builder;
 
 [PublicAPI]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class UVaultMiddlewareOptionsExtensions
 {
-    // ReSharper disable once InconsistentNaming
     public static void UseIAM(this UVaultMiddlewareOptions options)
     {
         options.App.UseAuthentication();

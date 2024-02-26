@@ -33,7 +33,7 @@ internal sealed class StaticStore<TModel, TKey> : IApiStore<TModel, TKey>
     where TModel : ApiModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    private readonly IList<TModel> collection = new List<TModel>();
+    private readonly List<TModel> collection = [];
 
     public Task<TModel> GetByKeyAsync(TKey key)
     {
