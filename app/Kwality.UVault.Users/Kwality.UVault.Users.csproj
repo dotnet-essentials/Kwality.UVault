@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <AnalysisLevel>latest-all</AnalysisLevel>
     <TreatWarningsAsErrors Condition="'$(CIBuild)' == 'true'">true</TreatWarningsAsErrors>
   </PropertyGroup>
 
