@@ -50,6 +50,7 @@ public static class UVaultOptionsExtensions
         where TModel : ApiModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.Services.AddScoped<ApiManager<TModel, TKey>>();
         options.Services.AddScoped<IApiStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 

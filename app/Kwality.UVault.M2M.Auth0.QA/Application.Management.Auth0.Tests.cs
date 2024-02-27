@@ -588,7 +588,9 @@ public sealed class ApplicationManagementAuth0Tests
     }
 
     [UsedImplicitly]
+#pragma warning disable CA1812
     private sealed class ModelMapper : IModelMapper<Model>
+#pragma warning restore CA1812
     {
         public Model Map(Client client)
         {

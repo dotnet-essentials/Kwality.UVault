@@ -50,6 +50,7 @@ public static class UVaultOptionsExtensions
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
+        ArgumentNullException.ThrowIfNull(options);
         UseAndConfigureApplicationManagement(options, applicationManagementOptions);
     }
 
@@ -60,6 +61,7 @@ public static class UVaultOptionsExtensions
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
+        ArgumentNullException.ThrowIfNull(options);
         UseAndConfigureApplicationManagement<TModel, TKey>(options, null);
         UseAndConfigureApplicationTokenManagement<TToken, TKey>(options, applicationTokenManagementOptions);
     }

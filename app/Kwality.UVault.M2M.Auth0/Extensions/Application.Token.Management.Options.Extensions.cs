@@ -45,6 +45,7 @@ public static class ApplicationTokenManagementOptionsExtensions
         where TToken : TokenModel
         where TMapper : class, IModelTokenMapper<TToken>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.UseStore<ApplicationTokenStore<TToken>>();
 
         // Register additional services.

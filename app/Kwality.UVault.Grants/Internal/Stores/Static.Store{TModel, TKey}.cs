@@ -31,7 +31,9 @@ using Kwality.UVault.Grants.Operations.Filters.Abstractions;
 using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 using Kwality.UVault.Grants.Stores.Abstractions;
 
+#pragma warning disable CA1812
 internal sealed class StaticStore<TModel, TKey> : IGrantStore<TModel, TKey>
+#pragma warning restore CA1812
     where TModel : GrantModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

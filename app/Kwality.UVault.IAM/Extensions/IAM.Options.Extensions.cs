@@ -39,6 +39,7 @@ public static class IAMOptionsExtensions
 {
     public static void UseDefault(this IAMOptions options, string validIssuer, string validAudience)
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.AuthenticationBuilder.AddJwtBearer(new JwtValidator(validIssuer, validAudience).Options);
     }
 }

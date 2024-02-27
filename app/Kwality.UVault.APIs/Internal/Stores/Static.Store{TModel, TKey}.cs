@@ -29,7 +29,9 @@ using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.APIs.Stores.Abstractions;
 using Kwality.UVault.Core.Exceptions;
 
+#pragma warning disable CA1812
 internal sealed class StaticStore<TModel, TKey> : IApiStore<TModel, TKey>
+#pragma warning restore CA1812
     where TModel : ApiModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

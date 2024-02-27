@@ -41,7 +41,9 @@ public sealed class IAMAttribute : Attribute, ITraitAttribute
 
 [UsedImplicitly]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
+#pragma warning disable CA1812
 internal sealed class IAMFeatureDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

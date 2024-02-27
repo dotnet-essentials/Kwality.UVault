@@ -41,6 +41,7 @@ public static class UVaultOptionsExtensions
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static void UseIAM(this UVaultOptions options, Action<IAMOptions>? action)
     {
+        ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(action);
 
         // Setup authentication / authorization.

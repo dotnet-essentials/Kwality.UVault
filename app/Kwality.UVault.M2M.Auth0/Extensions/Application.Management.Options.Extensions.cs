@@ -46,6 +46,7 @@ public static class ApplicationManagementOptionsExtensions
         where TModel : ApplicationModel
         where TMapper : class, IModelMapper<TModel>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.UseStore<ApplicationStore<TModel>>();
 
         // Register additional services.

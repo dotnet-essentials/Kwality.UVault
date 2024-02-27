@@ -38,6 +38,7 @@ public static class UVaultMiddlewareOptionsExtensions
 {
     public static void UseIAM(this UVaultMiddlewareOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.App.UseAuthentication();
         options.App.UseAuthorization();
     }

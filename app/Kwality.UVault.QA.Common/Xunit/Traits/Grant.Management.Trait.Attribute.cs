@@ -37,7 +37,9 @@ public sealed class GrantManagementAttribute : Attribute, ITraitAttribute
 }
 
 [UsedImplicitly]
+#pragma warning disable CA1812
 internal sealed class GrantManagementFeatureDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

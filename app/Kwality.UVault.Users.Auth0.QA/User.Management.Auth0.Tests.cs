@@ -551,7 +551,9 @@ public sealed class UserManagementAuth0Tests
     }
 
     [UsedImplicitly]
+#pragma warning disable CA1812
     private sealed class ModelMapper : IModelMapper<Model>
+#pragma warning restore CA1812
     {
         public Model Map(User user)
         {

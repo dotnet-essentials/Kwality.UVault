@@ -37,7 +37,9 @@ public sealed class UserManagementAttribute : Attribute, ITraitAttribute
 }
 
 [UsedImplicitly]
+#pragma warning disable CA1812
 internal sealed class UserManagementFeatureDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

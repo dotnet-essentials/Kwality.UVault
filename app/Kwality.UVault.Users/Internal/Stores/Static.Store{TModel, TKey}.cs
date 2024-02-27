@@ -29,7 +29,9 @@ using Kwality.UVault.Users.Models;
 using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
 
+#pragma warning disable CA1812
 internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
+#pragma warning restore CA1812
     where TModel : UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

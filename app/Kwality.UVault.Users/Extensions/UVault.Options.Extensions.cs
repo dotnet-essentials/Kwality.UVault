@@ -50,6 +50,7 @@ public static class UVaultOptionsExtensions
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.Services.AddScoped<UserManager<TModel, TKey>>();
         options.Services.AddScoped<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 

@@ -425,7 +425,9 @@ public sealed class ApplicationManagementTests
     }
 
     [UsedImplicitly]
+#pragma warning disable CA1812
     internal sealed class Model : ApplicationModel<IntKey>
+#pragma warning restore CA1812
     {
         public Model(IntKey key, string name)
             : base(key)
@@ -487,7 +489,9 @@ public sealed class ApplicationManagementTests
     }
 
     [UsedImplicitly]
+#pragma warning disable CA1812
     internal sealed class Store : IApplicationStore<Model, IntKey>
+#pragma warning restore CA1812
     {
         private readonly Dictionary<IntKey, Model> collection = new();
 

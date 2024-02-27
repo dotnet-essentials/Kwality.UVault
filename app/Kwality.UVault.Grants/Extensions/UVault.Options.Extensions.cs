@@ -50,6 +50,7 @@ public static class UVaultOptionsExtensions
         where TModel : GrantModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.Services.AddScoped<GrantManager<TModel, TKey>>();
         options.Services.AddScoped<IGrantStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 

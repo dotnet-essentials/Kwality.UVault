@@ -75,7 +75,7 @@ internal sealed class HttpRequestValidator
         }
 
         // ACT.
-        HttpResponseMessage result = await httpClient.GetAsync(endpoint)
+        HttpResponseMessage result = await httpClient.GetAsync(new Uri(endpoint))
                                                      .ConfigureAwait(false);
 
         // ASSERT.

@@ -138,7 +138,9 @@ public sealed class ApplicationTokenManagementTests
     }
 
     [UsedImplicitly]
+#pragma warning disable CA1812
     internal sealed class Store : IApplicationTokenStore<Model>
+#pragma warning restore CA1812
     {
         public Task<Model> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)
         {

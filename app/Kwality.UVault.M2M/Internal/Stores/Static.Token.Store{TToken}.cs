@@ -27,7 +27,9 @@ namespace Kwality.UVault.M2M.Internal.Stores;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
+#pragma warning disable CA1812
 internal sealed class StaticTokenStore<TToken> : IApplicationTokenStore<TToken>
+#pragma warning restore CA1812
     where TToken : TokenModel, new()
 {
     public Task<TToken> GetAccessTokenAsync(string clientId, string clientSecret, string audience, string grantType)

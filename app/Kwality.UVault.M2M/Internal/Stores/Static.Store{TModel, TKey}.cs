@@ -31,7 +31,9 @@ using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
+#pragma warning disable CA1812
 internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey>
+#pragma warning disable CA1812
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

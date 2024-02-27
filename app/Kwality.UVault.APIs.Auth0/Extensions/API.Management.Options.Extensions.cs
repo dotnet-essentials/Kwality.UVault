@@ -46,6 +46,7 @@ public static class ApiManagementOptionsExtensions
         where TModel : ApiModel
         where TMapper : class, IModelMapper<TModel>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.UseStore<ApiStore<TModel>>();
 
         // Register additional services.

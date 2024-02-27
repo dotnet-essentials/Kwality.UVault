@@ -28,7 +28,9 @@ using System.Text.Json.Serialization;
 
 using JetBrains.Annotations;
 
+#pragma warning disable CA1812
 internal sealed class Auth0AuthenticationResponse
+#pragma warning restore CA1812
 {
     [JsonPropertyName("access_token")] public string? AccessToken { get; [UsedImplicitly] set; }
 }

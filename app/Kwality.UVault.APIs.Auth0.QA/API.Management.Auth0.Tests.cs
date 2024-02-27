@@ -203,7 +203,9 @@ public sealed class ApiManagementAuth0Tests
     internal sealed class Model(StringKey name) : ApiModel(name);
 
     [UsedImplicitly]
+#pragma warning disable CA1812
     private sealed class ModelMapper : IModelMapper<Model>
+#pragma warning restore CA1812
     {
         public Model Map(ResourceServer resourceServer)
         {

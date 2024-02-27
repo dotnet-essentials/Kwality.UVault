@@ -200,9 +200,11 @@ public sealed class IAMTests
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+#pragma warning disable CA5404
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = false,
+#pragma warning restore CA5404
                     ValidateIssuerSigningKey = false,
                     RequireSignedTokens = false,
 

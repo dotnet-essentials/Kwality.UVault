@@ -38,7 +38,9 @@ public sealed class M2MTokenManagementAttribute : Attribute, ITraitAttribute
 }
 
 [UsedImplicitly]
+#pragma warning disable CA1812
 internal sealed class M2MTokenManagementFeatureDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

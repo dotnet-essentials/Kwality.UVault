@@ -37,6 +37,8 @@ public sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider da
 
     public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
+        ArgumentNullException.ThrowIfNull(apiConfiguration);
+
         if (this.lastRequestedManagementToken is { AccessToken: not null } &&
             !this.lastRequestedManagementToken.IsExpired(dateTimeProvider))
         {

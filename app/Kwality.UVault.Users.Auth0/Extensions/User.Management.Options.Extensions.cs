@@ -46,6 +46,7 @@ public static class UserManagementOptionsExtensions
         where TModel : UserModel
         where TMapper : class, IModelMapper<TModel>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.UseStore<UserStore<TModel>>();
 
         // Register additional services.

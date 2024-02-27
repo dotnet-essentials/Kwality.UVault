@@ -46,6 +46,7 @@ public static class GrantManagementOptionsExtensions
         where TModel : GrantModel
         where TMapper : class, IModelMapper<TModel>
     {
+        ArgumentNullException.ThrowIfNull(options);
         options.UseStore<GrantStore<TModel>>();
 
         // Register additional services.

@@ -352,7 +352,9 @@ public sealed class UserManagementTests
     }
 
     [UsedImplicitly]
+#pragma warning disable CA1812
     internal sealed class Store : IUserStore<Model, IntKey>
+#pragma warning restore CA1812
     {
         private readonly Dictionary<IntKey, Model> collection = new();
 
