@@ -27,9 +27,9 @@ run-name: "CI (Continuous Integration) @ \u0022${{ github.ref_name }}\u0022 for 
 
 on:
   pull_request:
+    paths:
+      - 'app/Kwality.UVault.Core'
   workflow_dispatch:
-  paths:
-    - 'app/Kwality.UVault.Core'
 
 jobs:
   build:
