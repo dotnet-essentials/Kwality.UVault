@@ -51,8 +51,8 @@ jobs:
             dotnet-version: ${{ matrix.dotnet }}
 
         - name: Restore NuGet packages
-            working-directory: ${{ matrix.projects }}
-            run: dotnet restore
+          working-directory: ${{ matrix.projects }}
+          run: dotnet restore
 
         - name: Build project
           working-directory: ${{ matrix.projects }}
@@ -77,8 +77,8 @@ jobs:
             dotnet-version: ${{ matrix.dotnet }}
 
         - name: Restore NuGet packages
-            working-directory: ${{ matrix.projects }}
-            run: dotnet restore
+          working-directory: ${{ matrix.projects }}
+          run: dotnet restore
 
         - name: Build project
           working-directory: ${{ matrix.projects }}
