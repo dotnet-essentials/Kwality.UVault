@@ -34,14 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Kwality.UVault.APIs.Auth0\Kwality.UVault.APIs.Auth0.csproj" />
     <ProjectReference Include="..\Kwality.UVault.Core.Auth0\Kwality.UVault.Core.Auth0.csproj" />
-    <ProjectReference Include="..\Kwality.UVault.Core\Kwality.UVault.Core.csproj" />
-    <ProjectReference Include="..\Kwality.UVault.Grants.Auth0\Kwality.UVault.Grants.Auth0.csproj" />
-    <ProjectReference Include="..\Kwality.UVault.IAM\Kwality.UVault.IAM.csproj" />
-    <ProjectReference Include="..\Kwality.UVault.M2M.Auth0\Kwality.UVault.M2M.Auth0.csproj" />
     <ProjectReference Include="..\Kwality.UVault.QA.Common\Kwality.UVault.QA.Common.csproj" />
-    <ProjectReference Include="..\Kwality.UVault.Users.Auth0\Kwality.UVault.Users.Auth0.csproj" />
   </ItemGroup>
 
 </Project>
