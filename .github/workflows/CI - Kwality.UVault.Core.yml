@@ -61,63 +61,6 @@ jobs:
         working-directory: ${{ matrix.projects }}
         run: dotnet build --no-incremental --no-restore /p:CIBuild=true
 
-  analyze:
-    name: Analyze `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
-    needs: [ build ]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ windows-latest ]
-        dotnet: [ '6.0.419', '7.0.406', '8.0.201' ]
-        projects: [ 'app/Kwality.UVault.Core', 'app/Kwality.UVault.Core.Auth0', 'app/Kwality.UVault.Core.Auth0.QA', 'app/Kwality.UVault.APIs', 'app/Kwality.UVault.APIs.Auth0', 'app/Kwality.UVault.APIs.QA', 'app/Kwality.UVault.APIs.Auth0.QA', 'app/Kwality.UVault.IAM', 'app/Kwality.UVault.IAM.QA', 'app/Kwality.UVault.Grants', 'app/Kwality.UVault.Grants.Auth0', 'app/Kwality.UVault.Grants.QA', 'app/Kwality.UVault.Grants.Auth0.QA', 'app/Kwality.UVault.M2M', 'app/Kwality.UVault.M2M.Auth0', 'app/Kwality.UVault.M2M.QA', 'app/Kwality.UVault.M2M.Auth0.QA', 'app/Kwality.UVault.Users', 'app/Kwality.UVault.Users.Auth0', 'app/Kwality.UVault.Users.QA', 'app/Kwality.UVault.Users.Auth0.QA', 'app/Kwality.UVault.QA.Common' ]
-
-    steps:
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: 17
-          distribution: 'zulu'
-
-      - name: GIT Clone
-        uses: actions/checkout@v4
-
-      - name: Setup .NET ${{ matrix.dotnet }}
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ matrix.dotnet }}
-
-      - name: Install SonarCloud scanner
-        run: dotnet tool install -g dotnet-sonarscanner
-
-      - name: Install Code Coverage tool
-        run: dotnet tool install -g dotnet-coverage
-
-      - name: Restore NuGet packages
-        working-directory: ${{ matrix.projects }}
-        run: dotnet restore
-
-      - name: Build and analyze
-        working-directory: ${{ matrix.projects }}
-        env:
-          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
-          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
-          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
-          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
-          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
-          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
-          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-          AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
-          AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
-        shell: powershell
-        run: |
-          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-          dotnet clean
-          dotnet restore
-          dotnet build --no-incremental --no-restore
-          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
-          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
   # test-non-auth0-projects:
   #   name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
   #   needs: [ build ]
@@ -198,6 +141,64 @@ jobs:
   #       with:
   #         name: Test results (`${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
   #         path: ./app/TestResults-${{ matrix.projects }}-${{ matrix.os }}-${{ matrix.dotnet }}
+
+  analyze:
+    name: Analyze `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+    needs: [ build ]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+        dotnet: [ '6.0.419', '7.0.406', '8.0.201' ]
+
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+
+      - name: GIT Clone
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ matrix.dotnet }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+
+      - name: Install SonarCloud scanner
+        run: dotnet tool install -g dotnet-sonarscanner
+
+      - name: Install Code Coverage tool
+        run: dotnet tool install -g dotnet-coverage
+
+      - name: Restore NuGet packages
+        working-directory: ${{ matrix.projects }}
+        run: dotnet restore
+
+      - name: Build and analyze
+        working-directory: /app
+        env:
+          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
+          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
+          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+          AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
+          AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
+        shell: powershell
+        run: |
+          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          dotnet clean
+          dotnet restore
+          dotnet build --no-incremental --no-restore
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+
 
   # mutate:
   #   name: Mutate `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
