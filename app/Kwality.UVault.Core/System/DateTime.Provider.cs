@@ -28,5 +28,7 @@ using Kwality.UVault.Core.System.Abstractions;
 
 public sealed class DateTimeProvider : IDateTimeProvider
 {
+#pragma warning disable S6354
     public DateTime Now => DateTime.Now;
+#pragma warning restore S6354
 }

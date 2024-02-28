@@ -26,7 +26,6 @@ namespace Kwality.UVault.Core.Exceptions;
 
 using global::System.Diagnostics.CodeAnalysis;
 
-[Serializable]
 [ExcludeFromCodeCoverage]
 public sealed class ReadException : Exception
 {
