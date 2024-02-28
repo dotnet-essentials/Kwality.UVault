@@ -131,4 +131,20 @@ jobs:
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
           AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
           AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
-        run: dotnet test --no-build --no-restore
+          run: dotnet test --no-build --no-restore --filter Target="Auth0" --logger trx --results-directory "TestResults-${{ matrix.projects }}-${{ matrix.os }}-${{ matrix.dotnet }}"
+
+      - name: Check test result
+        id: check_dir
+        run: |
+          if [ -d "./app/TestResults-${{ matrix.dotnet }}" ]; then
+            echo "dir_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "dir_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload test result
+        uses: actions/upload-artifact@v3
+        if: steps.check_dir.outputs.dir_exists == 'true'
+        with:
+          name: Test results (`${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
+          path: ./app/TestResults-${{ matrix.projects }}-${{ matrix.os }}-${{ matrix.dotnet }}
