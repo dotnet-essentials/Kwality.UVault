@@ -28,7 +28,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.M2M.Auth0.Keys;
+using Kwality.UVault.Core.Auth0.Keys;
 using Kwality.UVault.M2M.Models;
 
 [PublicAPI]

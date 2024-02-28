@@ -22,9 +22,9 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.M2M.Auth0.Keys;
+namespace Kwality.UVault.Core.Auth0.Keys;
 
-using System.Diagnostics.CodeAnalysis;
+using global::System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -32,7 +32,7 @@ using JetBrains.Annotations;
 [ExcludeFromCodeCoverage]
 public sealed class StringKey(string value) : IEqualityComparer<StringKey>
 {
-    internal string Value { get; } = value;
+    public string Value { get; } = value;
 
     public bool Equals(StringKey? x, StringKey? y)
     {

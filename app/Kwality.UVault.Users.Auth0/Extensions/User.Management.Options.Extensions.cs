@@ -28,9 +28,9 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Auth0.API.Clients;
 using Kwality.UVault.Core.Auth0.Configuration;
+using Kwality.UVault.Core.Auth0.Keys;
 using Kwality.UVault.Core.System;
 using Kwality.UVault.Core.System.Abstractions;
-using Kwality.UVault.Users.Auth0.Keys;
 using Kwality.UVault.Users.Auth0.Mapping.Abstractions;
 using Kwality.UVault.Users.Auth0.Models;
 using Kwality.UVault.Users.Auth0.Stores;

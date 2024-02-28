@@ -36,10 +36,10 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Auth0.Configuration;
+using Kwality.UVault.Core.Auth0.Keys;
 using Kwality.UVault.Core.Exceptions;
 using Kwality.UVault.Core.Models;
 using Kwality.UVault.M2M.Auth0.Extensions;
-using Kwality.UVault.M2M.Auth0.Keys;
 using Kwality.UVault.M2M.Auth0.Mapping.Abstractions;
 using Kwality.UVault.M2M.Auth0.Models;
 using Kwality.UVault.M2M.Auth0.Operations.Filters;
