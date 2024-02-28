@@ -68,6 +68,12 @@ public sealed class ApiManagementTests
                                                     descriptor.ImplementationType == typeof(Store));
     }
 
+    [Fact]
+    internal void Demo()
+    {
+        Assert.True(false);
+    }
+
     [AutoData]
     [ApiManagement]
     [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
