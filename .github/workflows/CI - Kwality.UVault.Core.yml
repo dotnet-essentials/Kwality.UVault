@@ -23,7 +23,7 @@
 # ==                OTHER DEALINGS IN THE SOFTWARE.
 # ======================================================================================================================
 name: CI (Continuous Integration)`
-run-name: "CI (Continuous Integration) @ \u0022${{ github.ref_name }}\u0022 for \u0022Kwality.UVault.Core\u0022"
+run-name: "CI (Continuous Integration) @ \u0022${{ github.ref_name }}\u0022"
 
 on:
   pull_request:
@@ -63,6 +63,7 @@ jobs:
 
   analyze:
     name: Analyze `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+    needs: [ build ]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
