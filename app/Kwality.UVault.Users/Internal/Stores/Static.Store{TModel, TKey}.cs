@@ -39,7 +39,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        TModel? user = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? user = this.collection.Find(x => x.Key.Equals(key));
 
         if (user == null)
         {
@@ -56,7 +56,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
     public Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper)
     {
-        if (!this.collection.Any(u => u.Key.Equals(model.Key)))
+        if (!this.collection.Exists(u => u.Key.Equals(model.Key)))
         {
             this.collection.Add(mapper.Create<TModel, TModel>(model));
 
@@ -68,7 +68,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
     public async Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
     {
-        TModel? user = this.collection.FirstOrDefault(u => u.Key.Equals(key));
+        TModel? user = this.collection.Find(u => u.Key.Equals(key));
 
         if (user == null)
         {
@@ -83,7 +83,7 @@ internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 
     public Task DeleteByKeyAsync(TKey key)
     {
-        TModel? user = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? user = this.collection.Find(x => x.Key.Equals(key));
 
         if (user != null)
         {

@@ -27,7 +27,6 @@ namespace Kwality.UVault.Core.Auth0.Exceptions;
 using global::System.Diagnostics.CodeAnalysis;
 using global::System.Net;
 
-[Serializable]
 [ExcludeFromCodeCoverage]
 public sealed class TokenRequestException : Exception
 {
@@ -45,7 +44,7 @@ public sealed class TokenRequestException : Exception
     {
     }
 
-    public TokenRequestException(HttpStatusCode statusCode, string responseMessage)
+    internal TokenRequestException(HttpStatusCode statusCode, string responseMessage)
         : base(string.IsNullOrEmpty(responseMessage) ? $"{statusCode}" : $"{statusCode}: {responseMessage}")
     {
         this.StatusCode = statusCode;

@@ -26,7 +26,6 @@ namespace Kwality.UVault.Core.Auth0.Exceptions;
 
 using global::System.Diagnostics.CodeAnalysis;
 
-[Serializable]
 [ExcludeFromCodeCoverage]
 public sealed class ManagementApiException : Exception
 {

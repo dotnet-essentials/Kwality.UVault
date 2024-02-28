@@ -71,7 +71,9 @@ public sealed class UserManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         // ASSERT.
@@ -99,14 +101,18 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
                                .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             IEnumerable<Model> result = await manager.GetByEmailAsync("email@acme.com")
                                                      .ConfigureAwait(true);
@@ -146,7 +152,9 @@ public sealed class UserManagementAuth0Tests
             foreach (Model model in models)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 keys.Add(await manager.CreateAsync(model, new CreateOperationMapper())
                                       .ConfigureAwait(true));
@@ -157,7 +165,9 @@ public sealed class UserManagementAuth0Tests
                                    .First();
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             IEnumerable<Model> result = await manager.GetByEmailAsync(expected.Email)
                                                      .ConfigureAwait(true);
@@ -173,7 +183,9 @@ public sealed class UserManagementAuth0Tests
             foreach (StringKey key in keys)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -199,13 +211,17 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper())
                                       .ConfigureAwait(true));
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-1"))
                                       .ConfigureAwait(true));
@@ -215,7 +231,9 @@ public sealed class UserManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             IEnumerable<Model> result = await userManager.GetByEmailAsync(model.Email)
                                                          .ConfigureAwait(true);
@@ -231,7 +249,9 @@ public sealed class UserManagementAuth0Tests
             foreach (StringKey key in keys)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await userManager.DeleteByKeyAsync(key)
                                  .ConfigureAwait(true);
@@ -258,14 +278,18 @@ public sealed class UserManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
                                .ConfigureAwait(true);
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(true)).Should()
@@ -278,7 +302,9 @@ public sealed class UserManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -305,7 +331,9 @@ public sealed class UserManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             userId = await userManager.CreateAsync(model, new CreateOperationMapper())
                                       .ConfigureAwait(true);
@@ -321,7 +349,9 @@ public sealed class UserManagementAuth0Tests
             if (userId != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await userManager.DeleteByKeyAsync(userId)
                                  .ConfigureAwait(true);
@@ -347,14 +377,18 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
                                .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
             Func<Task<StringKey>> act = () => manager.CreateAsync(model, new CreateOperationMapper());
 
             // ASSERT.
@@ -392,7 +426,9 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
                                .ConfigureAwait(true);
@@ -402,13 +438,17 @@ public sealed class UserManagementAuth0Tests
             model.Name = "Updated: Name.";
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                          .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(true)).Should()
@@ -421,7 +461,9 @@ public sealed class UserManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -444,7 +486,9 @@ public sealed class UserManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
 
         // ASSERT.
@@ -468,14 +512,18 @@ public sealed class UserManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
         StringKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                      .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
         await manager.DeleteByKeyAsync(key)
                      .ConfigureAwait(true);

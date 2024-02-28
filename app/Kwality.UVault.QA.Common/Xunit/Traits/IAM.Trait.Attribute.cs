@@ -34,16 +34,18 @@ using JetBrains.Annotations;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 [TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.IAMFeatureDiscoverer", "Kwality.UVault.QA.Common")]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
+#pragma warning disable S101
 public sealed class IAMAttribute : Attribute, ITraitAttribute
+#pragma warning restore S101
 {
     // NOTE: Intentionally left blank.
 }
 
 [UsedImplicitly]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-#pragma warning disable CA1812
+#pragma warning disable CA1812, S101
 internal sealed class IAMFeatureDiscoverer : ITraitDiscoverer
-#pragma warning restore CA1812
+#pragma warning restore CA1812, S101
 {
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {

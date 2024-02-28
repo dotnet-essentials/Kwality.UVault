@@ -60,7 +60,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        TModel? application = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? application = this.collection.Find(x => x.Key.Equals(key));
 
         if (application == null)
         {
@@ -79,7 +79,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 
     public async Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
     {
-        TModel? application = this.collection.FirstOrDefault(u => u.Key.Equals(key));
+        TModel? application = this.collection.Find(u => u.Key.Equals(key));
 
         if (application == null)
         {
@@ -94,7 +94,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 
     public Task DeleteByKeyAsync(TKey key)
     {
-        TModel? application = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? application = this.collection.Find(x => x.Key.Equals(key));
 
         if (application != null)
         {
@@ -106,7 +106,7 @@ internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey
 
     public Task<TModel> RotateClientSecretAsync(TKey key)
     {
-        TModel? application = this.collection.FirstOrDefault(u => u.Key.Equals(key));
+        TModel? application = this.collection.Find(u => u.Key.Equals(key));
 
         if (application != null)
         {

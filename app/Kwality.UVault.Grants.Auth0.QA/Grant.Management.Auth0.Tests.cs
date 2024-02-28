@@ -73,7 +73,9 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
@@ -82,7 +84,9 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 3)
                                                         .ConfigureAwait(true);
@@ -108,7 +112,9 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -134,7 +140,9 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
@@ -143,7 +151,9 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
                                                         .ConfigureAwait(true);
@@ -162,7 +172,9 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -189,7 +201,9 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             keyOne = await manager.CreateAsync(modelOne,
                                       new CreateOperationMapper(
@@ -203,7 +217,9 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
                                                         .ConfigureAwait(true);
@@ -228,7 +244,9 @@ public sealed class GrantManagementAuth0Tests
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(keyOne)
                              .ConfigureAwait(true);
@@ -237,7 +255,9 @@ public sealed class GrantManagementAuth0Tests
             if (keyTwo != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(keyTwo)
                              .ConfigureAwait(true);
@@ -264,7 +284,9 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             keyOne = await manager.CreateAsync(modelOne,
                                       new CreateOperationMapper(
@@ -278,7 +300,9 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Audience))
                                                         .ConfigureAwait(true);
@@ -300,7 +324,9 @@ public sealed class GrantManagementAuth0Tests
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(keyOne)
                              .ConfigureAwait(true);
@@ -309,7 +335,9 @@ public sealed class GrantManagementAuth0Tests
             if (keyTwo != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(keyTwo)
                              .ConfigureAwait(true);
@@ -336,7 +364,9 @@ public sealed class GrantManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
@@ -345,7 +375,9 @@ public sealed class GrantManagementAuth0Tests
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             (await manager.GetAllAsync(0, 100)
                           .ConfigureAwait(true)).ResultSet.Should()
@@ -358,7 +390,9 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -384,7 +418,9 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             key = await manager.CreateAsync(model,
                                    new CreateOperationMapper(
@@ -395,13 +431,17 @@ public sealed class GrantManagementAuth0Tests
             model.Scopes = new[] { "read:authentication_methods" };
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                          .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
             (await manager.GetAllAsync(0, 100)
                           .ConfigureAwait(true)).ResultSet.Should()
@@ -414,7 +454,9 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
                 Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -437,7 +479,9 @@ public sealed class GrantManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
 
         // ASSERT.
@@ -461,7 +505,9 @@ public sealed class GrantManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
         StringKey key = await manager.CreateAsync(model,
                                          new CreateOperationMapper(
@@ -470,14 +516,18 @@ public sealed class GrantManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
         await manager.DeleteByKeyAsync(key)
                      .ConfigureAwait(true);
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
+#pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
+#pragma warning restore
 
         (await manager.GetAllAsync(0, 100)
                       .ConfigureAwait(true)).ResultSet.Should()

@@ -39,7 +39,7 @@ internal sealed class StaticStore<TModel, TKey> : IApiStore<TModel, TKey>
 
     public Task<TModel> GetByKeyAsync(TKey key)
     {
-        TModel? api = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? api = this.collection.Find(x => x.Key.Equals(key));
 
         if (api == null)
         {
@@ -58,7 +58,7 @@ internal sealed class StaticStore<TModel, TKey> : IApiStore<TModel, TKey>
 
     public Task DeleteByKeyAsync(TKey key)
     {
-        TModel? api = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? api = this.collection.Find(x => x.Key.Equals(key));
 
         if (api != null)
         {

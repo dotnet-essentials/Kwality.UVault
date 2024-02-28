@@ -67,7 +67,7 @@ internal sealed class StaticStore<TModel, TKey> : IGrantStore<TModel, TKey>
 
     public async Task UpdateAsync(TKey key, TModel model, IGrantOperationMapper mapper)
     {
-        TModel? grant = this.collection.FirstOrDefault(u => u.Key.Equals(key));
+        TModel? grant = this.collection.Find(u => u.Key.Equals(key));
 
         if (grant == null)
         {
@@ -82,7 +82,7 @@ internal sealed class StaticStore<TModel, TKey> : IGrantStore<TModel, TKey>
 
     public Task DeleteByKeyAsync(TKey key)
     {
-        TModel? grant = this.collection.FirstOrDefault(x => x.Key.Equals(key));
+        TModel? grant = this.collection.Find(x => x.Key.Equals(key));
 
         if (grant != null)
         {
