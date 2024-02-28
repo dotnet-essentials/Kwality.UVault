@@ -26,6 +26,8 @@ namespace Kwality.UVault.M2M.Operations.Filters.Abstractions;
 
 public interface IApplicationFilter
 {
+#pragma warning disable S4018
     TDestination Create<TDestination>()
+#pragma warning restore S4018
         where TDestination : class;
 }

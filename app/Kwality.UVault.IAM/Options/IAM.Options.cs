@@ -45,8 +45,9 @@ public sealed class IAMOptions
     }
 
     public AuthenticationBuilder AuthenticationBuilder { get; }
-
+#pragma warning disable S4018
     public void UseJwtValidator<TValidator>()
+#pragma warning resore S4018
         where TValidator : IJwtValidator, new()
     {
         this.AuthenticationBuilder.AddJwtBearer(new TValidator().Options);

@@ -32,7 +32,9 @@ using Kwality.UVault.Core.System.Abstractions;
 
 public sealed class ApiManagementToken
 {
+#pragma warning disable S6354
     private readonly DateTime issuedTimeStamp = DateTime.Now;
+#pragma warning restore S6354
     [JsonPropertyName("access_token")] public string? AccessToken { get; [UsedImplicitly] set; }
     [JsonPropertyName("expires_in")] public int ExpiresIn { get; [UsedImplicitly] set; }
     [JsonPropertyName("token_type")] public string TokenType { get; [UsedImplicitly] set; } = string.Empty;

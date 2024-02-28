@@ -42,14 +42,17 @@ public sealed class UserManagementOptions<TModel, TKey>
     }
 
     public IServiceCollection ServiceCollection { get; }
-
+#pragma warning disable S4018
     public void UseStore<TStore>()
+#pragma warning restore S4018
         where TStore : class, IUserStore<TModel, TKey>
     {
         this.ServiceCollection.AddScoped<IUserStore<TModel, TKey>, TStore>();
     }
 
+#pragma warning disable S4018
     public void UseStore<TStore>(ServiceLifetime serviceLifetime)
+#pragma warning restore S4018
         where TStore : class, IUserStore<TModel, TKey>
     {
         switch (serviceLifetime)

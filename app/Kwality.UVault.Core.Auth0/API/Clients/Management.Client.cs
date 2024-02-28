@@ -35,10 +35,15 @@ public sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider da
 {
     private ApiManagementToken? lastRequestedManagementToken;
 
-    public async Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
+    public Task<string> GetTokenAsync(ApiConfiguration apiConfiguration)
     {
         ArgumentNullException.ThrowIfNull(apiConfiguration);
 
+        return this.GetTokenInternalAsync(apiConfiguration);
+    }
+
+    private async Task<string> GetTokenInternalAsync(ApiConfiguration apiConfiguration)
+    {
         if (this.lastRequestedManagementToken is { AccessToken: not null } &&
             !this.lastRequestedManagementToken.IsExpired(dateTimeProvider))
         {
@@ -87,7 +92,7 @@ public sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider da
 
         try
         {
-            await EnsureHttpStatusCodeIsOkAsync(result, "Failed to retrieve an Auth0 token.")
+            await EnsureHttpStatusCodeIsOkAsync(result)
                 .ConfigureAwait(false);
 
             return await result.Content.ReadFromJsonAsync<ApiManagementToken>()
@@ -112,7 +117,7 @@ public sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider da
         }
     }
 
-    private static async Task EnsureHttpStatusCodeIsOkAsync(HttpResponseMessage result, string exceptionMessage)
+    private static async Task EnsureHttpStatusCodeIsOkAsync(HttpResponseMessage result)
     {
         if (!result.IsSuccessStatusCode)
         {
@@ -121,7 +126,7 @@ public sealed class ManagementClient(HttpClient httpClient, IDateTimeProvider da
 
             var errorApiException = new TokenRequestException(result.StatusCode, responseString);
 
-            throw new ManagementApiException(exceptionMessage, errorApiException);
+            throw new ManagementApiException("Failed to retrieve an Auth0 token.", errorApiException);
         }
     }
 }

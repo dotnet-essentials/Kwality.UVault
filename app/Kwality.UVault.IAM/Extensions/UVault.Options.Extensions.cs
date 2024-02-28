@@ -39,7 +39,9 @@ using Microsoft.Extensions.DependencyInjection;
 public static class UVaultOptionsExtensions
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
+#pragma warning disable S100
     public static void UseIAM(this UVaultOptions options, Action<IAMOptions>? action)
+#pragma warning disable S100
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(action);

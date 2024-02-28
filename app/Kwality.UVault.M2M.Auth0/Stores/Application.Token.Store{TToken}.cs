@@ -41,7 +41,7 @@ internal sealed class ApplicationTokenStore<TToken>(
     IModelTokenMapper<TToken> modelMapper) : IApplicationTokenStore<TToken>
     where TToken : TokenModel
 {
-    public async Task<TToken> GetAccessTokenAsync(
+    public Task<TToken> GetAccessTokenAsync(
         string clientId, string clientSecret, string audience, string grantType)
     {
         try
@@ -51,16 +51,22 @@ internal sealed class ApplicationTokenStore<TToken>(
             ArgumentNullException.ThrowIfNull(audience);
             ArgumentNullException.ThrowIfNull(grantType);
 
-            ApiManagementToken managementApiToken = await managementClient
-                                                          .GetM2MTokenAsync(m2MConfiguration.TokenEndpoint, grantType,
-                                                              clientId, clientSecret, audience)
-                                                          .ConfigureAwait(false);
-
-            return modelMapper.Map(managementApiToken);
+            return this.GetAccessTokenInternalAsync(clientId, clientSecret, audience, grantType);
         }
         catch (Exception ex)
         {
             throw new ReadException("Failed to retrieve an access token.", ex);
         }
+    }
+
+    private async Task<TToken> GetAccessTokenInternalAsync(
+        string clientId, string clientSecret, string audience, string grantType)
+    {
+        ApiManagementToken managementApiToken = await managementClient
+                                                      .GetM2MTokenAsync(m2MConfiguration.TokenEndpoint, grantType,
+                                                          clientId, clientSecret, audience)
+                                                      .ConfigureAwait(false);
+
+        return modelMapper.Map(managementApiToken);
     }
 }

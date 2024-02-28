@@ -35,7 +35,9 @@ using Kwality.UVault.M2M.Operations.Filters.Abstractions;
 [PublicAPI]
 public abstract class Auth0ApplicationFilter : IApplicationFilter
 {
+#pragma warning disable S4018
     public TDestination Create<TDestination>()
+#pragma warning restore S4018
         where TDestination : class
     {
         if (typeof(TDestination) != typeof(GetClientsRequest))

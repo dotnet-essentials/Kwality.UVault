@@ -41,8 +41,10 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class ApiManagementOptionsExtensions
 {
+#pragma warning disable S4018
     public static void UseAuth0Store<TModel, TMapper>(
         this ApiManagementOptions<TModel, StringKey> options, ApiConfiguration configuration)
+#pragma warning restore S4018
         where TModel : ApiModel
         where TMapper : class, IModelMapper<TModel>
     {

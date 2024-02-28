@@ -38,7 +38,9 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class UVaultOptionsExtensions
 {
+#pragma warning disable S4018
     public static void UseApplicationManagement<TModel, TKey>(this UVaultOptions options)
+#pragma warning restore S4018
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -54,9 +56,11 @@ public static class UVaultOptionsExtensions
         UseAndConfigureApplicationManagement(options, applicationManagementOptions);
     }
 
+#pragma warning disable S4018
     public static void UseApplicationTokenManagement<TToken, TModel, TKey>(
         this UVaultOptions options,
         Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
+#pragma warning restore S4018
         where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
@@ -78,8 +82,10 @@ public static class UVaultOptionsExtensions
         applicationManagementOptions?.Invoke(new ApplicationManagementOptions<TModel, TKey>(options.Services));
     }
 
+#pragma warning disable S4018
     private static void UseAndConfigureApplicationTokenManagement<TToken, TKey>(
         UVaultOptions options, Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
+#pragma warning restore S4018
         where TToken : TokenModel, new()
         where TKey : IEqualityComparer<TKey>
     {

@@ -26,6 +26,8 @@ namespace Kwality.UVault.Grants.Operations.Filters.Abstractions;
 
 public interface IGrantFilter
 {
+#pragma warning disable S4018
     TDestination Create<TDestination>()
+#pragma warning restore S4018
         where TDestination : class;
 }

@@ -26,6 +26,8 @@ namespace Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 
 public interface IGrantOperationMapper
 {
+#pragma warning disable S4018
     TDestination Create<TSource, TDestination>(TSource source)
+#pragma warning restore S4018
         where TDestination : class;
 }

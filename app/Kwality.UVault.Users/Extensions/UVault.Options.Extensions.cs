@@ -38,7 +38,9 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class UVaultOptionsExtensions
 {
+#pragma warning disable S4018
     public static void UseUserManagement<TModel, TKey>(this UVaultOptions options)
+#pragma warning restore S4018
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
