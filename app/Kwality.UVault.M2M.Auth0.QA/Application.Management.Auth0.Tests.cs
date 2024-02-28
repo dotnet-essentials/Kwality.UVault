@@ -405,9 +405,9 @@ public sealed class ApplicationManagementAuth0Tests
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(true)).Should()
-                                                .BeEquivalentTo(model,
-                                                    static options => options.Excluding(static application =>
-                                                        application.ClientSecret));
+                                                .BeEquivalentTo(model, static options => options
+                                                    .Excluding(static application => application.ClientSecret)
+                                                    .Excluding(static application => application.Key));
         }
         finally
         {

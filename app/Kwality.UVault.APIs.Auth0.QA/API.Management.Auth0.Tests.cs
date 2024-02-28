@@ -209,7 +209,7 @@ public sealed class ApiManagementAuth0Tests
     {
         public Model Map(ResourceServer resourceServer)
         {
-            return new Model(new StringKey(resourceServer.Id));
+            return new Model(new StringKey(resourceServer.Identifier));
         }
     }
 

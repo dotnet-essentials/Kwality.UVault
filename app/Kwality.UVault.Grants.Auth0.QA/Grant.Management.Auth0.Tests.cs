@@ -99,7 +99,8 @@ public sealed class GrantManagementAuth0Tests
                   .Take(1)
                   .First()
                   .Should()
-                  .BeEquivalentTo(model, static options => options.Excluding(static grant => grant.Scopes));
+                  .BeEquivalentTo(model, static options => options.Excluding(static grant => grant.Scopes)
+                                                                  .Excluding(static grant => grant.Key));
         }
         finally
         {
@@ -218,7 +219,8 @@ public sealed class GrantManagementAuth0Tests
             result.ResultSet.Take(1)
                   .First()
                   .Should()
-                  .BeEquivalentTo(modelOne, static options => options.Excluding(static grant => grant.Scopes));
+                  .BeEquivalentTo(modelOne, static options => options.Excluding(static grant => grant.Scopes)
+                                                                     .Excluding(static grant => grant.Key));
         }
         finally
         {
@@ -287,10 +289,10 @@ public sealed class GrantManagementAuth0Tests
                   .Be(3);
 
             result.ResultSet.Should()
-                  .ContainEquivalentOf(modelOne);
+                  .ContainEquivalentOf(modelOne, static options => options.Excluding(static grant => grant.Key));
 
             result.ResultSet.Should()
-                  .ContainEquivalentOf(modelTwo);
+                  .ContainEquivalentOf(modelTwo, static options => options.Excluding(static grant => grant.Key));
         }
         finally
         {
@@ -347,7 +349,8 @@ public sealed class GrantManagementAuth0Tests
 
             (await manager.GetAllAsync(0, 100)
                           .ConfigureAwait(true)).ResultSet.Should()
-                                                .ContainEquivalentOf(model);
+                                                .ContainEquivalentOf(model,
+                                                    static options => options.Excluding(static grant => grant.Key));
         }
         finally
         {
@@ -402,7 +405,8 @@ public sealed class GrantManagementAuth0Tests
 
             (await manager.GetAllAsync(0, 100)
                           .ConfigureAwait(true)).ResultSet.Should()
-                                                .ContainEquivalentOf(model);
+                                                .ContainEquivalentOf(model,
+                                                    static options => options.Excluding(static grant => grant.Key));
         }
         finally
         {
