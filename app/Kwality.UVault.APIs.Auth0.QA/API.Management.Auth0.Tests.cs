@@ -71,7 +71,7 @@ public sealed class ApiManagementAuth0Tests
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
 #pragma warning disable S2925
         Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+#pragma warning restore S2925
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         // ASSERT.
@@ -102,7 +102,7 @@ public sealed class ApiManagementAuth0Tests
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
 #pragma warning disable S2925
             Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+#pragma warning restore S2925
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
                                .ConfigureAwait(true);
