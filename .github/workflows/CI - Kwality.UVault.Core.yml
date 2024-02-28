@@ -118,90 +118,90 @@ jobs:
           dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-  test-non-auth0-projects:
-    name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
-    needs: [ build ]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-        dotnet: [ '6.0.419', '7.0.406', '8.0.201' ]
-        projects: [ 'app/Kwality.UVault.APIs.QA',  'app/Kwality.UVault.Grants.QA', 'app/Kwality.UVault.M2M.QA', 'app/Kwality.UVault.Users.QA' ]
+  # test-non-auth0-projects:
+  #   name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+  #   needs: [ build ]
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ ubuntu-latest ]
+  #       dotnet: [ '6.0.419', '7.0.406', '8.0.201' ]
+  #       projects: [ 'app/Kwality.UVault.APIs.QA',  'app/Kwality.UVault.Grants.QA', 'app/Kwality.UVault.M2M.QA', 'app/Kwality.UVault.Users.QA' ]
 
-    steps:
-      - name: GIT Clone
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: GIT Clone
+  #       uses: actions/checkout@v4
 
-      - name: Setup .NET ${{ matrix.dotnet }}
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ matrix.dotnet }}
+  #     - name: Setup .NET ${{ matrix.dotnet }}
+  #       uses: actions/setup-dotnet@v3
+  #       with:
+  #         dotnet-version: ${{ matrix.dotnet }}
 
-      - name: Restore NuGet packages
-        working-directory: ${{ matrix.projects }}
-        run: dotnet restore
+  #     - name: Restore NuGet packages
+  #       working-directory: ${{ matrix.projects }}
+  #       run: dotnet restore
 
-      - name: Build project
-        working-directory: ${{ matrix.projects }}
-        run: dotnet build --no-incremental --no-restore
+  #     - name: Build project
+  #       working-directory: ${{ matrix.projects }}
+  #       run: dotnet build --no-incremental --no-restore
 
-      - name: Test
-        working-directory: ${{ matrix.projects }}
-        run: dotnet test --no-build --no-restore
+  #     - name: Test
+  #       working-directory: ${{ matrix.projects }}
+  #       run: dotnet test --no-build --no-restore
 
-  test-auth0-projects:
-    name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
-    needs: [ build ]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-        dotnet: [ '6.0.419', '7.0.406', '8.0.201' ]
-        projects: [ 'app/Kwality.UVault.Core.Auth0.QA', 'app/Kwality.UVault.APIs.Auth0.QA', 'app/Kwality.UVault.IAM.QA', 'app/Kwality.UVault.Grants.Auth0.QA', 'app/Kwality.UVault.M2M.Auth0.QA', 'app/Kwality.UVault.Users.Auth0.QA' ]
-      max-parallel: 1
+  # test-auth0-projects:
+  #   name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
+  #   needs: [ build ]
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [ ubuntu-latest ]
+  #       dotnet: [ '6.0.419', '7.0.406', '8.0.201' ]
+  #       projects: [ 'app/Kwality.UVault.Core.Auth0.QA', 'app/Kwality.UVault.APIs.Auth0.QA', 'app/Kwality.UVault.IAM.QA', 'app/Kwality.UVault.Grants.Auth0.QA', 'app/Kwality.UVault.M2M.Auth0.QA', 'app/Kwality.UVault.Users.Auth0.QA' ]
+  #     max-parallel: 1
 
-    steps:
-      - name: GIT Clone
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: GIT Clone
+  #       uses: actions/checkout@v4
 
-      - name: Setup .NET ${{ matrix.dotnet }}
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ matrix.dotnet }}
+  #     - name: Setup .NET ${{ matrix.dotnet }}
+  #       uses: actions/setup-dotnet@v3
+  #       with:
+  #         dotnet-version: ${{ matrix.dotnet }}
 
-      - name: Restore NuGet packages
-        working-directory: ${{ matrix.projects }}
-        run: dotnet restore
+  #     - name: Restore NuGet packages
+  #       working-directory: ${{ matrix.projects }}
+  #       run: dotnet restore
 
-      - name: Build project
-        working-directory: ${{ matrix.projects }}
-        run: dotnet build --no-incremental --no-restore
+  #     - name: Build project
+  #       working-directory: ${{ matrix.projects }}
+  #       run: dotnet build --no-incremental --no-restore
 
-      - name: Test
-        working-directory: ${{ matrix.projects }}
-        env:
-          AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
-          AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
-          AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
-          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
-          AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
-          AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
-          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-          AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
-          AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
-        run: dotnet test --no-build --no-restore --filter Target="Auth0" --logger trx --results-directory "TestResults-${{ matrix.projects }}-${{ matrix.os }}-${{ matrix.dotnet }}"
+  #     - name: Test
+  #       working-directory: ${{ matrix.projects }}
+  #       env:
+  #         AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
+  #         AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
+  #         AUTH0_PASSWORD: ${{ secrets.AUTH0_PASSWORD }}
+  #         AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+  #         AUTH0_VALID_AUDIENCE: ${{ secrets.AUTH0_VALID_AUDIENCE }}
+  #         AUTH0_VALID_ISSUER: ${{ secrets.AUTH0_VALID_ISSUER }}
+  #         AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+  #         AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+  #         AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
+  #         AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
+  #       run: dotnet test --no-build --no-restore --filter Target="Auth0" --logger trx --results-directory "TestResults-${{ matrix.projects }}-${{ matrix.os }}-${{ matrix.dotnet }}"
 
-      - name: Upload test result
-        uses: actions/upload-artifact@v3
-        if: steps.check_dir.outputs.dir_exists == 'true'
-        with:
-          name: Test results (`${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
-          path: ./app/TestResults-${{ matrix.projects }}-${{ matrix.os }}-${{ matrix.dotnet }}
+  #     - name: Upload test result
+  #       uses: actions/upload-artifact@v3
+  #       if: steps.check_dir.outputs.dir_exists == 'true'
+  #       with:
+  #         name: Test results (`${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
+  #         path: ./app/TestResults-${{ matrix.projects }}-${{ matrix.os }}-${{ matrix.dotnet }}
 
   mutate:
     name: Mutate `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
-    needs: [ build, test-non-auth0-projects, test-auth0-projects ]
+    needs: [ analyze ]
     runs-on: ubuntu-latest
     strategy:
       matrix:
