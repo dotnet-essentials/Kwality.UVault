@@ -177,7 +177,7 @@ jobs:
         run: dotnet restore
 
       - name: Build and analyze
-        working-directory: /app
+        working-directory: ./app/
         env:
           AUTH0_TOKEN_ENDPOINT: ${{ secrets.AUTH0_TOKEN_ENDPOINT }}
           AUTH0_USERNAME: ${{ secrets.AUTH0_USERNAME }}
