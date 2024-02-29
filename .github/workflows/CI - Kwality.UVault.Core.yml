@@ -196,6 +196,11 @@ jobs:
         working-directory: ./app/
         run: dotnet restore
 
+      - name: Download test result(s)
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+
       - name: Build and analyze
         working-directory: ./app/
         env:
