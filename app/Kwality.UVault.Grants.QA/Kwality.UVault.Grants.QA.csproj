@@ -7,7 +7,8 @@
     <LangVersion>latest</LangVersion>
     <AnalysisLevel>latest-all</AnalysisLevel>
     <TreatWarningsAsErrors Condition="'$(CIBuild)' == 'true'">true</TreatWarningsAsErrors>
-
+    <SonarQubeTestProject>false</SonarQubeTestProject>
+    
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>

@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <AnalysisLevel>latest-all</AnalysisLevel>
     <TreatWarningsAsErrors Condition="'$(CIBuild)' == 'true'">true</TreatWarningsAsErrors>
+    <SonarQubeTestProject>false</SonarQubeTestProject>
   </PropertyGroup>
 
   <ItemGroup>
