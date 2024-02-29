@@ -206,7 +206,7 @@ jobs:
 
       - name: Merge test results
         run:
-          coverage merge coverage*.xml --recursive --output coverage.xml --output-format xml
+          dotnet-coverage merge coverage*.xml --recursive --output coverage.xml --output-format xml
 
       - name: Build and analyze
         working-directory: ./app/
