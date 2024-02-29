@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Test results (`${{ env.PROJECT_WITH_DASH }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
-          path: coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
+          path: ${{ matrix.projects }}/coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
 
   # test-auth0-projects:
   #   name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
@@ -161,7 +161,7 @@ jobs:
   #       uses: actions/upload-artifact@v4
   #       with:
             # name: Test results (`${{ env.PROJECT_WITH_DASH }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
-            # path: coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
+            # path: ${{ matrix.projects }}/coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
 
   analyze:
     name: Analyze on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
