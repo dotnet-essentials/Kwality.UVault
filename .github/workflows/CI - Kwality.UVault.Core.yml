@@ -199,8 +199,11 @@ jobs:
       - name: Download test result(s)
         uses: actions/download-artifact@v4
         with:
-          pattern: coverage-dotnet-*
+          pattern: *coverage-dotnet-*
           merge-multiple: true
+
+      - name: Install Code Coverage tool
+        run: dotnet tool install -g dotnet-coverage
 
       - run: ls -R *coverage-dotnet
 
