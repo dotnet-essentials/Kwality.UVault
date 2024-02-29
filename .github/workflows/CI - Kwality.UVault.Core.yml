@@ -202,11 +202,11 @@ jobs:
           pattern: coverage-dotnet-*
           merge-multiple: true
 
-      - run: ls -R coverage-dotnet
+      - run: ls -R *coverage-dotnet
 
       - name: Merge test results
         run:
-          dotnet-coverage merge coverage*.xml --recursive --output coverage.xml --output-format xml
+          dotnet-coverage merge *coverage*.xml --recursive --output coverage.xml --output-format xml
 
       - name: Build and analyze
         working-directory: ./app/
