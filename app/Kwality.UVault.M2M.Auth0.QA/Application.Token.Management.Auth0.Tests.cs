@@ -67,9 +67,8 @@ public sealed class ApplicationTokenManagementAuth0Tests
                 options.UseAuth0Store<TokenModel, TokenModelMapper>(configuration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         Model application = await applicationManager
                                   .GetByKeyAsync(new StringKey(Environment.ReadString("AUTH0_CLIENT_ID")))
@@ -77,9 +76,8 @@ public sealed class ApplicationTokenManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         TokenModel result = await applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
                                                              application.ClientSecret ?? string.Empty,
@@ -118,9 +116,8 @@ public sealed class ApplicationTokenManagementAuth0Tests
                 options.UseAuth0Store<TokenModel, TokenModelMapper>(configuration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         Model application = await applicationManager
                                   .GetByKeyAsync(
@@ -129,9 +126,8 @@ public sealed class ApplicationTokenManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         Func<Task<TokenModel>> act = () => applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
             application.ClientSecret ?? string.Empty, Environment.ReadString("AUTH0_AUDIENCE"), "client_credentials");

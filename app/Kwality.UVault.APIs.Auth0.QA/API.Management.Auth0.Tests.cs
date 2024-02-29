@@ -69,9 +69,9 @@ public sealed class ApiManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore S2925
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
+
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         // ASSERT.
@@ -100,18 +100,16 @@ public sealed class ApiManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore S2925
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
                                .ConfigureAwait(true);
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(true)).Should()
@@ -123,9 +121,8 @@ public sealed class ApiManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -148,18 +145,17 @@ public sealed class ApiManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
                      .ConfigureAwait(true);
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
+
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
@@ -182,27 +178,25 @@ public sealed class ApiManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         StringKey key = await manager.CreateAsync(model, new CreateOperationMapper())
                                      .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
                      .ConfigureAwait(true);
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
+
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()

@@ -74,18 +74,16 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 5)
                                                         .ConfigureAwait(true);
@@ -111,9 +109,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -139,18 +136,16 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
                                                         .ConfigureAwait(true);
@@ -169,9 +164,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -197,18 +191,16 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(3, 1)
                                                         .ConfigureAwait(true);
@@ -233,9 +225,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -262,9 +253,8 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(ClientApplicationType.Native))
                                   .ConfigureAwait(true);
@@ -275,9 +265,8 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager
                                                  .GetAllAsync(0, 10,
@@ -300,9 +289,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyOne)
                              .ConfigureAwait(true);
@@ -311,9 +299,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (keyTwo != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyTwo)
                              .ConfigureAwait(true);
@@ -336,9 +323,9 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
+
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         // ASSERT.
@@ -367,18 +354,16 @@ public sealed class ApplicationManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(true);
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(true)).Should()
@@ -392,9 +377,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -420,9 +404,8 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(true);
@@ -431,17 +414,15 @@ public sealed class ApplicationManagementAuth0Tests
             model.Name = "UVault (Sample application)";
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                          .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
                           .ConfigureAwait(true)).Should()
@@ -455,9 +436,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
@@ -480,9 +460,9 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
+
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
 
         // ASSERT.
@@ -506,9 +486,8 @@ public sealed class ApplicationManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         StringKey key = await manager
                               .CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
@@ -516,18 +495,17 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
                      .ConfigureAwait(true);
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
+
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
 
         await act.Should()
@@ -551,9 +529,9 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-        Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+        await Task.Delay(2000)
+                  .ConfigureAwait(true);
+
         Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
 
         // ASSERT.
@@ -581,35 +559,31 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             Model initialApplication = await manager.GetByKeyAsync(key)
                                                     .ConfigureAwait(true);
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             await manager.RotateClientSecretAsync(key)
                          .ConfigureAwait(true);
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+            await Task.Delay(2000)
+                      .ConfigureAwait(true);
 
             Model application = await manager.GetByKeyAsync(key)
                                              .ConfigureAwait(true);
@@ -623,9 +597,8 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-#pragma warning disable S2925
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-#pragma warning restore
+                await Task.Delay(2000)
+                          .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
                              .ConfigureAwait(true);
