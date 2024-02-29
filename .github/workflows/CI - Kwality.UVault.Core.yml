@@ -89,14 +89,14 @@ jobs:
         working-directory: ${{ matrix.projects }}
         run: dotnet build --no-incremental --no-restore
 
-      - name: Test
-        working-directory: ${{ matrix.projects }}
-        run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-dotnet-${{matrix.dotnet}}.xml"
-      
+      - name: Set Matrix Variables
+        run: |
+          echo "PROJECT_WITH_DASH=$(echo ${{ matrix.projects }} | tr '/' ' - ')" >> $GITHUB_ENV
+
       - name: Upload test result(s)
         uses: actions/upload-artifact@v3
         with:
-          name: Test results (`${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
+          name: Test results (`${{ env.PROJECT_WITH_DASH }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
           path: ${{ matrix.projects }}/coverage-dotnet-${{matrix.dotnet}}.xml
 
   test-auth0-projects:
@@ -145,10 +145,14 @@ jobs:
           AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
         run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-dotnet-${{matrix.dotnet}}.xml"
 
+      - name: Set Matrix Variables
+        run: |
+          echo "PROJECT_WITH_DASH=$(echo ${{ matrix.projects }} | tr '/' ' - ')" >> $GITHUB_ENV
+
       - name: Upload test result(s)
         uses: actions/upload-artifact@v3
         with:
-          name: Test results (`${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
+          name: Test results (`${{ env.PROJECT_WITH_DASH }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
           path: ${{ matrix.projects }}/coverage-dotnet-${{matrix.dotnet}}.xml
 
   analyze:
