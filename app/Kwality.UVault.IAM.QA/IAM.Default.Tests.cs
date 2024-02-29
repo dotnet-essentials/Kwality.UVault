@@ -92,7 +92,7 @@ public sealed class IAMDefaultTests
                 {
                     routes.MapGet(defaultRoute, static context =>
                     {
-                        context.Response.StatusCode = 200;
+                        context.Response.StatusCode = (int)HttpStatusCode.OK;
 
                         return Task.CompletedTask;
                     });
@@ -132,7 +132,7 @@ public sealed class IAMDefaultTests
                         [ExcludeFromCodeCoverage(Justification = "The user is NOT allowed to visit this endpoint.")]
                         static (context) =>
                         {
-                            context.Response.StatusCode = 200;
+                            context.Response.StatusCode = (int)HttpStatusCode.OK;
 
                             return Task.CompletedTask;
                         });
@@ -170,7 +170,7 @@ public sealed class IAMDefaultTests
                         [Authorize]
                         static (context) =>
                         {
-                            context.Response.StatusCode = 200;
+                            context.Response.StatusCode = (int)HttpStatusCode.OK;
 
                             return Task.CompletedTask;
                         });
@@ -210,7 +210,7 @@ public sealed class IAMDefaultTests
                 {
                     routes.MapGet(defaultRoute, [Authorize] static (context) =>
                     {
-                        context.Response.StatusCode = 200;
+                        context.Response.StatusCode = (int)HttpStatusCode.OK;
 
                         return Task.CompletedTask;
                     });
