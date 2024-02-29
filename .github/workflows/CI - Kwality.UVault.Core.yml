@@ -91,14 +91,13 @@ jobs:
 
       - name: Test
         working-directory: ${{ matrix.projects }}
-        run: dotnet-coverage collect "dotnet test --no-buid --no-restore" -f xml -o "coverage-dotnet-${{matrix.dotnet}}.xml"
+        run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-dotnet-${{matrix.dotnet}}.xml"
       
       - name: Upload test result(s)
         uses: actions/upload-artifact@v3
         with:
           name: Test results (`${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }})
           path: ${{ matrix.projects }}/coverage-dotnet-${{matrix.dotnet}}.xml
-
 
   test-auth0-projects:
     name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
@@ -144,7 +143,7 @@ jobs:
           AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
           AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
           AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
-        run: dotnet-coverage collect "dotnet test --no-buid --no-restore --filter Target="Auth0"" -f xml -o "coverage-dotnet-${{matrix.dotnet}}.xml"
+        run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-dotnet-${{matrix.dotnet}}.xml"
 
       - name: Upload test result(s)
         uses: actions/upload-artifact@v3
