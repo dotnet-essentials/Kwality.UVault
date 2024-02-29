@@ -95,13 +95,13 @@ jobs:
 
       - name: Test
         working-directory: ${{ matrix.projects }}
-        run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml"
+        run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml"
 
       - name: Upload test result(s)
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
-          path: ${{ matrix.projects }}/coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
+          name: coverage-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
+          path: ${{ matrix.projects }}/coverage-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
 
   # test-auth0-projects:
   #   name: Test `${{ matrix.projects }}` on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
@@ -151,7 +151,7 @@ jobs:
   #         AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
   #         AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
   #         AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
-  #       run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml"
+  #       run: dotnet-coverage collect -f xml dotnet test --no-build --no-restore -o "coverage-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml"
 
   #     - name: Set Matrix Variables
   #       run: |
@@ -160,8 +160,8 @@ jobs:
   #     - name: Upload test result(s)
   #       uses: actions/upload-artifact@v4
   #       with:
-            # name: coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
-            # path: ${{ matrix.projects }}/coverage-dotnet-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
+            # name: coverage-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
+            # path: ${{ matrix.projects }}/coverage-${{matrix.dotnet}}-${{ env.PROJECT_WITH_DASH }}.xml
 
   analyze:
     name: Analyze on ${{ matrix.os }} using .NET ${{ matrix.dotnet }}
@@ -196,19 +196,6 @@ jobs:
         working-directory: ./app/
         run: dotnet restore
 
-      - name: Download test result(s)
-        uses: actions/download-artifact@v4
-        with:
-          pattern: coverage-dotnet-*
-          merge-multiple: true
-
-      - name: Install Code Coverage tool
-        run: dotnet tool install -g dotnet-coverage
-
-      - name: Merge test results
-        run:
-          dotnet-coverage merge coverage-dotnet*.xml --output coverage.xml --output-format xml
-
       - name: Build and analyze
         working-directory: ./app/
         env:
@@ -224,7 +211,7 @@ jobs:
           AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
         shell: powershell
         run: |
-          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=Kwality.UVault/coverage.xml
+          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage-*.xml
           dotnet clean
           dotnet restore
           dotnet build --no-incremental --no-restore
