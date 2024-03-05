@@ -41,7 +41,7 @@ internal sealed class ApplicationTokenStore<TToken>(
     IModelTokenMapper<TToken> modelMapper) : IApplicationTokenStore<TToken>
     where TToken : TokenModel
 {
-    public Task<TToken> GetAccessTokenAsync(
+    public async Task<TToken> GetAccessTokenAsync(
         string clientId, string clientSecret, string audience, string grantType)
     {
         try
@@ -51,7 +51,8 @@ internal sealed class ApplicationTokenStore<TToken>(
             ArgumentNullException.ThrowIfNull(audience);
             ArgumentNullException.ThrowIfNull(grantType);
 
-            return this.GetAccessTokenInternalAsync(clientId, clientSecret, audience, grantType);
+            return await this.GetAccessTokenInternalAsync(clientId, clientSecret, audience, grantType)
+                             .ConfigureAwait(false);
         }
         catch (Exception ex)
         {
