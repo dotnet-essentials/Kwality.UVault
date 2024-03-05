@@ -51,6 +51,8 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
+using static UVault.QA.Common.Properties.Delays;
+
 [Collection("Auth0")]
 [SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class GrantManagementAuth0Tests
@@ -73,7 +75,7 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model,
@@ -83,7 +85,7 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 3)
@@ -110,7 +112,7 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -137,7 +139,7 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model,
@@ -147,7 +149,7 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
@@ -167,7 +169,7 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -195,7 +197,7 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             keyOne = await manager.CreateAsync(modelOne,
@@ -210,7 +212,7 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 1)
@@ -236,7 +238,7 @@ public sealed class GrantManagementAuth0Tests
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyOne)
@@ -246,7 +248,7 @@ public sealed class GrantManagementAuth0Tests
             if (keyTwo != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyTwo)
@@ -274,7 +276,7 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             keyOne = await manager.CreateAsync(modelOne,
@@ -289,7 +291,7 @@ public sealed class GrantManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 10, new OperationFilter(modelTwo.Audience))
@@ -312,7 +314,7 @@ public sealed class GrantManagementAuth0Tests
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyOne)
@@ -322,7 +324,7 @@ public sealed class GrantManagementAuth0Tests
             if (keyTwo != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyTwo)
@@ -350,7 +352,7 @@ public sealed class GrantManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model,
@@ -360,7 +362,7 @@ public sealed class GrantManagementAuth0Tests
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             (await manager.GetAllAsync(0, 100)
@@ -374,7 +376,7 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -401,7 +403,7 @@ public sealed class GrantManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model,
@@ -413,14 +415,14 @@ public sealed class GrantManagementAuth0Tests
             model.Scopes = new[] { "read:authentication_methods" };
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                          .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(2000)
+            await Task.Delay(RateLimitDelay)
                       .ConfigureAwait(true);
 
             (await manager.GetAllAsync(0, 100)
@@ -434,7 +436,7 @@ public sealed class GrantManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(2000)
+                await Task.Delay(RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -458,7 +460,7 @@ public sealed class GrantManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
@@ -484,7 +486,7 @@ public sealed class GrantManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         StringKey key = await manager.CreateAsync(model,
@@ -494,7 +496,7 @@ public sealed class GrantManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
@@ -502,7 +504,7 @@ public sealed class GrantManagementAuth0Tests
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         (await manager.GetAllAsync(0, 100)

@@ -47,6 +47,8 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
+using static UVault.QA.Common.Properties.Delays;
+
 [Collection("Auth0")]
 public sealed class ApplicationTokenManagementAuth0Tests
 {
@@ -67,7 +69,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
                 options.UseAuth0Store<TokenModel, TokenModelMapper>(configuration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         Model application = await applicationManager
@@ -76,7 +78,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         TokenModel result = await applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
@@ -116,7 +118,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
                 options.UseAuth0Store<TokenModel, TokenModelMapper>(configuration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         Model application = await applicationManager
@@ -126,7 +128,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(2000)
+        await Task.Delay(RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task<TokenModel>> act = () => applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
