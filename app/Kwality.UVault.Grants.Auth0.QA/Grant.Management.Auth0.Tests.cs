@@ -57,12 +57,6 @@ using static UVault.QA.Common.Properties.Delays;
 [SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class GrantManagementAuth0Tests
 {
-    [Fact]
-    internal void ShouldFail()
-    {
-        Assert.True(false);
-    }
-
     [AutoData]
     [GrantManagement]
     [Auth0]
