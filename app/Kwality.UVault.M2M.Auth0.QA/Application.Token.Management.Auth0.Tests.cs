@@ -100,7 +100,7 @@ public sealed class ApplicationTokenManagementAuth0Tests
     }
 
     [M2MTokenManagement]
-    [Fact(DisplayName = "Get access token (for an application without permissions) succeeds.")]
+    [Fact(DisplayName = "Get access token (for an application without permissions) fails.")]
     internal async Task GetToken_ApplicationWithoutPermission_Fails()
     {
         // ARRANGE.
