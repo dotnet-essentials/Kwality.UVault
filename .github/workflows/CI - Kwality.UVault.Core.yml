@@ -192,15 +192,12 @@ jobs:
       - name: Install SonarCloud scanner
         run: dotnet tool install -g dotnet-sonarscanner
 
+      - name: Install Code Coverage tool
+        run: dotnet tool install -g dotnet-coverage
+
       - name: Restore NuGet packages
         working-directory: ./app/
         run: dotnet restore
-
-      - name: Download test result(s)
-        uses: actions/download-artifact@v4
-        with:
-          pattern: coverage-*
-          path: ./app/
 
       - name: Build and analyze
         working-directory: ./app/
@@ -217,7 +214,7 @@ jobs:
           AUTH0_TEST_APPLICATION_1_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_1_CLIENT_ID }}
           AUTH0_TEST_APPLICATION_2_CLIENT_ID: ${{ secrets.AUTH0_TEST_APPLICATION_2_CLIENT_ID }}
         run: |
-          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage-*.xml
+          dotnet-sonarscanner begin /k:"dotnet-essentials_Kwality.UVault" /o:"dotnet-essentials" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet clean
           dotnet restore
           dotnet build --no-incremental --no-restore
