@@ -38,9 +38,7 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class UVaultOptionsExtensions
 {
-#pragma warning disable S4018
     public static void UseApiManagement<TModel, TKey>(this UVaultOptions options)
-#pragma warning restore
         where TModel : ApiModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {

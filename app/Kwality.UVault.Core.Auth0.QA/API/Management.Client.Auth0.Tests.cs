@@ -39,7 +39,6 @@ using Kwality.UVault.Core.Auth0.Exceptions;
 using Kwality.UVault.Core.Auth0.Models;
 using Kwality.UVault.Core.Auth0.QA.Internal.Extensions;
 using Kwality.UVault.Core.System.Abstractions;
-using Kwality.UVault.QA.Common.Properties;
 using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Moq;
@@ -51,10 +50,9 @@ using Xunit;
 public sealed class Auth0ManagementClientTests
 {
     private const string testPrefix = "Request an API management token";
+    
     private readonly ApiConfiguration apiConfiguration
-#pragma warning disable S1075
         = new(new Uri("http://localhost/"), string.Empty, string.Empty, string.Empty);
-#pragma warning restore S1075
     
     [Auth0]
     [AutoDomainData]
@@ -257,7 +255,7 @@ public sealed class Auth0ManagementClientTests
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
-                        .Returns(Time.Now);
+                        .Returns(DateTime.Now);
 
         using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
         managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;
@@ -298,7 +296,7 @@ public sealed class Auth0ManagementClientTests
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
-                        .Returns(Time.Tomorrow);
+                        .Returns(DateTime.Now.AddHours(24));
 
         using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
         managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;
@@ -339,7 +337,7 @@ public sealed class Auth0ManagementClientTests
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
-                        .Returns(Time.Now);
+                        .Returns(DateTime.Now);
 
         using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
         managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;

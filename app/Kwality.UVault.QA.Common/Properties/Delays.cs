@@ -26,5 +26,5 @@ namespace Kwality.UVault.QA.Common.Properties;
 
 public static class Delays
 {
-    public const int TwoSeconds = 2000;
+    public const int Auth0RateLimitDelay = 2000;
 }

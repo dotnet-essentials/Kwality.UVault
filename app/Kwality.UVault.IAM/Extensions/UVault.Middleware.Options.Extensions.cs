@@ -36,9 +36,7 @@ using Microsoft.AspNetCore.Builder;
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class UVaultMiddlewareOptionsExtensions
 {
-#pragma warning disable S100
     public static void UseIAM(this UVaultMiddlewareOptions options)
-#pragma warning disable S100
     {
         ArgumentNullException.ThrowIfNull(options);
         options.App.UseAuthentication();

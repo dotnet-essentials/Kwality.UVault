@@ -338,6 +338,6 @@ public sealed class IAMDefaultTests
 
     private static (string validIssuer, string validAudience) GetJwtSettings()
     {
-        return (Environment.ReadString("AUTH0_VALID_ISSUER"), Environment.ReadString("AUTH0_VALID_AUDIENCE"));
+        return (Environment.AUTH0_VALID_ISSUER, Environment.AUTH0_VALID_AUDIENCE);
     }
 }

@@ -42,17 +42,14 @@ public sealed class ApiManagementOptions<TModel, TKey>
     }
 
     public IServiceCollection ServiceCollection { get; }
-#pragma warning disable S4018
+
     public void UseStore<TStore>()
-#pragma warning restore S4018
         where TStore : class, IApiStore<TModel, TKey>
     {
         this.ServiceCollection.AddScoped<IApiStore<TModel, TKey>, TStore>();
     }
 
-#pragma warning disable S4018
     public void UseStore<TStore>(ServiceLifetime serviceLifetime)
-#pragma warning restore S4018
         where TStore : class, IApiStore<TModel, TKey>
     {
         switch (serviceLifetime)

@@ -35,9 +35,7 @@ using Kwality.UVault.Core.Helpers;
 [PublicAPI]
 public abstract class Auth0ApiCreateOperationMapper : IApiOperationMapper
 {
-#pragma warning disable S4018
     public TDestination Create<TSource, TDestination>(TSource source)
-#pragma warning restore S4018
         where TDestination : class
     {
         if (typeof(TDestination) != typeof(ResourceServerCreateRequest))

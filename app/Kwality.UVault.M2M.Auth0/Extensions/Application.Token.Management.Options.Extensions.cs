@@ -40,10 +40,8 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class ApplicationTokenManagementOptionsExtensions
 {
-#pragma warning disable S4018
     public static void UseAuth0Store<TToken, TMapper>(
         this ApplicationTokenManagementOptions<TToken> options, M2MConfiguration configuration)
-#pragma warning restore S4018
         where TToken : TokenModel
         where TMapper : class, IModelTokenMapper<TToken>
     {

@@ -73,7 +73,7 @@ public sealed class UserManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -103,7 +103,7 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -111,7 +111,7 @@ public sealed class UserManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             IEnumerable<Model> result = await manager.GetByEmailAsync("email@acme.com")
@@ -152,7 +152,7 @@ public sealed class UserManagementAuth0Tests
             foreach (Model model in models)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(TwoSeconds)
+                await Task.Delay(Auth0RateLimitDelay)
                           .ConfigureAwait(true);
 
                 keys.Add(await manager.CreateAsync(model, new CreateOperationMapper())
@@ -164,7 +164,7 @@ public sealed class UserManagementAuth0Tests
                                    .First();
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             IEnumerable<Model> result = await manager.GetByEmailAsync(expected.Email)
@@ -181,7 +181,7 @@ public sealed class UserManagementAuth0Tests
             foreach (StringKey key in keys)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(TwoSeconds)
+                await Task.Delay(Auth0RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -208,14 +208,14 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper())
                                       .ConfigureAwait(true));
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             keys.Add(await userManager.CreateAsync(model, new CreateOperationMapper("DEV-CNN-1"))
@@ -226,7 +226,7 @@ public sealed class UserManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             IEnumerable<Model> result = await userManager.GetByEmailAsync(model.Email)
@@ -243,7 +243,7 @@ public sealed class UserManagementAuth0Tests
             foreach (StringKey key in keys)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(TwoSeconds)
+                await Task.Delay(Auth0RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await userManager.DeleteByKeyAsync(key)
@@ -271,7 +271,7 @@ public sealed class UserManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -279,7 +279,7 @@ public sealed class UserManagementAuth0Tests
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
@@ -293,7 +293,7 @@ public sealed class UserManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(TwoSeconds)
+                await Task.Delay(Auth0RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -321,7 +321,7 @@ public sealed class UserManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             userId = await userManager.CreateAsync(model, new CreateOperationMapper())
@@ -338,7 +338,7 @@ public sealed class UserManagementAuth0Tests
             if (userId != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(TwoSeconds)
+                await Task.Delay(Auth0RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await userManager.DeleteByKeyAsync(userId)
@@ -365,7 +365,7 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -373,7 +373,7 @@ public sealed class UserManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             Func<Task<StringKey>> act = () => manager.CreateAsync(model, new CreateOperationMapper());
@@ -413,7 +413,7 @@ public sealed class UserManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -424,14 +424,14 @@ public sealed class UserManagementAuth0Tests
             model.Name = "Updated: Name.";
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                          .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
@@ -445,7 +445,7 @@ public sealed class UserManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(TwoSeconds)
+                await Task.Delay(Auth0RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -469,7 +469,7 @@ public sealed class UserManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
@@ -495,7 +495,7 @@ public sealed class UserManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         StringKey key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -503,7 +503,7 @@ public sealed class UserManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
@@ -520,17 +520,16 @@ public sealed class UserManagementAuth0Tests
 
     private static ApiConfiguration GetApiConfiguration()
     {
-        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")),
-            Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"),
-            Environment.ReadString("AUTH0_AUDIENCE"));
+        return new ApiConfiguration(new Uri(Environment.AUTH0_TOKEN_ENDPOINT), Environment.AUTH0_CLIENT_ID,
+            Environment.AUTH0_CLIENT_SECRET, Environment.AUTH0_AUDIENCE);
     }
 
     private static async Task<string> AuthenticateUserAsync(string email, string password)
     {
-        string endpoint = Environment.ReadString("AUTH0_TOKEN_ENDPOINT");
-        string audience = Environment.ReadString("AUTH0_AUDIENCE");
-        string clientId = Environment.ReadString("AUTH0_CLIENT_ID");
-        string clientSecret = Environment.ReadString("AUTH0_CLIENT_SECRET");
+        string endpoint = Environment.AUTH0_TOKEN_ENDPOINT;
+        string audience = Environment.AUTH0_AUDIENCE;
+        string clientId = Environment.AUTH0_CLIENT_ID;
+        string clientSecret = Environment.AUTH0_CLIENT_SECRET;
         using var httpClient = new HttpClient();
 
         var data = new[]

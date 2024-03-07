@@ -30,9 +30,7 @@ using global::System.Runtime.CompilerServices;
 public static class SafeMap
 {
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-#pragma warning disable S4018
     public static TDestination UnsafeAs<TSource, TDestination>(this TSource source)
-#pragma warning restore S4018
         where TDestination : class
     {
         return Unsafe.As<TDestination>(source)!;

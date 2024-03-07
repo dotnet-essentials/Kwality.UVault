@@ -29,7 +29,7 @@ using global::System.Diagnostics.CodeAnalysis;
 [ExcludeFromCodeCoverage(Justification = "Helper function.")]
 public static class Environment
 {
-    public static string ReadString(string key)
+    private static string ReadString(string key)
     {
         string value = global::System.Environment.GetEnvironmentVariable(key) ?? string.Empty;
 
@@ -40,4 +40,16 @@ public static class Environment
 
         return value;
     }
+#pragma warning disable CA1707
+    public static string AUTH0_TOKEN_ENDPOINT => ReadString("AUTH0_TOKEN_ENDPOINT");
+    public static string AUTH0_USERNAME => ReadString("AUTH0_USERNAME");
+    public static string AUTH0_PASSWORD => ReadString("AUTH0_PASSWORD");
+    public static string AUTH0_AUDIENCE => ReadString("AUTH0_AUDIENCE");
+    public static string AUTH0_VALID_AUDIENCE => ReadString("AUTH0_VALID_AUDIENCE");
+    public static string AUTH0_VALID_ISSUER => ReadString("AUTH0_VALID_ISSUER");
+    public static string AUTH0_CLIENT_ID => ReadString("AUTH0_CLIENT_ID");
+    public static string AUTH0_CLIENT_SECRET => ReadString("AUTH0_CLIENT_SECRET");
+    public static string AUTH0_TEST_APPLICATION_1_CLIENT_ID => ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID");
+    public static string AUTH0_TEST_APPLICATION_2_CLIENT_ID => ReadString("AUTH0_TEST_APPLICATION_2_CLIENT_ID");
+#pragma warning restore CA1707
 }

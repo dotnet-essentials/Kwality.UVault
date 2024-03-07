@@ -35,12 +35,12 @@ internal static class Auth0AuthenticationFactory
 {
     public static async Task<string> RequestAsync()
     {
-        string endpoint = Environment.ReadString("AUTH0_TOKEN_ENDPOINT");
-        string userName = Environment.ReadString("AUTH0_USERNAME");
-        string password = Environment.ReadString("AUTH0_PASSWORD");
-        string audience = Environment.ReadString("AUTH0_AUDIENCE");
-        string clientId = Environment.ReadString("AUTH0_CLIENT_ID");
-        string clientSecret = Environment.ReadString("AUTH0_CLIENT_SECRET");
+        string endpoint = Environment.AUTH0_TOKEN_ENDPOINT;
+        string userName = Environment.AUTH0_USERNAME;
+        string password = Environment.AUTH0_PASSWORD;
+        string audience = Environment.AUTH0_AUDIENCE;
+        string clientId = Environment.AUTH0_CLIENT_ID;
+        string clientSecret = Environment.AUTH0_CLIENT_SECRET;
         using var httpClient = new HttpClient();
 
         var data = new[]

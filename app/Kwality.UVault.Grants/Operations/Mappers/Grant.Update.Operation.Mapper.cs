@@ -33,9 +33,7 @@ using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 [PublicAPI]
 public sealed class GrantUpdateOperationMapper : IGrantOperationMapper
 {
-#pragma warning disable S4018
     public TDestination Create<TSource, TDestination>(TSource source)
-#pragma warning restore S4018
         where TDestination : class
     {
         if (typeof(TDestination) != typeof(TSource))

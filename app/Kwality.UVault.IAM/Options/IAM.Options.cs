@@ -35,9 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 [PublicAPI]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
-#pragma warning disable S101
 public sealed class IAMOptions
-#pragma warning restore S101
 {
     internal IAMOptions(AuthenticationBuilder authenticationBuilder)
     {
@@ -45,9 +43,8 @@ public sealed class IAMOptions
     }
 
     public AuthenticationBuilder AuthenticationBuilder { get; }
-#pragma warning disable S4018
+
     public void UseJwtValidator<TValidator>()
-#pragma warning restore S4018
         where TValidator : IJwtValidator, new()
     {
         this.AuthenticationBuilder.AddJwtBearer(new TValidator().Options);

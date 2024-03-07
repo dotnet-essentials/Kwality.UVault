@@ -38,9 +38,7 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class UVaultOptionsExtensions
 {
-#pragma warning disable S4018
     public static void UseGrantManagement<TModel, TKey>(this UVaultOptions options)
-#pragma warning restore S4018
         where TModel : GrantModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {

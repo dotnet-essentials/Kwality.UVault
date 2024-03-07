@@ -69,21 +69,20 @@ public sealed class ApplicationTokenManagementAuth0Tests
                 options.UseAuth0Store<TokenModel, TokenModelMapper>(configuration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
-        Model application = await applicationManager
-                                  .GetByKeyAsync(new StringKey(Environment.ReadString("AUTH0_CLIENT_ID")))
-                                  .ConfigureAwait(true);
+        Model application = await applicationManager.GetByKeyAsync(new StringKey(Environment.AUTH0_CLIENT_ID))
+                                                    .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         TokenModel result = await applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
                                                              application.ClientSecret ?? string.Empty,
-                                                             Environment.ReadString("AUTH0_AUDIENCE"),
+                                                             Environment.AUTH0_AUDIENCE,
                                                              "client_credentials")
                                                          .ConfigureAwait(true);
 
@@ -118,21 +117,20 @@ public sealed class ApplicationTokenManagementAuth0Tests
                 options.UseAuth0Store<TokenModel, TokenModelMapper>(configuration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         Model application = await applicationManager
-                                  .GetByKeyAsync(
-                                      new StringKey(Environment.ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID")))
+                                  .GetByKeyAsync(new StringKey(Environment.AUTH0_TEST_APPLICATION_1_CLIENT_ID))
                                   .ConfigureAwait(true);
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task<TokenModel>> act = () => applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
-            application.ClientSecret ?? string.Empty, Environment.ReadString("AUTH0_AUDIENCE"), "client_credentials");
+            application.ClientSecret ?? string.Empty, Environment.AUTH0_AUDIENCE, "client_credentials");
 
         // ASSERT.
         await act.Should()
@@ -172,14 +170,13 @@ public sealed class ApplicationTokenManagementAuth0Tests
 
     private static ApiConfiguration GetApiConfiguration()
     {
-        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")),
-            Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"),
-            Environment.ReadString("AUTH0_AUDIENCE"));
+        return new ApiConfiguration(new Uri(Environment.AUTH0_TOKEN_ENDPOINT), Environment.AUTH0_CLIENT_ID,
+            Environment.AUTH0_CLIENT_SECRET, Environment.AUTH0_AUDIENCE);
     }
 
     private static M2MConfiguration GetM2MConfiguration()
     {
-        return new M2MConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")));
+        return new M2MConfiguration(new Uri(Environment.AUTH0_TOKEN_ENDPOINT));
     }
 
     private sealed class Model : ApplicationModel

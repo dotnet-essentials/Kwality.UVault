@@ -71,7 +71,7 @@ public sealed class ApiManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -102,7 +102,7 @@ public sealed class ApiManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -110,7 +110,7 @@ public sealed class ApiManagementAuth0Tests
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(TwoSeconds)
+            await Task.Delay(Auth0RateLimitDelay)
                       .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
@@ -123,7 +123,7 @@ public sealed class ApiManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(TwoSeconds)
+                await Task.Delay(Auth0RateLimitDelay)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -147,7 +147,7 @@ public sealed class ApiManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
@@ -155,7 +155,7 @@ public sealed class ApiManagementAuth0Tests
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -180,7 +180,7 @@ public sealed class ApiManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         StringKey key = await manager.CreateAsync(model, new CreateOperationMapper())
@@ -188,7 +188,7 @@ public sealed class ApiManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
@@ -196,7 +196,7 @@ public sealed class ApiManagementAuth0Tests
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(TwoSeconds)
+        await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -209,14 +209,11 @@ public sealed class ApiManagementAuth0Tests
 
     private static ApiConfiguration GetApiConfiguration()
     {
-        return new ApiConfiguration(new Uri(Environment.ReadString("AUTH0_TOKEN_ENDPOINT")),
-            Environment.ReadString("AUTH0_CLIENT_ID"), Environment.ReadString("AUTH0_CLIENT_SECRET"),
-            Environment.ReadString("AUTH0_AUDIENCE"));
+        return new ApiConfiguration(new Uri(Environment.AUTH0_TOKEN_ENDPOINT), Environment.AUTH0_CLIENT_ID,
+            Environment.AUTH0_CLIENT_SECRET, Environment.AUTH0_AUDIENCE);
     }
 
-#pragma warning disable S2094
     internal sealed class Model(StringKey name) : ApiModel(name);
-#pragma warning restore S2094
 
     [UsedImplicitly]
 #pragma warning disable CA1812

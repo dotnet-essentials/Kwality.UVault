@@ -41,17 +41,14 @@ public sealed class ApplicationTokenManagementOptions<TToken>
     }
 
     public IServiceCollection ServiceCollection { get; }
-#pragma warning disable S4018
+
     public void UseStore<TStore>()
-#pragma warning restore S4018
         where TStore : class, IApplicationTokenStore<TToken>
     {
         this.ServiceCollection.AddScoped<IApplicationTokenStore<TToken>, TStore>();
     }
 
-#pragma warning disable S4018
     public void UseStore<TStore>(ServiceLifetime serviceLifetime)
-#pragma warning restore S4018
         where TStore : class, IApplicationTokenStore<TToken>
     {
         switch (serviceLifetime)
