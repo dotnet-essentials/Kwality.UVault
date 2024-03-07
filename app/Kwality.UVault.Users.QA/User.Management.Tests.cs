@@ -50,7 +50,7 @@ using Xunit;
 
 public sealed class UserManagementTests
 {
-    [AutoData]
+    [AutoDomainData]
     [ApiManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
@@ -67,7 +67,7 @@ public sealed class UserManagementTests
                                                     descriptor.ImplementationType == typeof(Store));
     }
 
-    [AutoData]
+    [AutoDomainData]
     [ApiManagement]
     [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
     internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
@@ -84,7 +84,7 @@ public sealed class UserManagementTests
                                                     descriptor.ImplementationType == typeof(Store));
     }
 
-    [AutoData]
+    [AutoDomainData]
     [ApiManagement]
     [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
     internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
@@ -407,6 +407,15 @@ public sealed class UserManagementTests
             return Task.CompletedTask;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    private sealed class AutoDomainDataAttribute() : AutoDataAttribute(static () =>
+    {
+        var fixture = new Fixture();
+        fixture.Customizations.Add(new TypeRelay(typeof(IServiceCollection), typeof(ServiceCollection)));
+
+        return fixture;
+    });
 
     [AttributeUsage(AttributeTargets.Method)]
     private sealed class FixedEmailAttribute() : AutoDataAttribute(static () =>

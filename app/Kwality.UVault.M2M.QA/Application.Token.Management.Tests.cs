@@ -24,6 +24,8 @@
 // =====================================================================================================================
 namespace Kwality.UVault.M2M.QA;
 
+using AutoFixture;
+using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -45,7 +47,7 @@ using Xunit;
 
 public sealed class ApplicationTokenManagementTests
 {
-    [AutoData]
+    [AutoDomainData]
     [M2MTokenManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
@@ -62,7 +64,7 @@ public sealed class ApplicationTokenManagementTests
                                                     descriptor.ImplementationType == typeof(Store));
     }
 
-    [AutoData]
+    [AutoDomainData]
     [M2MTokenManagement]
     [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
     internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
@@ -79,7 +81,7 @@ public sealed class ApplicationTokenManagementTests
                                                     descriptor.ImplementationType == typeof(Store));
     }
 
-    [AutoData]
+    [AutoDomainData]
     [M2MTokenManagement]
     [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
     internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
@@ -148,4 +150,13 @@ public sealed class ApplicationTokenManagementTests
                                                  .ToString(), 86400, "Bearer", "read, write, update, delete"));
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    private sealed class AutoDomainDataAttribute() : AutoDataAttribute(static () =>
+    {
+        var fixture = new Fixture();
+        fixture.Customizations.Add(new TypeRelay(typeof(IServiceCollection), typeof(ServiceCollection)));
+
+        return fixture;
+    });
 }

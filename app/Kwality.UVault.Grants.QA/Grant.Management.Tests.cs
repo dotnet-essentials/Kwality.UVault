@@ -26,6 +26,8 @@ namespace Kwality.UVault.Grants.QA;
 
 using System.Diagnostics.CodeAnalysis;
 
+using AutoFixture;
+using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
 
 using FluentAssertions;
@@ -53,7 +55,7 @@ using Xunit;
 [SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
 public sealed class GrantManagementTests
 {
-    [AutoData]
+    [AutoDomainData]
     [GrantManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
@@ -70,7 +72,7 @@ public sealed class GrantManagementTests
                                                     descriptor.ImplementationType == typeof(Store));
     }
 
-    [AutoData]
+    [AutoDomainData]
     [GrantManagement]
     [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
     internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
@@ -87,7 +89,7 @@ public sealed class GrantManagementTests
                                                     descriptor.ImplementationType == typeof(Store));
     }
 
-    [AutoData]
+    [AutoDomainData]
     [GrantManagement]
     [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
     internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
@@ -469,4 +471,13 @@ public sealed class GrantManagementTests
             return Task.CompletedTask;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    private sealed class AutoDomainDataAttribute() : AutoDataAttribute(static () =>
+    {
+        var fixture = new Fixture();
+        fixture.Customizations.Add(new TypeRelay(typeof(IServiceCollection), typeof(ServiceCollection)));
+
+        return fixture;
+    });
 }
