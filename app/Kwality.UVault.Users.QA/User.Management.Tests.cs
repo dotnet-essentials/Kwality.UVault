@@ -151,8 +151,10 @@ public sealed class UserManagementTests
             = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         foreach (Model model in models)
+        {
             await manager.CreateAsync(model, new CreateOperationMapper())
                          .ConfigureAwait(true);
+        }
 
         // ACT.
         Model expected = models.Skip(1)
@@ -176,8 +178,10 @@ public sealed class UserManagementTests
             = new UserManagerFactory().Create<Model, IntKey>(static options => options.UseStore<Store>());
 
         foreach (Model model in models)
+        {
             await manager.CreateAsync(model, new CreateOperationMapper())
                          .ConfigureAwait(true);
+        }
 
         // ACT.
         Model expected = models.Skip(1)

@@ -91,8 +91,10 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         foreach (Model model in models)
+        {
             await manager.CreateAsync(model, new UserCreateOperationMapper())
                          .ConfigureAwait(true);
+        }
 
         // ACT.
         Model expected = models.Skip(1)
@@ -115,8 +117,10 @@ public sealed class UserManagementDefaultTests
         UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
 
         foreach (Model model in models)
+        {
             await manager.CreateAsync(model, new UserCreateOperationMapper())
                          .ConfigureAwait(true);
+        }
 
         // ACT.
         Model expected = models.Skip(1)

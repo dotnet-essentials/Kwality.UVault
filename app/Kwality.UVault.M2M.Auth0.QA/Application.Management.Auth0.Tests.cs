@@ -76,7 +76,7 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
@@ -84,7 +84,7 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(0, 5)
@@ -111,7 +111,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -138,7 +138,7 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
@@ -146,7 +146,7 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(1, 10)
@@ -166,7 +166,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -193,7 +193,7 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
@@ -201,7 +201,7 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager.GetAllAsync(3, 1)
@@ -227,7 +227,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -255,7 +255,7 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             keyOne = await manager.CreateAsync(modelOne, new CreateOperationMapper(ClientApplicationType.Native))
@@ -267,7 +267,7 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             PagedResultSet<Model> result = await manager
@@ -291,7 +291,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (keyOne != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyOne)
@@ -301,7 +301,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (keyTwo != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(keyTwo)
@@ -325,7 +325,7 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(RateLimitDelay)
+        await Task.Delay(TwoSeconds)
                   .ConfigureAwait(true);
 
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -356,7 +356,7 @@ public sealed class ApplicationManagementAuth0Tests
         {
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
@@ -364,7 +364,7 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
@@ -379,7 +379,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -406,7 +406,7 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
@@ -416,14 +416,14 @@ public sealed class ApplicationManagementAuth0Tests
             model.Name = "UVault (Sample application)";
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             await manager.UpdateAsync(key, model, new UpdateOperationMapper())
                          .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             (await manager.GetByKeyAsync(key)
@@ -438,7 +438,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
@@ -462,7 +462,7 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(RateLimitDelay)
+        await Task.Delay(TwoSeconds)
                   .ConfigureAwait(true);
 
         Func<Task> act = () => manager.UpdateAsync(key, model, new UpdateOperationMapper());
@@ -488,7 +488,7 @@ public sealed class ApplicationManagementAuth0Tests
                 options.UseAuth0Store<Model, ModelMapper>(apiConfiguration));
 
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(RateLimitDelay)
+        await Task.Delay(TwoSeconds)
                   .ConfigureAwait(true);
 
         StringKey key = await manager
@@ -497,7 +497,7 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(RateLimitDelay)
+        await Task.Delay(TwoSeconds)
                   .ConfigureAwait(true);
 
         await manager.DeleteByKeyAsync(key)
@@ -505,7 +505,7 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ASSERT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(RateLimitDelay)
+        await Task.Delay(TwoSeconds)
                   .ConfigureAwait(true);
 
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -531,7 +531,7 @@ public sealed class ApplicationManagementAuth0Tests
 
         // ACT.
         // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-        await Task.Delay(RateLimitDelay)
+        await Task.Delay(TwoSeconds)
                   .ConfigureAwait(true);
 
         Func<Task<Model>> act = () => manager.RotateClientSecretAsync(key);
@@ -561,14 +561,14 @@ public sealed class ApplicationManagementAuth0Tests
         try
         {
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             key = await manager.CreateAsync(model, new CreateOperationMapper(ClientApplicationType.NonInteractive))
                                .ConfigureAwait(true);
 
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             Model initialApplication = await manager.GetByKeyAsync(key)
@@ -576,7 +576,7 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ACT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             await manager.RotateClientSecretAsync(key)
@@ -584,7 +584,7 @@ public sealed class ApplicationManagementAuth0Tests
 
             // ASSERT.
             // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-            await Task.Delay(RateLimitDelay)
+            await Task.Delay(TwoSeconds)
                       .ConfigureAwait(true);
 
             Model application = await manager.GetByKeyAsync(key)
@@ -599,7 +599,7 @@ public sealed class ApplicationManagementAuth0Tests
             if (key != null)
             {
                 // To ensure that we don't Auth0's "Rate Limit", we wait for 2 seconds before executing this test.
-                await Task.Delay(RateLimitDelay)
+                await Task.Delay(TwoSeconds)
                           .ConfigureAwait(true);
 
                 await manager.DeleteByKeyAsync(key)
