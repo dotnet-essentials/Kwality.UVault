@@ -39,6 +39,7 @@ using Kwality.UVault.Core.Auth0.Exceptions;
 using Kwality.UVault.Core.Auth0.Models;
 using Kwality.UVault.Core.Auth0.QA.Internal.Extensions;
 using Kwality.UVault.Core.System.Abstractions;
+using Kwality.UVault.QA.Common.Properties;
 using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Moq;
@@ -50,10 +51,11 @@ using Xunit;
 public sealed class Auth0ManagementClientTests
 {
     private const string testPrefix = "Request an API management token";
-
     private readonly ApiConfiguration apiConfiguration
+#pragma warning disable S1075
         = new(new Uri("http://localhost/"), string.Empty, string.Empty, string.Empty);
-
+#pragma warning restore S1075
+    
     [Auth0]
     [AutoDomainData]
     [Theory(DisplayName = $"{testPrefix} fails when the REST endpoint can't be requested.")]
@@ -255,7 +257,7 @@ public sealed class Auth0ManagementClientTests
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
-                        .Returns(DateTime.Now);
+                        .Returns(Time.Now);
 
         using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
         managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;
@@ -296,7 +298,7 @@ public sealed class Auth0ManagementClientTests
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
-                        .Returns(DateTime.Now.AddHours(24));
+                        .Returns(Time.Tomorrow);
 
         using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
         managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;
@@ -337,7 +339,7 @@ public sealed class Auth0ManagementClientTests
     {
         // MOCK SETUP.
         dateTimeProvider.Setup(static x => x.Now)
-                        .Returns(DateTime.Now);
+                        .Returns(Time.Now);
 
         using var managementApiTokenHttpResponseMessageOne = new HttpResponseMessage();
         managementApiTokenHttpResponseMessageOne.StatusCode = HttpStatusCode.OK;

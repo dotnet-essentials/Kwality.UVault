@@ -36,16 +36,6 @@ internal sealed class UserManagerFactory
 {
     private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
-    public UserManager<TModel, TKey> Create<TModel, TKey>()
-        where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseUserManagement<TModel, TKey>());
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<UserManager<TModel, TKey>>();
-    }
-
     public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? action)
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>

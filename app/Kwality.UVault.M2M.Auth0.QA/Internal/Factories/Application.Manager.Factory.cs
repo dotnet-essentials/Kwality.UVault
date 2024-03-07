@@ -36,16 +36,6 @@ internal sealed class ApplicationManagerFactory
 {
     private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
-    public ApplicationManager<TModel, TKey> Create<TModel, TKey>()
-        where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseApplicationManagement<TModel, TKey>());
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<ApplicationManager<TModel, TKey>>();
-    }
-
     public ApplicationManager<TModel, TKey> Create<TModel, TKey>(
         Action<ApplicationManagementOptions<TModel, TKey>>? action)
         where TModel : ApplicationModel<TKey>

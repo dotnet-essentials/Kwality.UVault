@@ -53,7 +53,7 @@ public sealed class ApplicationManagementTests
     [AutoData]
     [M2MManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
-    internal void UseStoreAsSingleton_RegisterStoreAsSingleton(ServiceCollection services)
+    internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
         // ARRANGE.
         services.AddUVault(static (_, options) =>
@@ -70,7 +70,7 @@ public sealed class ApplicationManagementTests
     [AutoData]
     [M2MManagement]
     [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
-    internal void UseStoreAsScoped_RegisterStoreAsScoped(ServiceCollection services)
+    internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
     {
         // ARRANGE.
         services.AddUVault(static (_, options) =>
@@ -87,7 +87,7 @@ public sealed class ApplicationManagementTests
     [AutoData]
     [M2MManagement]
     [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
-    internal void UseStoreAsTransient_RegisterStoreAsTransient(ServiceCollection services)
+    internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
     {
         // ARRANGE.
         services.AddUVault(static (_, options) =>

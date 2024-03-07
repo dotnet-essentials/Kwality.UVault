@@ -36,16 +36,6 @@ internal sealed class ApiManagerFactory
 {
     private readonly IServiceCollection serviceCollection = new ServiceCollection();
 
-    public ApiManager<TModel, TKey> Create<TModel, TKey>()
-        where TModel : ApiModel<TKey>
-        where TKey : IEqualityComparer<TKey>
-    {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseApiManagement<TModel, TKey>());
-
-        return this.serviceCollection.BuildServiceProvider()
-                   .GetRequiredService<ApiManager<TModel, TKey>>();
-    }
-
     public ApiManager<TModel, TKey> Create<TModel, TKey>(Action<ApiManagementOptions<TModel, TKey>>? action)
         where TModel : ApiModel<TKey>
         where TKey : IEqualityComparer<TKey>
