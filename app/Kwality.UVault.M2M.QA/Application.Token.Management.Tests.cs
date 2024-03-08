@@ -126,7 +126,6 @@ public sealed class ApplicationTokenManagementTests
               .Be("Bearer");
     }
 
-    [UsedImplicitly]
     internal sealed class Model : TokenModel
     {
         public Model()

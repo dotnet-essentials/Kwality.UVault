@@ -255,7 +255,6 @@ public sealed class UserManagementDefaultTests
                  .ConfigureAwait(true);
     }
 
-    [UsedImplicitly]
     internal sealed class Model(IntKey key, string email) : UserModel<IntKey>(key, email);
 
     [AttributeUsage(AttributeTargets.Method)]

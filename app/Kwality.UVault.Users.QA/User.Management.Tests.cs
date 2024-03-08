@@ -403,7 +403,9 @@ public sealed class UserManagementTests
                  .ConfigureAwait(true);
     }
 
+#pragma warning disable CA1812
     private sealed class Store<TModel, TKey> : IUserStore<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -433,11 +435,15 @@ public sealed class UserManagementTests
         }
     }
 
+#pragma warning disable CA1812
     private sealed class Manager<TModel, TKey>(IUserStore<TModel, TKey> store) : UserManager<TModel, TKey>(store)
+#pragma warning restore CA1812
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>;
 
+#pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : UserManager<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {

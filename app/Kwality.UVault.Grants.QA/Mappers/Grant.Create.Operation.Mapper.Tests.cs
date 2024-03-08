@@ -72,7 +72,6 @@ public sealed class GrantCreateOperationMapperTests
               .BeEquivalentTo(model);
     }
 
-    [UsedImplicitly]
 #pragma warning disable CA1812
     internal sealed class ModelOne
 #pragma warning restore CA1812
@@ -80,7 +79,6 @@ public sealed class GrantCreateOperationMapperTests
         [UsedImplicitly] public string? Name { get; set; }
     }
 
-    [UsedImplicitly]
 #pragma warning disable CA1812
     internal sealed class ModelTwo
 #pragma warning restore CA1812

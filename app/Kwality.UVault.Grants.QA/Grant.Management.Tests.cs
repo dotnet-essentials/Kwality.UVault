@@ -438,7 +438,9 @@ public sealed class GrantManagementTests
                  .ConfigureAwait(true);
     }
 
+#pragma warning disable CA1812
     private sealed class Store<TModel, TKey> : IGrantStore<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : GrantModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -463,11 +465,15 @@ public sealed class GrantManagementTests
         }
     }
 
+#pragma warning disable CA1812
     private sealed class Manager<TModel, TKey>(IGrantStore<TModel, TKey> store) : GrantManager<TModel, TKey>(store)
+#pragma warning restore CA1812
         where TModel : GrantModel<TKey>
         where TKey : IEqualityComparer<TKey>;
 
+#pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : GrantManager<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : GrantModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {

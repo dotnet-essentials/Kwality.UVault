@@ -264,7 +264,9 @@ public sealed class ApiManagementTests
                  .ConfigureAwait(true);
     }
 
+#pragma warning disable CA1812
     private sealed class Store<TModel, TKey> : IApiStore<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : ApiModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -284,11 +286,15 @@ public sealed class ApiManagementTests
         }
     }
 
+#pragma warning disable CA1812
     private sealed class Manager<TModel, TKey>(IApiStore<TModel, TKey> store) : ApiManager<TModel, TKey>(store)
+#pragma warning restore CA1812
         where TModel : ApiModel<TKey>
         where TKey : IEqualityComparer<TKey>;
 
+#pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : ApiManager<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : ApiModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -324,7 +330,7 @@ public sealed class ApiManagementTests
 
     [UsedImplicitly]
 #pragma warning disable CA1812
-    internal sealed class Store : IApiStore<Model, IntKey>
+    private sealed class Store : IApiStore<Model, IntKey>
 #pragma warning restore CA1812
     {
         private readonly Dictionary<IntKey, Model> collection = new();

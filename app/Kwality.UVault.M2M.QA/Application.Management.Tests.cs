@@ -508,7 +508,9 @@ public sealed class ApplicationManagementTests
                            .NotMatch(application.ClientSecret);
     }
 
+#pragma warning disable CA1812
     private sealed class Store<TModel, TKey> : IApplicationStore<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -543,12 +545,16 @@ public sealed class ApplicationManagementTests
         }
     }
 
+#pragma warning disable CA1812
     private sealed class Manager<TModel, TKey>(IApplicationStore<TModel, TKey> store)
+#pragma warning restore CA1812
         : ApplicationManager<TModel, TKey>(store)
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>;
 
+#pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : ApplicationManager<TModel, TKey>
+#pragma warning restore CA1812
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
@@ -562,7 +568,6 @@ public sealed class ApplicationManagementTests
         }
     }
 
-    [UsedImplicitly]
 #pragma warning disable CA1812
     internal sealed class Model : ApplicationModel<IntKey>
 #pragma warning restore CA1812
