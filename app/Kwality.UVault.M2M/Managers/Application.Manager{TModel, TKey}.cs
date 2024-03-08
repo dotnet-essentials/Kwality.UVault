@@ -33,7 +33,7 @@ using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
 [PublicAPI]
-public sealed class ApplicationManager<TModel, TKey>(IApplicationStore<TModel, TKey> store)
+public class ApplicationManager<TModel, TKey>(IApplicationStore<TModel, TKey> store)
     where TModel : ApplicationModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

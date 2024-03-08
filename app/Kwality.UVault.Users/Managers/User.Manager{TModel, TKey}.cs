@@ -31,7 +31,7 @@ using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 using Kwality.UVault.Users.Stores.Abstractions;
 
 [PublicAPI]
-public sealed class UserManager<TModel, TKey>(IUserStore<TModel, TKey> store)
+public class UserManager<TModel, TKey>(IUserStore<TModel, TKey> store)
     where TModel : UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

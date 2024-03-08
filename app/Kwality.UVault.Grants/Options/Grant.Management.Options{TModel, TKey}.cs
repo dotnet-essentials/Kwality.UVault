@@ -26,6 +26,7 @@ namespace Kwality.UVault.Grants.Options;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Grants.Managers;
 using Kwality.UVault.Grants.Models;
 using Kwality.UVault.Grants.Stores.Abstractions;
 
@@ -42,6 +43,12 @@ public sealed class GrantManagementOptions<TModel, TKey>
     }
 
     public IServiceCollection ServiceCollection { get; }
+
+    public void UseManager<TManager>()
+        where TManager : GrantManager<TModel, TKey>
+    {
+        this.ServiceCollection.AddScoped<TManager>();
+    }
 
     public void UseStore<TStore>()
         where TStore : class, IGrantStore<TModel, TKey>

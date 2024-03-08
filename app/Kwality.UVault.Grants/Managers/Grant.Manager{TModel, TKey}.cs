@@ -33,7 +33,7 @@ using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 using Kwality.UVault.Grants.Stores.Abstractions;
 
 [PublicAPI]
-public sealed class GrantManager<TModel, TKey>(IGrantStore<TModel, TKey> store)
+public class GrantManager<TModel, TKey>(IGrantStore<TModel, TKey> store)
     where TModel : GrantModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

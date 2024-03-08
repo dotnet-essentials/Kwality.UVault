@@ -55,6 +55,87 @@ public sealed class ApiManagementTests
 {
     [AutoDomainData]
     [ApiManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it's registered.")]
+    internal void UseManager_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApiManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(Manager<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+    }
+
+    [AutoDomainData]
+    [ApiManagement]
+    [Theory(DisplayName = "When a custom manager (with a custom store) is configured, it's registered.")]
+    internal void UseManagerStore_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApiManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(ManagerStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IApiStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped &&
+                                                    descriptor.ImplementationType == typeof(Store<Model, IntKey>));
+    }
+
+    [AutoDomainData]
+    [ApiManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManager_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApiManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<Manager<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                         .GetRequiredService<Manager<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [ApiManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManagerStore_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApiManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<ManagerStore<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                              .GetRequiredService<ManagerStore<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [ApiManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
@@ -181,6 +262,44 @@ public sealed class ApiManagementTests
         await act.Should()
                  .NotThrowAsync()
                  .ConfigureAwait(true);
+    }
+
+    private sealed class Store<TModel, TKey> : IApiStore<TModel, TKey>
+        where TModel : ApiModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public Task<TModel> GetByKeyAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TKey> CreateAsync(TModel model, IApiOperationMapper mapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteByKeyAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private sealed class Manager<TModel, TKey>(IApiStore<TModel, TKey> store) : ApiManager<TModel, TKey>(store)
+        where TModel : ApiModel<TKey>
+        where TKey : IEqualityComparer<TKey>;
+
+    private sealed class ManagerStore<TModel, TKey> : ApiManager<TModel, TKey>
+        where TModel : ApiModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public ManagerStore(IApiStore<TModel, TKey> store)
+            : base(store)
+        {
+            if (store is not Store<TModel, TKey>)
+            {
+                throw new InvalidOperationException("The provided store isn't valid for this manager.");
+            }
+        }
     }
 
     [UsedImplicitly]

@@ -26,6 +26,7 @@ namespace Kwality.UVault.APIs.Options;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.APIs.Managers;
 using Kwality.UVault.APIs.Models;
 using Kwality.UVault.APIs.Stores.Abstractions;
 
@@ -42,6 +43,12 @@ public sealed class ApiManagementOptions<TModel, TKey>
     }
 
     public IServiceCollection ServiceCollection { get; }
+
+    public void UseManager<TManager>()
+        where TManager : ApiManager<TModel, TKey>
+    {
+        this.ServiceCollection.AddScoped<TManager>();
+    }
 
     public void UseStore<TStore>()
         where TStore : class, IApiStore<TModel, TKey>

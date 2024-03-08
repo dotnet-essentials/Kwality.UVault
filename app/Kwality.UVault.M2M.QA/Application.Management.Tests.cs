@@ -54,6 +54,88 @@ public sealed class ApplicationManagementTests
 {
     [AutoDomainData]
     [M2MManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it's registered.")]
+    internal void UseManager_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApplicationManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(Manager<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
+    [Theory(DisplayName = "When a custom manager (with a custom store) is configured, it's registered.")]
+    internal void UseManagerStore_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApplicationManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(ManagerStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+
+        services.Should()
+                .ContainSingle(static descriptor =>
+                    descriptor.ServiceType == typeof(IApplicationStore<Model, IntKey>) &&
+                    descriptor.Lifetime == ServiceLifetime.Scoped &&
+                    descriptor.ImplementationType == typeof(Store<Model, IntKey>));
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManager_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApplicationManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<Manager<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                         .GetRequiredService<Manager<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManagerStore_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseApplicationManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<ManagerStore<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                              .GetRequiredService<ManagerStore<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [M2MManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
@@ -424,6 +506,60 @@ public sealed class ApplicationManagementTests
 
         initialClientSecret.Should()
                            .NotMatch(application.ClientSecret);
+    }
+
+    private sealed class Store<TModel, TKey> : IApplicationStore<TModel, TKey>
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TModel> GetByKeyAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteByKeyAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TModel> RotateClientSecretAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private sealed class Manager<TModel, TKey>(IApplicationStore<TModel, TKey> store)
+        : ApplicationManager<TModel, TKey>(store)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>;
+
+    private sealed class ManagerStore<TModel, TKey> : ApplicationManager<TModel, TKey>
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public ManagerStore(IApplicationStore<TModel, TKey> store)
+            : base(store)
+        {
+            if (store is not Store<TModel, TKey>)
+            {
+                throw new InvalidOperationException("The provided store isn't valid for this manager.");
+            }
+        }
     }
 
     [UsedImplicitly]

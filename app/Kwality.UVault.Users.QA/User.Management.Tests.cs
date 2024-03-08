@@ -51,7 +51,88 @@ using Xunit;
 public sealed class UserManagementTests
 {
     [AutoDomainData]
-    [ApiManagement]
+    [UserManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it's registered.")]
+    internal void UseManager_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseUserManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(Manager<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+    }
+
+    [AutoDomainData]
+    [UserManagement]
+    [Theory(DisplayName = "When a custom manager (with a custom store) is configured, it's registered.")]
+    internal void UseManagerStore_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseUserManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(ManagerStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IUserStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped &&
+                                                    descriptor.ImplementationType == typeof(Store<Model, IntKey>));
+    }
+
+    [AutoDomainData]
+    [UserManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManager_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseUserManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<Manager<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                         .GetRequiredService<Manager<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [UserManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManagerStore_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseUserManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<ManagerStore<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                              .GetRequiredService<ManagerStore<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [UserManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
@@ -68,7 +149,7 @@ public sealed class UserManagementTests
     }
 
     [AutoDomainData]
-    [ApiManagement]
+    [UserManagement]
     [Theory(DisplayName = "When the store is configured as a `Scoped` one, it behaves as such.")]
     internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
     {
@@ -85,7 +166,7 @@ public sealed class UserManagementTests
     }
 
     [AutoDomainData]
-    [ApiManagement]
+    [UserManagement]
     [Theory(DisplayName = "When the store is configured as a `Transient` one, it behaves as such.")]
     internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
     {
@@ -320,6 +401,54 @@ public sealed class UserManagementTests
         await act.Should()
                  .NotThrowAsync()
                  .ConfigureAwait(true);
+    }
+
+    private sealed class Store<TModel, TKey> : IUserStore<TModel, TKey>
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public Task<TModel> GetByKeyAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteByKeyAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private sealed class Manager<TModel, TKey>(IUserStore<TModel, TKey> store) : UserManager<TModel, TKey>(store)
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>;
+
+    private sealed class ManagerStore<TModel, TKey> : UserManager<TModel, TKey>
+        where TModel : UserModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public ManagerStore(IUserStore<TModel, TKey> store)
+            : base(store)
+        {
+            if (store is not Store<TModel, TKey>)
+            {
+                throw new InvalidOperationException("The provided store isn't valid for this manager.");
+            }
+        }
     }
 
     [UsedImplicitly]

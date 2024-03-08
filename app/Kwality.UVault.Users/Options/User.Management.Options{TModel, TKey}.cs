@@ -26,6 +26,7 @@ namespace Kwality.UVault.Users.Options;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.Users.Managers;
 using Kwality.UVault.Users.Models;
 using Kwality.UVault.Users.Stores.Abstractions;
 
@@ -42,6 +43,12 @@ public sealed class UserManagementOptions<TModel, TKey>
     }
 
     public IServiceCollection ServiceCollection { get; }
+
+    public void UseManager<TManager>()
+        where TManager : UserManager<TModel, TKey>
+    {
+        this.ServiceCollection.AddScoped<TManager>();
+    }
 
     public void UseStore<TStore>()
         where TStore : class, IUserStore<TModel, TKey>

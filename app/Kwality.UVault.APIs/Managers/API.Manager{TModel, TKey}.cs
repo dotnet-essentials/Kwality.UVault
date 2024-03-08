@@ -31,7 +31,7 @@ using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.APIs.Stores.Abstractions;
 
 [PublicAPI]
-public sealed class ApiManager<TModel, TKey>(IApiStore<TModel, TKey> store)
+public class ApiManager<TModel, TKey>(IApiStore<TModel, TKey> store)
     where TModel : ApiModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {

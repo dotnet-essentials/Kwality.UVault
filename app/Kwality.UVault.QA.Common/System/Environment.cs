@@ -41,15 +41,34 @@ public static class Environment
         return value;
     }
 #pragma warning disable CA1707
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_TOKEN_ENDPOINT => ReadString("AUTH0_TOKEN_ENDPOINT");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_USERNAME => ReadString("AUTH0_USERNAME");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_PASSWORD => ReadString("AUTH0_PASSWORD");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_AUDIENCE => ReadString("AUTH0_AUDIENCE");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_VALID_AUDIENCE => ReadString("AUTH0_VALID_AUDIENCE");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_VALID_ISSUER => ReadString("AUTH0_VALID_ISSUER");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_CLIENT_ID => ReadString("AUTH0_CLIENT_ID");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_CLIENT_SECRET => ReadString("AUTH0_CLIENT_SECRET");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_TEST_APPLICATION_1_CLIENT_ID => ReadString("AUTH0_TEST_APPLICATION_1_CLIENT_ID");
+
+    // ReSharper disable once InconsistentNaming
     public static string AUTH0_TEST_APPLICATION_2_CLIENT_ID => ReadString("AUTH0_TEST_APPLICATION_2_CLIENT_ID");
 #pragma warning restore CA1707
 }

@@ -26,6 +26,7 @@ namespace Kwality.UVault.M2M.Options;
 
 using JetBrains.Annotations;
 
+using Kwality.UVault.M2M.Managers;
 using Kwality.UVault.M2M.Models;
 using Kwality.UVault.M2M.Stores.Abstractions;
 
@@ -42,6 +43,12 @@ public sealed class ApplicationManagementOptions<TModel, TKey>
     }
 
     public IServiceCollection ServiceCollection { get; }
+
+    public void UseManager<TManager>()
+        where TManager : ApplicationManager<TModel, TKey>
+    {
+        this.ServiceCollection.AddScoped<TManager>();
+    }
 
     public void UseStore<TStore>()
         where TStore : class, IApplicationStore<TModel, TKey>

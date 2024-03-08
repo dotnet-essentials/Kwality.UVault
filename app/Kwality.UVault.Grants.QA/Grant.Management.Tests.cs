@@ -57,6 +57,87 @@ public sealed class GrantManagementTests
 {
     [AutoDomainData]
     [GrantManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it's registered.")]
+    internal void UseManager_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseGrantManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(Manager<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+    }
+
+    [AutoDomainData]
+    [GrantManagement]
+    [Theory(DisplayName = "When a custom manager (with a custom store) is configured, it's registered.")]
+    internal void UseManagerStore_RegistersManager(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseGrantManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ASSERT.
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(ManagerStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped);
+
+        services.Should()
+                .ContainSingle(static descriptor => descriptor.ServiceType == typeof(IGrantStore<Model, IntKey>) &&
+                                                    descriptor.Lifetime == ServiceLifetime.Scoped &&
+                                                    descriptor.ImplementationType == typeof(Store<Model, IntKey>));
+    }
+
+    [AutoDomainData]
+    [GrantManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManager_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseGrantManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<Manager<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<Manager<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                         .GetRequiredService<Manager<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [GrantManagement]
+    [Theory(DisplayName = "When a custom manager is configured, it can be resolved.")]
+    internal void ResolveManagerStore_RaisesNoException(IServiceCollection services)
+    {
+        // ARRANGE.
+        services.AddUVault(static options => options.UseGrantManagement<Model, IntKey>(static options =>
+        {
+            options.UseManager<ManagerStore<Model, IntKey>>();
+            options.UseStore<Store<Model, IntKey>>();
+        }));
+
+        // ACT.
+        Func<ManagerStore<Model, IntKey>> act = () => services.BuildServiceProvider()
+                                                              .GetRequiredService<ManagerStore<Model, IntKey>>();
+
+        // ASSERT.
+        act.Should()
+           .NotThrow();
+    }
+
+    [AutoDomainData]
+    [GrantManagement]
     [Theory(DisplayName = "When the store is configured as a `Singleton` one, it behaves as such.")]
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
@@ -355,6 +436,49 @@ public sealed class GrantManagementTests
         await act.Should()
                  .NotThrowAsync()
                  .ConfigureAwait(true);
+    }
+
+    private sealed class Store<TModel, TKey> : IGrantStore<TModel, TKey>
+        where TModel : GrantModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IGrantFilter? filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TKey> CreateAsync(TModel model, IGrantOperationMapper mapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(TKey key, TModel model, IGrantOperationMapper mapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteByKeyAsync(TKey key)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private sealed class Manager<TModel, TKey>(IGrantStore<TModel, TKey> store) : GrantManager<TModel, TKey>(store)
+        where TModel : GrantModel<TKey>
+        where TKey : IEqualityComparer<TKey>;
+
+    private sealed class ManagerStore<TModel, TKey> : GrantManager<TModel, TKey>
+        where TModel : GrantModel<TKey>
+        where TKey : IEqualityComparer<TKey>
+    {
+        public ManagerStore(IGrantStore<TModel, TKey> store)
+            : base(store)
+        {
+            if (store is not Store<TModel, TKey>)
+            {
+                throw new InvalidOperationException("The provided store isn't valid for this manager.");
+            }
+        }
     }
 
     [UsedImplicitly]
