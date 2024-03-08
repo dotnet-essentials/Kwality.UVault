@@ -12,7 +12,7 @@
   <!-- NuGet (Package) information. -->
   <PropertyGroup>
     <PackageId>Kwality.UVault.APIs.Auth0</PackageId>
-    <Version>3.0.0-preview.1</Version>
+    <Version>3.0.0</Version>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/dotnet-essentials/Kwality.UVault</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
