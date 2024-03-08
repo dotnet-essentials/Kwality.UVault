@@ -40,7 +40,7 @@ internal sealed class UserManagerFactory
         where TModel : UserModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault((_, options) => options.UseUserManagement(action));
+        this.serviceCollection.AddUVault(options => options.UseUserManagement(action));
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<UserManager<TModel, TKey>>();

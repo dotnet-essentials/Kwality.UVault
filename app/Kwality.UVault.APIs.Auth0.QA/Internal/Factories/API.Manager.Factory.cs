@@ -40,7 +40,7 @@ internal sealed class ApiManagerFactory
         where TModel : ApiModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault((_, options) => options.UseApiManagement(action));
+        this.serviceCollection.AddUVault(options => options.UseApiManagement(action));
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<ApiManager<TModel, TKey>>();

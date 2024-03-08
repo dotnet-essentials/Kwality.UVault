@@ -41,7 +41,7 @@ internal sealed class ApplicationManagerFactory
         where TModel : ApplicationModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault((_, options) => options.UseApplicationManagement(action));
+        this.serviceCollection.AddUVault(options => options.UseApplicationManagement(action));
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<ApplicationManager<TModel, TKey>>();

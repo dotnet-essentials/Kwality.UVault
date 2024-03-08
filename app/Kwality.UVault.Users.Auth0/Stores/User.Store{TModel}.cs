@@ -45,7 +45,6 @@ internal sealed class UserStore<TModel>(
     IModelMapper<TModel> modelMapper) : IUserStore<TModel, StringKey>
     where TModel : UserModel
 {
-    // Stryker disable once all
     public async Task<TModel> GetByKeyAsync(StringKey key)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -64,7 +63,6 @@ internal sealed class UserStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task<IEnumerable<TModel>> GetByEmailAsync(string email)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -76,7 +74,6 @@ internal sealed class UserStore<TModel>(
         return users.Select(modelMapper.Map);
     }
 
-    // Stryker disable once all
     public async Task<StringKey> CreateAsync(TModel model, IUserOperationMapper mapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -95,7 +92,6 @@ internal sealed class UserStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task UpdateAsync(StringKey key, TModel model, IUserOperationMapper mapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -112,7 +108,6 @@ internal sealed class UserStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task DeleteByKeyAsync(StringKey key)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()

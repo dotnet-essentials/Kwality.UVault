@@ -47,31 +47,26 @@ public sealed class ApplicationManager<TModel, TKey>(IApplicationStore<TModel, T
         return store.GetAllAsync(pageIndex, pageSize, filter);
     }
 
-    // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
         return store.GetByKeyAsync(key);
     }
 
-    // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IApplicationOperationMapper mapper)
     {
         return store.CreateAsync(model, mapper);
     }
 
-    // Stryker disable once all
     public Task UpdateAsync(TKey key, TModel model, IApplicationOperationMapper mapper)
     {
         return store.UpdateAsync(key, model, mapper);
     }
 
-    // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
         return store.DeleteByKeyAsync(key);
     }
 
-    // Stryker disable once all
     public Task<TModel> RotateClientSecretAsync(TKey key)
     {
         return store.RotateClientSecretAsync(key);

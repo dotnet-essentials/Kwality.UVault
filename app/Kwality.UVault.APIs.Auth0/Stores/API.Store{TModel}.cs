@@ -45,7 +45,6 @@ internal sealed class ApiStore<TModel>(
     IModelMapper<TModel> modelMapper) : IApiStore<TModel, StringKey>
     where TModel : ApiModel
 {
-    // Stryker disable once all
     public async Task<TModel> GetByKeyAsync(StringKey key)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -64,7 +63,6 @@ internal sealed class ApiStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task<StringKey> CreateAsync(TModel model, IApiOperationMapper mapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -85,7 +83,6 @@ internal sealed class ApiStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task DeleteByKeyAsync(StringKey key)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()

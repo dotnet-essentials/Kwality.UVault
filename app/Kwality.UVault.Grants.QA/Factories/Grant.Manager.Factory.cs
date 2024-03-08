@@ -40,7 +40,7 @@ internal sealed class GrantManagerFactory
         where TModel : GrantModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault(static (_, options) => options.UseGrantManagement<TModel, TKey>());
+        this.serviceCollection.AddUVault(static options => options.UseGrantManagement<TModel, TKey>());
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<GrantManager<TModel, TKey>>();
@@ -50,7 +50,7 @@ internal sealed class GrantManagerFactory
         where TModel : GrantModel<TKey>
         where TKey : IEqualityComparer<TKey>
     {
-        this.serviceCollection.AddUVault((_, options) => options.UseGrantManagement(action));
+        this.serviceCollection.AddUVault(options => options.UseGrantManagement(action));
 
         return this.serviceCollection.BuildServiceProvider()
                    .GetRequiredService<GrantManager<TModel, TKey>>();

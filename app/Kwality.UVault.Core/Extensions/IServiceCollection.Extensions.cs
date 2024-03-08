@@ -33,11 +33,23 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static class ServiceCollectionExtensions
 {
-    public static void AddUVault(this IServiceCollection services, Action<IServiceProvider, UVaultOptions>? action)
+    public static void AddUVault(this IServiceCollection services, Action<UVaultOptions> action)
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         using IServiceScope serviceProviderScope = services.BuildServiceProvider()
                                                            .CreateScope();
 
-        action?.Invoke(serviceProviderScope.ServiceProvider, new UVaultOptions(services));
+        action.Invoke(new UVaultOptions(services));
+    }
+
+    public static void AddUVault(this IServiceCollection services, Action<IServiceProvider, UVaultOptions> action)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        using IServiceScope serviceProviderScope = services.BuildServiceProvider()
+                                                           .CreateScope();
+
+        action.Invoke(serviceProviderScope.ServiceProvider, new UVaultOptions(services));
     }
 }

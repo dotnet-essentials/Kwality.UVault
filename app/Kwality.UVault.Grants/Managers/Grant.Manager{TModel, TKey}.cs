@@ -47,19 +47,16 @@ public sealed class GrantManager<TModel, TKey>(IGrantStore<TModel, TKey> store)
         return store.GetAllAsync(pageIndex, pageSize, filter);
     }
 
-    // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IGrantOperationMapper mapper)
     {
         return store.CreateAsync(model, mapper);
     }
 
-    // Stryker disable once all
     public Task UpdateAsync(TKey key, TModel model, IGrantOperationMapper mapper)
     {
         return store.UpdateAsync(key, model, mapper);
     }
 
-    // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
         return store.DeleteByKeyAsync(key);

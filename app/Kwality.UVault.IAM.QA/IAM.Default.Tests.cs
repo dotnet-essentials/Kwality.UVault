@@ -60,7 +60,7 @@ public sealed class IAMDefaultTests
         var serviceCollection = new ServiceCollection();
 
         // ACT.
-        Action act = () => serviceCollection.AddUVault(static (_, options) => options.UseIAM(null));
+        Action act = () => serviceCollection.AddUVault(static options => options.UseIAM(null));
 
         // ASSERT.
         act.Should()
@@ -80,7 +80,7 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault((_, options) =>
+                    services.AddUVault(options =>
                     {
                         // Use `UVault's` Identity & Access Management.
                         options.UseIAM(iamOptions =>
@@ -117,7 +117,7 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault((_, options) =>
+                    services.AddUVault(options =>
                     {
                         // Use `UVault's` Identity & Access Management.
                         options.UseIAM(iamOptions =>
@@ -155,7 +155,7 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault((_, options) =>
+                    services.AddUVault(options =>
                     {
                         // Use `UVault's` Identity & Access Management.
                         options.UseIAM(iamOptions =>
@@ -198,7 +198,7 @@ public sealed class IAMDefaultTests
                 ConfigureServices = services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault((_, options) =>
+                    services.AddUVault(options =>
                     {
                         // Use `UVault's` Identity & Access Management.
                         options.UseIAM(iamOptions =>

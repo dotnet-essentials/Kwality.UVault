@@ -76,7 +76,6 @@ internal sealed class GrantStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task<StringKey> CreateAsync(TModel model, IGrantOperationMapper mapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -97,7 +96,6 @@ internal sealed class GrantStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task UpdateAsync(StringKey key, TModel model, IGrantOperationMapper mapper)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()
@@ -114,7 +112,6 @@ internal sealed class GrantStore<TModel>(
         }
     }
 
-    // Stryker disable once all
     public async Task DeleteByKeyAsync(StringKey key)
     {
         using ManagementApiClient apiClient = await this.CreateManagementApiClientAsync()

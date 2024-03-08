@@ -63,31 +63,6 @@ public sealed class IAMTests
     private const string defaultRoute = "/";
 
     [IAM]
-    [Fact(DisplayName = "Request an HTTP endpoint succeeds.")]
-    internal async Task NoIAM_RequestEndpoint_Succeeds()
-    {
-        // ACT / ASSERT.
-        await new HttpRequestValidator
-            {
-                ConfigureServices = static services => { services.AddUVault(null); },
-                ConfigureApp = static app => app.UseUVault(null),
-                ConfigureRoutes = static routes =>
-                {
-                    routes.MapGet(defaultRoute, static context =>
-                    {
-                        context.Response.StatusCode = (int)HttpStatusCode.OK;
-
-                        return Task.CompletedTask;
-                    });
-                },
-
-                // EXPECTATIONS.
-                ExpectedHttpStatusCode = HttpStatusCode.OK,
-            }.SendHttpRequestAsync(defaultRoute)
-             .ConfigureAwait(true);
-    }
-
-    [IAM]
     [Fact(DisplayName = "Request a secured HTTP endpoint without a `JWT` fails.")]
     internal async Task RequestSecuredEndpoint_NoJwt_Fails()
     {
@@ -97,7 +72,7 @@ public sealed class IAMTests
                 ConfigureServices = static services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(static (_, options) =>
+                    services.AddUVault(static options =>
                     {
                         // Use `UVault's` Identity & Access Management.
                         options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
@@ -131,7 +106,7 @@ public sealed class IAMTests
                 ConfigureServices = static services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(static (_, options) =>
+                    services.AddUVault(static options =>
                     {
                         // Use `UVault's` Identity & Access Management.
                         options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());
@@ -166,7 +141,7 @@ public sealed class IAMTests
                 ConfigureServices = static services =>
                 {
                     // Add `UVault`.
-                    services.AddUVault(static (_, options) =>
+                    services.AddUVault(static options =>
                     {
                         // Use `UVault's` Identity & Access Management.
                         options.UseIAM(static options => options.UseJwtValidator<JwtValidator>());

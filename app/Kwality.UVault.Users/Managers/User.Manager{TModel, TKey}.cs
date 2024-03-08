@@ -35,31 +35,26 @@ public sealed class UserManager<TModel, TKey>(IUserStore<TModel, TKey> store)
     where TModel : UserModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
         return store.GetByKeyAsync(key);
     }
 
-    // Stryker disable once all
     public Task<IEnumerable<TModel>> GetByEmailAsync(string email)
     {
         return store.GetByEmailAsync(email);
     }
 
-    // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IUserOperationMapper mapper)
     {
         return store.CreateAsync(model, mapper);
     }
 
-    // Stryker disable once all
     public Task UpdateAsync(TKey key, TModel model, IUserOperationMapper mapper)
     {
         return store.UpdateAsync(key, model, mapper);
     }
 
-    // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
         return store.DeleteByKeyAsync(key);

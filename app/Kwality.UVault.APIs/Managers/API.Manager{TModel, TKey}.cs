@@ -35,19 +35,16 @@ public sealed class ApiManager<TModel, TKey>(IApiStore<TModel, TKey> store)
     where TModel : ApiModel<TKey>
     where TKey : IEqualityComparer<TKey>
 {
-    // Stryker disable once all
     public Task<TModel> GetByKeyAsync(TKey key)
     {
         return store.GetByKeyAsync(key);
     }
 
-    // Stryker disable once all
     public Task<TKey> CreateAsync(TModel model, IApiOperationMapper mapper)
     {
         return store.CreateAsync(model, mapper);
     }
 
-    // Stryker disable once all
     public Task DeleteByKeyAsync(TKey key)
     {
         return store.DeleteByKeyAsync(key);

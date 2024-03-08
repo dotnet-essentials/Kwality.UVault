@@ -56,7 +56,7 @@ public sealed class UserManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseUserManagement<Model, IntKey>(static options =>
                 options.UseStore<Store>(ServiceLifetime.Singleton)));
 
@@ -73,7 +73,7 @@ public sealed class UserManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseUserManagement<Model, IntKey>(static options =>
                 options.UseStore<Store>(ServiceLifetime.Scoped)));
 
@@ -90,7 +90,7 @@ public sealed class UserManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseUserManagement<Model, IntKey>(static options =>
                 options.UseStore<Store>(ServiceLifetime.Transient)));
 

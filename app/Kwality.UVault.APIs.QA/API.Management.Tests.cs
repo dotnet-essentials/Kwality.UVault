@@ -59,7 +59,7 @@ public sealed class ApiManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseApiManagement<Model, IntKey>(
                 static options => options.UseStore<Store>(ServiceLifetime.Singleton)));
 
@@ -76,7 +76,7 @@ public sealed class ApiManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseApiManagement<Model, IntKey>(static options => options.UseStore<Store>(ServiceLifetime.Scoped)));
 
         // ASSERT.
@@ -92,7 +92,7 @@ public sealed class ApiManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseApiManagement<Model, IntKey>(
                 static options => options.UseStore<Store>(ServiceLifetime.Transient)));
 

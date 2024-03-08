@@ -53,7 +53,7 @@ public sealed class ApplicationTokenManagementTests
     internal void UseStoreAsSingleton_RegisterStoreAsSingleton(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(static options =>
                 options.UseStore<Store>(ServiceLifetime.Singleton)));
 
@@ -70,7 +70,7 @@ public sealed class ApplicationTokenManagementTests
     internal void UseStoreAsScoped_RegisterStoreAsScoped(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(static options =>
                 options.UseStore<Store>(ServiceLifetime.Scoped)));
 
@@ -87,7 +87,7 @@ public sealed class ApplicationTokenManagementTests
     internal void UseStoreAsTransient_RegisterStoreAsTransient(IServiceCollection services)
     {
         // ARRANGE.
-        services.AddUVault(static (_, options) =>
+        services.AddUVault(static options =>
             options.UseApplicationTokenManagement<Model, ApplicationModel<IntKey>, IntKey>(static options =>
                 options.UseStore<Store>(ServiceLifetime.Transient)));
 
