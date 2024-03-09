@@ -35,7 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public sealed class GrantManagementOptions<TModel, TKey>
     where TModel : GrantModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     internal GrantManagementOptions(IServiceCollection serviceCollection)
     {

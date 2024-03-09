@@ -40,18 +40,35 @@ public static class UVaultOptionsExtensions
 {
     public static void UseApplicationManagement<TModel, TKey>(this UVaultOptions options)
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         options.UseApplicationManagement<TModel, TKey>(null);
+    }
+
+    public static void UseApplicationManagement<TModel, TKey>(this UVaultOptions options, ServiceLifetime storeLifetime)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        options.UseApplicationManagement<TModel, TKey>(null, storeLifetime);
     }
 
     public static void UseApplicationManagement<TModel, TKey>(
         this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions)
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         ArgumentNullException.ThrowIfNull(options);
         UseAndConfigureApplicationManagement(options, applicationManagementOptions);
+    }
+
+    public static void UseApplicationManagement<TModel, TKey>(
+        this UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions,
+        ServiceLifetime storeLifetime)
+        where TModel : ApplicationModel<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        UseAndConfigureApplicationManagement(options, applicationManagementOptions, storeLifetime);
     }
 
     public static void UseApplicationTokenManagement<TToken, TModel, TKey>(
@@ -59,7 +76,7 @@ public static class UVaultOptionsExtensions
         Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
         where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         ArgumentNullException.ThrowIfNull(options);
         UseAndConfigureApplicationManagement<TModel, TKey>(options, null);
@@ -67,11 +84,34 @@ public static class UVaultOptionsExtensions
     }
 
     private static void UseAndConfigureApplicationManagement<TModel, TKey>(
-        UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions)
+        UVaultOptions options, Action<ApplicationManagementOptions<TModel, TKey>>? applicationManagementOptions,
+        ServiceLifetime storeLifetime = ServiceLifetime.Scoped)
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         options.Services.AddScoped<ApplicationManager<TModel, TKey>>();
+
+        switch (storeLifetime)
+        {
+            case ServiceLifetime.Singleton:
+                options.Services.AddSingleton<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            case ServiceLifetime.Scoped:
+                options.Services.AddScoped<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            case ServiceLifetime.Transient:
+                options.Services.AddTransient<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(storeLifetime), storeLifetime, null);
+        }
+
         options.Services.AddScoped<IApplicationStore<TModel, TKey>, StaticStore<TModel, TKey>>();
 
         // Configure UVault's M2M management component.
@@ -81,7 +121,7 @@ public static class UVaultOptionsExtensions
     private static void UseAndConfigureApplicationTokenManagement<TToken, TKey>(
         UVaultOptions options, Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
         where TToken : TokenModel, new()
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         options.Services.AddScoped<ApplicationTokenManager<TToken>>();
         options.Services.AddScoped<IApplicationTokenStore<TToken>, StaticTokenStore<TToken>>();

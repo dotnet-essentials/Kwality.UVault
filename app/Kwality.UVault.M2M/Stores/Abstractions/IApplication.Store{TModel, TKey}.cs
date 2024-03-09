@@ -31,7 +31,7 @@ using Kwality.UVault.M2M.Operations.Mappers.Abstractions;
 
 public interface IApplicationStore<TModel, TKey>
     where TModel : ApplicationModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter);
     Task<TModel> GetByKeyAsync(TKey key);

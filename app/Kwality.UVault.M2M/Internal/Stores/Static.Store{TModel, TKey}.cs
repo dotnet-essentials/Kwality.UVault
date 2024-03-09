@@ -35,7 +35,7 @@ using Kwality.UVault.M2M.Stores.Abstractions;
 internal sealed class StaticStore<TModel, TKey> : IApplicationStore<TModel, TKey>
 #pragma warning disable CA1812
     where TModel : ApplicationModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     private readonly List<TModel> collection = [];
 

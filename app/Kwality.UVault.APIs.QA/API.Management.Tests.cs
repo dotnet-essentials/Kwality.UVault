@@ -268,7 +268,7 @@ public sealed class ApiManagementTests
     private sealed class Store<TModel, TKey> : IApiStore<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : ApiModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public Task<TModel> GetByKeyAsync(TKey key)
         {
@@ -290,13 +290,13 @@ public sealed class ApiManagementTests
     private sealed class Manager<TModel, TKey>(IApiStore<TModel, TKey> store) : ApiManager<TModel, TKey>(store)
 #pragma warning restore CA1812
         where TModel : ApiModel<TKey>
-        where TKey : IEqualityComparer<TKey>;
+        where TKey : IEquatable<TKey>;
 
 #pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : ApiManager<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : ApiModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public ManagerStore(IApiStore<TModel, TKey> store)
             : base(store)

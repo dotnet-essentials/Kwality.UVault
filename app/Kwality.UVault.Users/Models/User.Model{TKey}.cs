@@ -28,7 +28,7 @@ using JetBrains.Annotations;
 
 [PublicAPI]
 public class UserModel<TKey>(TKey key, string email)
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     public TKey Key { get; set; } = key;
     public string Email { get; set; } = email;

@@ -407,7 +407,7 @@ public sealed class UserManagementTests
     private sealed class Store<TModel, TKey> : IUserStore<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public Task<TModel> GetByKeyAsync(TKey key)
         {
@@ -439,13 +439,13 @@ public sealed class UserManagementTests
     private sealed class Manager<TModel, TKey>(IUserStore<TModel, TKey> store) : UserManager<TModel, TKey>(store)
 #pragma warning restore CA1812
         where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>;
+        where TKey : IEquatable<TKey>;
 
 #pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : UserManager<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public ManagerStore(IUserStore<TModel, TKey> store)
             : base(store)

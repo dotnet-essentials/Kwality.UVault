@@ -35,7 +35,7 @@ using Kwality.UVault.Grants.Stores.Abstractions;
 internal sealed class StaticStore<TModel, TKey> : IGrantStore<TModel, TKey>
 #pragma warning restore CA1812
     where TModel : GrantModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     private readonly List<TModel> collection = [];
 

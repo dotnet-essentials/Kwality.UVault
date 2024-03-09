@@ -35,7 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public sealed class ApiManagementOptions<TModel, TKey>
     where TModel : ApiModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     internal ApiManagementOptions(IServiceCollection serviceCollection)
     {

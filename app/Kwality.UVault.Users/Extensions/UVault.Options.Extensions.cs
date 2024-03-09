@@ -40,19 +40,47 @@ public static class UVaultOptionsExtensions
 {
     public static void UseUserManagement<TModel, TKey>(this UVaultOptions options)
         where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         options.UseUserManagement<TModel, TKey>(null);
     }
 
-    public static void UseUserManagement<TModel, TKey>(
-        this UVaultOptions options, Action<UserManagementOptions<TModel, TKey>>? action)
+    public static void UseUserManagement<TModel, TKey>(this UVaultOptions options, ServiceLifetime storeLifetime)
         where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        options.UseUserManagement<TModel, TKey>(null, storeLifetime);
+    }
+
+    public static void UseUserManagement<TModel, TKey>(
+        this UVaultOptions options, Action<UserManagementOptions<TModel, TKey>>? action,
+        ServiceLifetime storeLifetime = ServiceLifetime.Scoped)
+        where TModel : UserModel<TKey>
+        where TKey : IEquatable<TKey>
     {
         ArgumentNullException.ThrowIfNull(options);
         options.Services.AddScoped<UserManager<TModel, TKey>>();
-        options.Services.AddScoped<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+        switch (storeLifetime)
+        {
+            case ServiceLifetime.Singleton:
+                options.Services.AddSingleton<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            case ServiceLifetime.Scoped:
+                options.Services.AddScoped<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            case ServiceLifetime.Transient:
+                options.Services.AddTransient<IUserStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(storeLifetime), storeLifetime, null);
+        }
 
         // Configure UVault's User Management component.
         action?.Invoke(new UserManagementOptions<TModel, TKey>(options.Services));

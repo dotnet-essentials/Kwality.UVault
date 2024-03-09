@@ -29,7 +29,7 @@ using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 
 public interface IApiStore<TModel, TKey>
     where TModel : ApiModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     Task<TModel> GetByKeyAsync(TKey key);
     Task<TKey> CreateAsync(TModel model, IApiOperationMapper mapper);

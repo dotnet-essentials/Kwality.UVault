@@ -24,47 +24,38 @@
 // =====================================================================================================================
 namespace Kwality.UVault.Core.Keys;
 
-using global::System.Diagnostics.CodeAnalysis;
 using global::System.Globalization;
 
 using JetBrains.Annotations;
 
 [PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class IntKey(int value) : IEqualityComparer<IntKey>
+public sealed class IntKey(int value) : IEquatable<IntKey>
 {
     private readonly int value = value;
 
-    public bool Equals(IntKey? x, IntKey? y)
+    public bool Equals(IntKey? other)
     {
-        if (ReferenceEquals(x, y))
+        if (ReferenceEquals(null, other))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
         {
             return true;
         }
 
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.value == y.value;
+        return this.value == other.value;
     }
 
-    public int GetHashCode(IntKey obj)
+    public override bool Equals(object? obj)
     {
-        ArgumentNullException.ThrowIfNull(obj);
+        return ReferenceEquals(this, obj) || (obj is IntKey other && this.Equals(other));
+    }
 
-        return obj.value;
+    public override int GetHashCode()
+    {
+        return this.value;
     }
 
     public override string ToString()

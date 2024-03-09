@@ -442,7 +442,7 @@ public sealed class GrantManagementTests
     private sealed class Store<TModel, TKey> : IGrantStore<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : GrantModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IGrantFilter? filter)
         {
@@ -469,13 +469,13 @@ public sealed class GrantManagementTests
     private sealed class Manager<TModel, TKey>(IGrantStore<TModel, TKey> store) : GrantManager<TModel, TKey>(store)
 #pragma warning restore CA1812
         where TModel : GrantModel<TKey>
-        where TKey : IEqualityComparer<TKey>;
+        where TKey : IEquatable<TKey>;
 
 #pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : GrantManager<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : GrantModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public ManagerStore(IGrantStore<TModel, TKey> store)
             : base(store)

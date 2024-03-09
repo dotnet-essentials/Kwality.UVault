@@ -512,7 +512,7 @@ public sealed class ApplicationManagementTests
     private sealed class Store<TModel, TKey> : IApplicationStore<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IApplicationFilter? filter)
         {
@@ -550,13 +550,13 @@ public sealed class ApplicationManagementTests
 #pragma warning restore CA1812
         : ApplicationManager<TModel, TKey>(store)
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>;
+        where TKey : IEquatable<TKey>;
 
 #pragma warning disable CA1812
     private sealed class ManagerStore<TModel, TKey> : ApplicationManager<TModel, TKey>
 #pragma warning restore CA1812
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         public ManagerStore(IApplicationStore<TModel, TKey> store)
             : base(store)

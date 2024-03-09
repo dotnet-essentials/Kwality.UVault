@@ -29,7 +29,7 @@ using Kwality.UVault.Users.Operations.Mappers.Abstractions;
 
 public interface IUserStore<TModel, TKey>
     where TModel : UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     Task<TModel> GetByKeyAsync(TKey key);
     Task<IEnumerable<TModel>> GetByEmailAsync(string email);

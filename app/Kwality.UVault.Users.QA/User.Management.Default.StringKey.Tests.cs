@@ -30,8 +30,6 @@ using AutoFixture.Xunit2;
 
 using FluentAssertions;
 
-using JetBrains.Annotations;
-
 using Kwality.UVault.Core.Exceptions;
 using Kwality.UVault.Core.Keys;
 using Kwality.UVault.QA.Common.Xunit.Traits;
@@ -42,15 +40,15 @@ using Kwality.UVault.Users.QA.Factories;
 
 using Xunit;
 
-public sealed class UserManagementDefaultTests
+public sealed class UserManagementDefaultStringKeyTests
 {
     [AutoData]
     [UserManagement]
     [Theory(DisplayName = "Get by key raises an exception when the key is NOT found.")]
-    internal async Task GetByKey_UnknownKey_RaisesException(IntKey key)
+    internal async Task GetByKey_UnknownKey_RaisesException(StringKey key)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
         // ACT.
         Func<Task<Model>> act = () => manager.GetByKeyAsync(key);
@@ -68,7 +66,7 @@ public sealed class UserManagementDefaultTests
     internal async Task GetByEmail_UnknownEmail_ReturnsEmptyCollection(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
         await manager.CreateAsync(model, new UserCreateOperationMapper())
                      .ConfigureAwait(true);
@@ -88,7 +86,7 @@ public sealed class UserManagementDefaultTests
     internal async Task GetByEmail_SingleMatch_ReturnsMatches(List<Model> models)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
         foreach (Model model in models)
         {
@@ -114,7 +112,7 @@ public sealed class UserManagementDefaultTests
     internal async Task GetByEmail_MultipleMatches_ReturnsMatches(List<Model> models)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
         foreach (Model model in models)
         {
@@ -140,11 +138,11 @@ public sealed class UserManagementDefaultTests
     internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
         // ACT.
-        IntKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
-                                  .ConfigureAwait(true);
+        StringKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
+                                     .ConfigureAwait(true);
 
         // ASSERT.
         (await manager.GetByKeyAsync(key)
@@ -158,13 +156,13 @@ public sealed class UserManagementDefaultTests
     internal async Task Create_KeyExists_RaisesException(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
         await manager.CreateAsync(model, new UserCreateOperationMapper())
                      .ConfigureAwait(true);
 
         // ACT.
-        Func<Task<IntKey>> act = () => manager.CreateAsync(model, new UserCreateOperationMapper());
+        Func<Task<StringKey>> act = () => manager.CreateAsync(model, new UserCreateOperationMapper());
 
         // ASSERT.
         await act.Should()
@@ -179,10 +177,10 @@ public sealed class UserManagementDefaultTests
     internal async Task Update_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
-        IntKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
-                                  .ConfigureAwait(true);
+        StringKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
+                                     .ConfigureAwait(true);
 
         // ACT.
         model.Email = "kwality.uvault@github.com";
@@ -199,10 +197,10 @@ public sealed class UserManagementDefaultTests
     [AutoData]
     [UserManagement]
     [Theory(DisplayName = "Update raises an exception when the key is not found.")]
-    internal async Task Update_UnknownKey_RaisesException(IntKey key, Model model)
+    internal async Task Update_UnknownKey_RaisesException(StringKey key, Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
         // ACT.
         Func<Task> act = () => manager.UpdateAsync(key, model, new UserUpdateOperationMapper());
@@ -220,10 +218,10 @@ public sealed class UserManagementDefaultTests
     internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> manager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> manager = new UserManagerFactory().Create<Model, StringKey>();
 
-        IntKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
-                                  .ConfigureAwait(true);
+        StringKey key = await manager.CreateAsync(model, new UserCreateOperationMapper())
+                                     .ConfigureAwait(true);
 
         // ACT.
         await manager.DeleteByKeyAsync(key)
@@ -241,10 +239,10 @@ public sealed class UserManagementDefaultTests
     [AutoData]
     [UserManagement]
     [Theory(DisplayName = "Delete succeeds when the key is not found.")]
-    internal async Task Delete_UnknownKey_Succeeds(IntKey key)
+    internal async Task Delete_UnknownKey_Succeeds(StringKey key)
     {
         // ARRANGE.
-        UserManager<Model, IntKey> userManager = new UserManagerFactory().Create<Model, IntKey>();
+        UserManager<Model, StringKey> userManager = new UserManagerFactory().Create<Model, StringKey>();
 
         // ACT.
         Func<Task> act = () => userManager.DeleteByKeyAsync(key);
@@ -255,7 +253,7 @@ public sealed class UserManagementDefaultTests
                  .ConfigureAwait(true);
     }
 
-    internal sealed class Model(IntKey key, string email) : UserModel<IntKey>(key, email);
+    internal sealed class Model(StringKey key, string email) : UserModel<StringKey>(key, email);
 
     [AttributeUsage(AttributeTargets.Method)]
     private sealed class FixedEmailAttribute() : AutoDataAttribute(static () =>
@@ -273,7 +271,7 @@ public sealed class UserManagementDefaultTests
             {
                 if (request is Type type && type == typeof(Model))
                 {
-                    return new Model(context.Create<IntKey>(), email);
+                    return new Model(context.Create<StringKey>(), email);
                 }
 
                 return new NoSpecimen();

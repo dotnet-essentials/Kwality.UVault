@@ -40,19 +40,47 @@ public static class UVaultOptionsExtensions
 {
     public static void UseGrantManagement<TModel, TKey>(this UVaultOptions options)
         where TModel : GrantModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         options.UseGrantManagement<TModel, TKey>(null);
     }
 
-    public static void UseGrantManagement<TModel, TKey>(
-        this UVaultOptions options, Action<GrantManagementOptions<TModel, TKey>>? action)
+    public static void UseGrantManagement<TModel, TKey>(this UVaultOptions options, ServiceLifetime storeLifetime)
         where TModel : GrantModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
+    {
+        options.UseGrantManagement<TModel, TKey>(null, storeLifetime);
+    }
+
+    public static void UseGrantManagement<TModel, TKey>(
+        this UVaultOptions options, Action<GrantManagementOptions<TModel, TKey>>? action,
+        ServiceLifetime storeLifetime = ServiceLifetime.Scoped)
+        where TModel : GrantModel<TKey>
+        where TKey : IEquatable<TKey>
     {
         ArgumentNullException.ThrowIfNull(options);
         options.Services.AddScoped<GrantManager<TModel, TKey>>();
-        options.Services.AddScoped<IGrantStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+        switch (storeLifetime)
+        {
+            case ServiceLifetime.Singleton:
+                options.Services.AddSingleton<IGrantStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            case ServiceLifetime.Scoped:
+                options.Services.AddScoped<IGrantStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            case ServiceLifetime.Transient:
+                options.Services.AddTransient<IGrantStore<TModel, TKey>, StaticStore<TModel, TKey>>();
+
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(storeLifetime), storeLifetime, null);
+        }
 
         // Configure UVault's User Management component.
         action?.Invoke(new GrantManagementOptions<TModel, TKey>(options.Services));

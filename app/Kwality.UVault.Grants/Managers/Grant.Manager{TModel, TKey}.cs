@@ -35,7 +35,7 @@ using Kwality.UVault.Grants.Stores.Abstractions;
 [PublicAPI]
 public class GrantManager<TModel, TKey>(IGrantStore<TModel, TKey> store)
     where TModel : GrantModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     public Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize)
     {

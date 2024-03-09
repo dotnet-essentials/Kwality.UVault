@@ -31,7 +31,7 @@ using Kwality.UVault.Grants.Operations.Mappers.Abstractions;
 
 public interface IGrantStore<TModel, TKey>
     where TModel : GrantModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     Task<PagedResultSet<TModel>> GetAllAsync(int pageIndex, int pageSize, IGrantFilter? filter);
     Task<TKey> CreateAsync(TModel model, IGrantOperationMapper mapper);

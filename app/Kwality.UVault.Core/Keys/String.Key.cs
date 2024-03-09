@@ -22,37 +22,42 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Users.Auth0.Extensions;
+namespace Kwality.UVault.Core.Keys;
 
 using JetBrains.Annotations;
 
-using Kwality.UVault.Core.Auth0.API.Clients;
-using Kwality.UVault.Core.Auth0.Configuration;
-using Kwality.UVault.Core.Keys;
-using Kwality.UVault.Core.System;
-using Kwality.UVault.Core.System.Abstractions;
-using Kwality.UVault.Users.Auth0.Mapping.Abstractions;
-using Kwality.UVault.Users.Auth0.Models;
-using Kwality.UVault.Users.Auth0.Stores;
-using Kwality.UVault.Users.Options;
-
-using Microsoft.Extensions.DependencyInjection;
-
 [PublicAPI]
-public static class UserManagementOptionsExtensions
+public sealed class StringKey(string value) : IEquatable<StringKey>
 {
-    public static void UseAuth0Store<TModel, TMapper>(
-        this UserManagementOptions<TModel, StringKey> options, ApiConfiguration configuration)
-        where TModel : UserModel
-        where TMapper : class, IModelMapper<TModel>
-    {
-        ArgumentNullException.ThrowIfNull(options);
-        options.UseStore<UserStore<TModel>>();
+    public string Value { get; } = value;
 
-        // Register additional services.
-        options.ServiceCollection.AddScoped<IModelMapper<TModel>, TMapper>();
-        options.ServiceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-        options.ServiceCollection.AddHttpClient<ManagementClient>();
-        options.ServiceCollection.AddSingleton(configuration);
+    public bool Equals(StringKey? other)
+    {
+        if (ReferenceEquals(null, other))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return this.Value == other.Value;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj) || (obj is StringKey other && this.Equals(other));
+    }
+
+    public override int GetHashCode()
+    {
+        return this.Value.GetHashCode(StringComparison.CurrentCulture);
+    }
+
+    public override string ToString()
+    {
+        return this.Value;
     }
 }

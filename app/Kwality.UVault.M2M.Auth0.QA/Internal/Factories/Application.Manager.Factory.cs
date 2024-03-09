@@ -39,7 +39,7 @@ internal sealed class ApplicationManagerFactory
     public ApplicationManager<TModel, TKey> Create<TModel, TKey>(
         Action<ApplicationManagementOptions<TModel, TKey>>? action)
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         this.serviceCollection.AddUVault(options => options.UseApplicationManagement(action));
 

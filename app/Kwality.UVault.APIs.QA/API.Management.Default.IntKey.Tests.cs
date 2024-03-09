@@ -43,7 +43,7 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 using Xunit;
 
 [SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
-public sealed class ApiManagementDefaultTests
+public sealed class ApiManagementDefaultIntKeyTests
 {
     [AutoData]
     [ApiManagement]

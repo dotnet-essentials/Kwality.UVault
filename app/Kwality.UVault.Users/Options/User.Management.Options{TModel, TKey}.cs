@@ -35,7 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public sealed class UserManagementOptions<TModel, TKey>
     where TModel : UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     internal UserManagementOptions(IServiceCollection serviceCollection)
     {

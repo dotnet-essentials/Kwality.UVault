@@ -22,52 +22,27 @@
 // =                FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // =                OTHER DEALINGS IN THE SOFTWARE.
 // =====================================================================================================================
-namespace Kwality.UVault.Core.Auth0.Keys;
+namespace Kwality.UVault.QA.Common.Xunit.Traits;
 
-using global::System.Diagnostics.CodeAnalysis;
+using global::Xunit.Abstractions;
+using global::Xunit.Sdk;
 
 using JetBrains.Annotations;
 
-[PublicAPI]
-[ExcludeFromCodeCoverage]
-public sealed class StringKey(string value) : IEqualityComparer<StringKey>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+[TraitDiscoverer("Kwality.UVault.QA.Common.Xunit.Traits.E2ETargetDiscoverer", "Kwality.UVault.QA.Common")]
+public sealed class E2EAttribute : Attribute, ITraitAttribute
 {
-    public string Value { get; } = value;
+    // NOTE: Intentionally left blank.
+}
 
-    public bool Equals(StringKey? x, StringKey? y)
+[UsedImplicitly]
+#pragma warning disable CA1812
+internal sealed class E2ETargetDiscoverer : ITraitDiscoverer
+#pragma warning restore CA1812
+{
+    public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {
-        if (ReferenceEquals(x, y))
-        {
-            return true;
-        }
-
-        if (ReferenceEquals(x, null))
-        {
-            return false;
-        }
-
-        if (ReferenceEquals(y, null))
-        {
-            return false;
-        }
-
-        if (x.GetType() != y.GetType())
-        {
-            return false;
-        }
-
-        return x.Value == y.Value;
-    }
-
-    public int GetHashCode(StringKey obj)
-    {
-        ArgumentNullException.ThrowIfNull(obj);
-
-        return obj.Value.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
-    }
-
-    public override string ToString()
-    {
-        return this.Value;
+        yield return new KeyValuePair<string, string>("Type", "E2E");
     }
 }

@@ -46,7 +46,7 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 using Xunit;
 
 [SuppressMessage("ReSharper", "MemberCanBeFileLocal")]
-public sealed class GrantManagementDefaultTests
+public sealed class GrantManagementDefaultStringKeyTests
 {
     [AutoData]
     [GrantManagement]
@@ -54,7 +54,7 @@ public sealed class GrantManagementDefaultTests
     internal async Task GetAll_FirstPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
         await manager.CreateAsync(model, new GrantCreateOperationMapper())
                      .ConfigureAwait(true);
@@ -83,7 +83,7 @@ public sealed class GrantManagementDefaultTests
     internal async Task GetAll_SecondPageWhenAllDataShowed_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
         await manager.CreateAsync(model, new GrantCreateOperationMapper())
                      .ConfigureAwait(true);
@@ -107,7 +107,7 @@ public sealed class GrantManagementDefaultTests
     internal async Task GetAll_FirstPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
         await manager.CreateAsync(modelOne, new GrantCreateOperationMapper())
                      .ConfigureAwait(true);
@@ -139,7 +139,7 @@ public sealed class GrantManagementDefaultTests
     internal async Task GetAll_SecondPageWhenNotAllDataShowed_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
         await manager.CreateAsync(modelOne, new GrantCreateOperationMapper())
                      .ConfigureAwait(true);
@@ -171,7 +171,7 @@ public sealed class GrantManagementDefaultTests
     internal async Task GetAll_WithFilter_Succeeds(Model modelOne, Model modelTwo)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
         await manager.CreateAsync(modelOne, new GrantCreateOperationMapper())
                      .ConfigureAwait(true);
@@ -198,7 +198,7 @@ public sealed class GrantManagementDefaultTests
     internal async Task Create_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
         // ACT.
         await manager.CreateAsync(model, new GrantCreateOperationMapper())
@@ -216,10 +216,10 @@ public sealed class GrantManagementDefaultTests
     internal async Task Update_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
-        IntKey key = await manager.CreateAsync(model, new GrantCreateOperationMapper())
-                                  .ConfigureAwait(true);
+        StringKey key = await manager.CreateAsync(model, new GrantCreateOperationMapper())
+                                     .ConfigureAwait(true);
 
         // ACT.
         model.Scopes = new[] { "newScope", "newScope2" };
@@ -241,10 +241,10 @@ public sealed class GrantManagementDefaultTests
     [AutoData]
     [GrantManagement]
     [Theory(DisplayName = "Update raises an exception when the key is not found.")]
-    internal async Task Update_UnknownKey_RaisesException(IntKey key, Model model)
+    internal async Task Update_UnknownKey_RaisesException(StringKey key, Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
         // ACT.
         Func<Task> act = () => manager.UpdateAsync(key, model, new GrantUpdateOperationMapper());
@@ -262,10 +262,10 @@ public sealed class GrantManagementDefaultTests
     internal async Task Delete_Succeeds(Model model)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> manager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> manager = new GrantManagerFactory().Create<Model, StringKey>();
 
-        IntKey key = await manager.CreateAsync(model, new GrantCreateOperationMapper())
-                                  .ConfigureAwait(true);
+        StringKey key = await manager.CreateAsync(model, new GrantCreateOperationMapper())
+                                     .ConfigureAwait(true);
 
         // ACT.
         await manager.DeleteByKeyAsync(key)
@@ -280,10 +280,10 @@ public sealed class GrantManagementDefaultTests
     [AutoData]
     [GrantManagement]
     [Theory(DisplayName = "Delete succeeds when the key is not found.")]
-    internal async Task Delete_UnknownKey_Succeeds(IntKey key)
+    internal async Task Delete_UnknownKey_Succeeds(StringKey key)
     {
         // ARRANGE.
-        GrantManager<Model, IntKey> userManager = new GrantManagerFactory().Create<Model, IntKey>();
+        GrantManager<Model, StringKey> userManager = new GrantManagerFactory().Create<Model, StringKey>();
 
         // ACT.
         Func<Task> act = () => userManager.DeleteByKeyAsync(key);
@@ -317,7 +317,7 @@ public sealed class GrantManagementDefaultTests
 
     [UsedImplicitly]
 #pragma warning disable CA1812
-    internal sealed class Model(IntKey key) : GrantModel<IntKey>(key)
+    internal sealed class Model(StringKey key) : GrantModel<StringKey>(key)
 #pragma warning restore CA1812
     {
         public IEnumerable<string> Scopes { get; set; } = Array.Empty<string>();

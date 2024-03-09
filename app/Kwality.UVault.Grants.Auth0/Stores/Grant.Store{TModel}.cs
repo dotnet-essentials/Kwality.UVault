@@ -32,8 +32,8 @@ using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Auth0.API.Clients;
 using Kwality.UVault.Core.Auth0.Configuration;
-using Kwality.UVault.Core.Auth0.Keys;
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Keys;
 using Kwality.UVault.Core.Models;
 using Kwality.UVault.Grants.Auth0.Mapping.Abstractions;
 using Kwality.UVault.Grants.Auth0.Models;

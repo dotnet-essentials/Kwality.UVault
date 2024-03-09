@@ -36,8 +36,8 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Auth0.Configuration;
-using Kwality.UVault.Core.Auth0.Keys;
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Keys;
 using Kwality.UVault.QA.Common.System;
 using Kwality.UVault.QA.Common.Xunit.Traits;
 using Kwality.UVault.Users.Auth0.Extensions;

@@ -38,7 +38,7 @@ internal sealed class GrantManagerFactory
 
     public GrantManager<TModel, TKey> Create<TModel, TKey>()
         where TModel : GrantModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         this.serviceCollection.AddUVault(static options => options.UseGrantManagement<TModel, TKey>());
 
@@ -48,7 +48,7 @@ internal sealed class GrantManagerFactory
 
     public GrantManager<TModel, TKey> Create<TModel, TKey>(Action<GrantManagementOptions<TModel, TKey>>? action)
         where TModel : GrantModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         this.serviceCollection.AddUVault(options => options.UseGrantManagement(action));
 

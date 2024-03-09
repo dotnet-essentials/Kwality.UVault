@@ -33,7 +33,7 @@ using Kwality.UVault.Users.Stores.Abstractions;
 internal sealed class StaticStore<TModel, TKey> : IUserStore<TModel, TKey>
 #pragma warning restore CA1812
     where TModel : UserModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     private readonly List<TModel> collection = [];
 

@@ -39,7 +39,7 @@ internal sealed class ApplicationTokenManagerFactory
     public ApplicationTokenManager<TToken> Create<TToken, TModel, TKey>()
         where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         this.serviceCollection.AddUVault(static options =>
             options.UseApplicationTokenManagement<TToken, TModel, TKey>(null));
@@ -52,7 +52,7 @@ internal sealed class ApplicationTokenManagerFactory
         Action<ApplicationTokenManagementOptions<TToken>>? applicationTokenManagementOptions)
         where TToken : TokenModel, new()
         where TModel : ApplicationModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         this.serviceCollection.AddUVault(options =>
             options.UseApplicationTokenManagement<TToken, TModel, TKey>(applicationTokenManagementOptions));

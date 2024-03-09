@@ -28,7 +28,7 @@ using JetBrains.Annotations;
 
 [PublicAPI]
 public class ApiModel<TKey>(TKey key)
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     public TKey Key { get; set; } = key;
 }

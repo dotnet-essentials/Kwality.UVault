@@ -33,7 +33,7 @@ using Kwality.UVault.Core.Exceptions;
 internal sealed class StaticStore<TModel, TKey> : IApiStore<TModel, TKey>
 #pragma warning restore CA1812
     where TModel : ApiModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     private readonly List<TModel> collection = [];
 

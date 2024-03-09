@@ -29,7 +29,7 @@ using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 using Kwality.UVault.APIs.Models;
-using Kwality.UVault.Core.Auth0.Keys;
+using Kwality.UVault.Core.Keys;
 
 [PublicAPI]
 [ExcludeFromCodeCoverage]

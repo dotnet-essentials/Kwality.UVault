@@ -35,7 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public sealed class ApplicationManagementOptions<TModel, TKey>
     where TModel : ApplicationModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     internal ApplicationManagementOptions(IServiceCollection serviceCollection)
     {

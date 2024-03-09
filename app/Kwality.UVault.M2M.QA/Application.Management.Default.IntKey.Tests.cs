@@ -43,7 +43,7 @@ using Kwality.UVault.QA.Common.Xunit.Traits;
 
 using Xunit;
 
-public sealed class ApplicationManagementDefaultTests
+public sealed class ApplicationManagementDefaultIntKeyTests
 {
     [AutoData]
     [M2MManagement]

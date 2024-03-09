@@ -33,9 +33,9 @@ using global::Auth0.ManagementApi.Models;
 using JetBrains.Annotations;
 
 using Kwality.UVault.Core.Auth0.Configuration;
-using Kwality.UVault.Core.Auth0.Keys;
 using Kwality.UVault.Core.Auth0.Models;
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Keys;
 using Kwality.UVault.M2M.Auth0.Configuration;
 using Kwality.UVault.M2M.Auth0.Extensions;
 using Kwality.UVault.M2M.Auth0.Mapping.Abstractions;
@@ -80,11 +80,11 @@ public sealed class ApplicationTokenManagementAuth0Tests
         await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
-        TokenModel result = await applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
-                                                             application.ClientSecret ?? string.Empty,
-                                                             Environment.AUTH0_AUDIENCE,
-                                                             "client_credentials")
-                                                         .ConfigureAwait(true);
+        TokenModel result = await applicationTokenManager
+                                  .GetAccessTokenAsync(application.Key.ToString() ?? string.Empty,
+                                      application.ClientSecret ?? string.Empty, Environment.AUTH0_AUDIENCE,
+                                      "client_credentials")
+                                  .ConfigureAwait(true);
 
         // ASSERT.
         result.Token.Should()
@@ -129,8 +129,9 @@ public sealed class ApplicationTokenManagementAuth0Tests
         await Task.Delay(Auth0RateLimitDelay)
                   .ConfigureAwait(true);
 
-        Func<Task<TokenModel>> act = () => applicationTokenManager.GetAccessTokenAsync(application.Key.ToString(),
-            application.ClientSecret ?? string.Empty, Environment.AUTH0_AUDIENCE, "client_credentials");
+        Func<Task<TokenModel>> act = () =>
+            applicationTokenManager.GetAccessTokenAsync(application.Key.ToString() ?? string.Empty,
+                application.ClientSecret ?? string.Empty, Environment.AUTH0_AUDIENCE, "client_credentials");
 
         // ASSERT.
         await act.Should()

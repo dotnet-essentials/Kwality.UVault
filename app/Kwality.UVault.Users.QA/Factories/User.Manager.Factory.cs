@@ -38,7 +38,7 @@ internal sealed class UserManagerFactory
 
     public UserManager<TModel, TKey> Create<TModel, TKey>()
         where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         this.serviceCollection.AddUVault(static options => options.UseUserManagement<TModel, TKey>());
 
@@ -48,7 +48,7 @@ internal sealed class UserManagerFactory
 
     public UserManager<TModel, TKey> Create<TModel, TKey>(Action<UserManagementOptions<TModel, TKey>>? action)
         where TModel : UserModel<TKey>
-        where TKey : IEqualityComparer<TKey>
+        where TKey : IEquatable<TKey>
     {
         this.serviceCollection.AddUVault(options => options.UseUserManagement(action));
 

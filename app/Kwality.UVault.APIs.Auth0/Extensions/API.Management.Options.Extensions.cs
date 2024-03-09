@@ -32,7 +32,7 @@ using Kwality.UVault.APIs.Auth0.Stores;
 using Kwality.UVault.APIs.Options;
 using Kwality.UVault.Core.Auth0.API.Clients;
 using Kwality.UVault.Core.Auth0.Configuration;
-using Kwality.UVault.Core.Auth0.Keys;
+using Kwality.UVault.Core.Keys;
 using Kwality.UVault.Core.System;
 using Kwality.UVault.Core.System.Abstractions;
 

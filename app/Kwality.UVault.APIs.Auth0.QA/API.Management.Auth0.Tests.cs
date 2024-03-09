@@ -43,8 +43,8 @@ using Kwality.UVault.APIs.Auth0.QA.Internal.Factories;
 using Kwality.UVault.APIs.Managers;
 using Kwality.UVault.APIs.Operations.Mappers.Abstractions;
 using Kwality.UVault.Core.Auth0.Configuration;
-using Kwality.UVault.Core.Auth0.Keys;
 using Kwality.UVault.Core.Exceptions;
+using Kwality.UVault.Core.Keys;
 using Kwality.UVault.QA.Common.System;
 using Kwality.UVault.QA.Common.Xunit.Traits;
 

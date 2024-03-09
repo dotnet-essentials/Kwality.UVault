@@ -33,7 +33,7 @@ using Kwality.UVault.APIs.Stores.Abstractions;
 [PublicAPI]
 public class ApiManager<TModel, TKey>(IApiStore<TModel, TKey> store)
     where TModel : ApiModel<TKey>
-    where TKey : IEqualityComparer<TKey>
+    where TKey : IEquatable<TKey>
 {
     public Task<TModel> GetByKeyAsync(TKey key)
     {
